@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,10 +21,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.couchbase.lite.Database;
+import com.couchbase.lite.Manager;
+import com.couchbase.lite.android.AndroidContext;
+
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "HomeActivity";
 
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
@@ -62,16 +69,14 @@ public class HomeActivity extends AppCompatActivity
         notes = new ArrayList<>();
         generateRandomNotes();
 
+        helloCBL();
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new NotesAdapter(notes, this);   //adapter personalizzato che accetta la lista di eventi, context dell'app e filtro per la categoria
         recyclerView.setAdapter(adapter);                  //l'adapter gestirà le CardView da inserire nel recycler view
 
         LinearLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-
-
-
-
 
 
 
@@ -93,6 +98,7 @@ public class HomeActivity extends AppCompatActivity
             notes.add(temp);
         }
     }
+
 
     @Override
     public void onBackPressed() {
