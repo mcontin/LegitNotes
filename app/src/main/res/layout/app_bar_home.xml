@@ -71,9 +71,9 @@
                 fab:fab_colorNormal="@color/accent"
                 fab:fab_colorPressed="@color/accent_dark"
                 fab:fab_plusIconColor="@color/white"
-                fab:fab_icon="@drawable/my_icon"
+                fab:fab_icon="@drawable/ic_note_add"
                 fab:fab_size="mini"
-                fab:fab_title="Three" />
+                fab:fab_title="Quick Note" />
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
