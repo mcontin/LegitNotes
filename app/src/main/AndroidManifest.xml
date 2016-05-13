@@ -33,13 +33,14 @@
 
         <activity
             android:name=".DetailNotes"
-            android:label="Dettaglio">
+            android:label="Dettaglio"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
 
-        
+
         <activity android:name=".MainNotesActivity" >
         </activity>
     </application>

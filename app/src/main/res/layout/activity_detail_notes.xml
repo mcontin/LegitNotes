@@ -9,11 +9,12 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/mediaView" />
+        android:layout_height="150dp"
+        android:id="@+id/mediaView"
+        android:src="@drawable/placeholder" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/scrollView" />
 </LinearLayout>

@@ -1,6 +1,8 @@
 package com.legitdevs.legitnotes;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -49,6 +51,18 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         cardHolder.noteTitle.setText(notes.get(position).getTitle());
 
         cardHolder.noteText.setText(notes.get(position).getText());
+
+        cardHolder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent vIntent = new Intent(ctx, DetailNotes.class);
+                //quando ci saranno cose da passare usare bundle(se non c'è un singleton)
+//                Bundle vBundle = new Bundle();
+//                vBundle.putString();
+//                vIntent.putExtras(vBundle);
+                ctx.startActivity(vIntent);
+            }
+        });
 
     }
 
