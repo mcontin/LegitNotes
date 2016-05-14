@@ -21,9 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import com.couchbase.lite.Database;
-import com.couchbase.lite.Manager;
-import com.couchbase.lite.android.AndroidContext;
+//import com.couchbase.lite.Database;
+//import com.couchbase.lite.Manager;
+//import com.couchbase.lite.android.AndroidContext;
 
 import java.util.ArrayList;
 
@@ -69,7 +69,7 @@ public class HomeActivity extends AppCompatActivity
         notes = new ArrayList<>();
         generateRandomNotes();
 
-        helloCBL();
+//        helloCBL();
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new NotesAdapter(notes, this);   //adapter personalizzato che accetta la lista di eventi, context dell'app e filtro per la categoria
@@ -94,7 +94,7 @@ public class HomeActivity extends AppCompatActivity
     public void generateRandomNotes(){
         Note temp;
         for(int i = 0; i < 10; i++) {
-            temp = new Note("Note " + i, "This is note " + i);
+            temp = new Note("Note"+i,"This is note"+i);
             notes.add(temp);
         }
     }

@@ -1,5 +1,7 @@
 package com.legitdevs.legitnotes;
 
+import android.util.Log;
+
 import com.legitdevs.legitnotes.database.DatabaseManager;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -7,6 +9,9 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by mattia on 13/05/16.
@@ -16,7 +21,7 @@ import java.net.URI;
 public class Note extends BaseModel{
 
     @PrimaryKey
-    int noteID;
+    long noteID;
     @Column
     private String title;
     @Column
@@ -26,21 +31,21 @@ public class Note extends BaseModel{
     @Column
     private String media;
 
-    public Note (String text) {
-        //TODO noteID = generato in base alla data in millisecondi
+    public Note() {
+//        noteID=getPrimaryKey();
         title = "";
-        this.text = text;
+        text = "";
         category = "";
         media = "";
-        save();
+//        save();
     }
-    public Note (String title, String text) {
-        //TODO noteID = generate in base alla data in millisecondi
+    public Note(String title, String text) {
+//        noteID=getPrimaryKey();
         this.title = title;
         this.text = text;
         category = "";
         media = "";
-        save();
+//        save();
     }
 
     public void setAttachment() {
@@ -67,4 +72,24 @@ public class Note extends BaseModel{
     public void setCategory(String category) {
         this.category = category;
     }
+
+    public String getMedia() {
+        return media;
+    }
+    public void setMedia(String media) {
+        this.media = media;
+    }
+
+
+//    public Date date;
+//    public long getPrimaryKey(){
+//        SimpleDateFormat sdf= new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+//        String dateInString=""+new Date();
+//        try {
+//            date=sdf.parse(dateInString);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        return date.getTime();
+//    }
 }
