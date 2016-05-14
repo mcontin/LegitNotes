@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailNotes"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    tools:context=".DetailNotes">
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:id="@+id/mediaView"
-        android:src="@drawable/placeholder" />
+        android:layout_height="match_parent">
 
-    <ScrollView
-        android:layout_width="match_parent"
+        <include
+            layout="@layout/content_detail_notes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView" />
-</LinearLayout>
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/ic_create"
+        android:layout_margin="@dimen/fab_margin"/>
+
+</android.support.design.widget.CoordinatorLayout>

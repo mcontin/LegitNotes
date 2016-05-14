@@ -32,6 +32,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    androidTestCompile('com.nineoldandroids:library:2.4.0') {
+        exclude module: 'support-v4'
+    }
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     compile 'com.getbase:floatingactionbutton:1.10.0'
@@ -49,4 +52,5 @@ dependencies {
 
     // kotlin extensions
     compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
+    compile 'com.nineoldandroids:library:2.4.0'
 }
