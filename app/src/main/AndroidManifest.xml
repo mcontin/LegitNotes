@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".HomeActivity"
-            android:label="@string/app_name"
+            android:label="@string/title_home_activity"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,26 +23,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
-
-
         <activity
             android:name=".DetailNotes"
-            android:label="Dettaglio"
-            android:theme="@style/AppTheme">
+            android:label="@string/title_detail_note"
+            android:theme="@style/AppTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
-
+        <activity
+            android:name=".EditNote"
+            android:label="@string/title_edit_note"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DetailNotes" />
+        </activity>
 
         <activity android:name=".MainNotesActivity" >
         </activity>
+
     </application>
 
 </manifest>

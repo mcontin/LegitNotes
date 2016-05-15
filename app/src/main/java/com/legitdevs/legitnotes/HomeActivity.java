@@ -46,6 +46,7 @@ public class HomeActivity extends AppCompatActivity
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         frameLayout.getBackground().setAlpha(0);
         final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        assert fabMenu != null;
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
