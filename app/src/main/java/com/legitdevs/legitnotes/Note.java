@@ -1,55 +1,47 @@
 package com.legitdevs.legitnotes;
 
-import android.util.Log;
-
-import com.legitdevs.legitnotes.database.DatabaseManager;
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-
-import java.net.URI;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by mattia on 13/05/16.
  */
 
-@Table(database = DatabaseManager.class)
-public class Note extends BaseModel{
+public class Note {
 
-    @PrimaryKey
-    long noteID;
-    @Column
+    private static final String KEY_ID = "id";
+    private static final String KEY_TITLE = "title";
+    private static final String KEY_DATE = "date";
+    private static final String KEY_TEXT = "text";
+    private static final String KEY_CATEGORY = "category";
+    private static final String KEY_MEDIA = "media";
+
+    private int id;
     private String title;
-    @Column
+    private Date date;
     private String text;
-    @Column
     private String category;
-    @Column
     private String media;
 
     public Note() {
-//        noteID=getPrimaryKey();
         title = "";
+        date = new Date();  //today
         text = "";
         category = "";
         media = "";
-//        save();
+        id = hashCode();
     }
     public Note(String title, String text) {
-//        noteID=getPrimaryKey();
         this.title = title;
+        date = new Date();  //today
         this.text = text;
         category = "";
         media = "";
-//        save();
+        id = hashCode();
     }
 
-    public void setAttachment() {
-
+    public int getId(){
+        return id;
     }
 
     public String getTitle() {
@@ -80,16 +72,22 @@ public class Note extends BaseModel{
         this.media = media;
     }
 
+    @Override
+    public int hashCode() {
+        return title.hashCode() + text.hashCode() + category.hashCode();
+    }
 
-//    public Date date;
-//    public long getPrimaryKey(){
-//        SimpleDateFormat sdf= new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-//        String dateInString=""+new Date();
-//        try {
-//            date=sdf.parse(dateInString);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        return date.getTime();
-//    }
+    public HashMap<String, Object> toHashMap(){
+        HashMap<String, Object> hashMap = new HashMap<>();
+
+        hashMap.put(KEY_ID, id);
+        hashMap.put(KEY_TITLE, title);
+        hashMap.put(KEY_DATE, date);
+        hashMap.put(KEY_TEXT, text);
+        hashMap.put(KEY_CATEGORY, category);
+        hashMap.put(KEY_MEDIA, media);
+
+        return hashMap;
+    }
+
 }
