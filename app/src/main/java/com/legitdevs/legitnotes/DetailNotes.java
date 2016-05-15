@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -19,9 +18,13 @@ public class DetailNotes extends AppCompatActivity implements ObservableScrollVi
 
     public final static String KEY_NOTE = "note";
 
+    private Note note;
+    public static final String BUNDLE="bundle";
+
     private ObservableScrollView scrollView;
     private ImageView attached;
-    private Note note;
+    private TextView title;
+    public  TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +38,22 @@ public class DetailNotes extends AppCompatActivity implements ObservableScrollVi
         TextView text = (TextView) findViewById(R.id.noteText);
         text.setText(note.getText());
 
-        scrollView = (ObservableScrollView) findViewById(R.id.scroll);
-        scrollView.setScrollViewCallbacks(this);
-
         attached = (ImageView) findViewById(R.id.mediaView);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO link per modificare la nota
-            }
-        });
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getBaseContext(),EditNote.class);
+                    i.putExtra(DetailNotes.KEY_NOTE, note);
+                    startActivity(i);
+                }
+            });
+        }
 
+        scrollView = (ObservableScrollView) findViewById(R.id.scroll);
+        scrollView.setScrollViewCallbacks(this);
     }
 
     @Override
