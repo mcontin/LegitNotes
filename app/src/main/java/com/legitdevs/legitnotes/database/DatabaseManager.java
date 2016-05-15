@@ -2,19 +2,16 @@ package com.legitdevs.legitnotes.database;
 
 import android.content.Context;
 import android.util.Log;
-
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.android.AndroidContext;
 import com.legitdevs.legitnotes.Note;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by mattia on 13/05/16.
@@ -51,6 +48,21 @@ public class DatabaseManager {
      * @return
      */
     public ArrayList<Note> getNotes() {
+        Document document = database.getExistingDocument(DOCUMENT_NOTES);
+
+        if(document != null) {
+            Map<String, Object> notesMap = (HashMap) document.getProperty(PROPERTY_NOTES);
+
+            ArrayList<Note> notes = new ArrayList<>();
+
+            for (String key : notesMap.keySet()) {
+                Note note = new Note((HashMap<String, Object>) notesMap.get(key));
+                notes.add(note);
+            }
+
+            return notes;
+        }
+
         return null;
     }
 
@@ -69,21 +81,28 @@ public class DatabaseManager {
      * @param notes
      */
     public void saveNotes(ArrayList<Note> notes) {
-        Document document = database.getDocument(DOCUMENT_NOTES);
-        //creando una nuova mappa sovrascrivo completamente le note salvate nel db
+        //mappa di note
         Map<String, Object> notesMap = new HashMap<>();
+        //proprietà del documento a cui verrà aggiunta la mappa di note, quella vecchia verrà sovrascritta
+        Map<String, Object> propertiesWithNotes = new HashMap<>();
+
+        Document document = database.getExistingDocument(DOCUMENT_NOTES);
+
+        if(document == null){
+            document = database.getDocument(DOCUMENT_NOTES);
+        } else {
+            propertiesWithNotes.putAll(document.getProperties());
+        }
 
         for(Note note : notes){
             notesMap.put(Integer.toString(note.getId()), note.toHashMap());
         }
 
-        //con questa mappa creo un campo "notes" nel documento che conterrà la mappa di note
-        Map<String, Object> notesToSave = new HashMap<>();
-        notesToSave.put(PROPERTY_NOTES, notesMap);
+        propertiesWithNotes.put(PROPERTY_NOTES, notesMap);
 
         try {
             //inserisco la lista aggiornata nel documento
-            document.putProperties(notesToSave);
+            document.putProperties(propertiesWithNotes);
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }

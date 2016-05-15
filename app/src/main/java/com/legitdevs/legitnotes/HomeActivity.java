@@ -3,6 +3,8 @@ package com.legitdevs.legitnotes;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.legitdevs.legitnotes.database.DatabaseManager;
+import com.thedeanda.lorem.Lorem;
+import com.thedeanda.lorem.LoremIpsum;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,11 +29,13 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "HomeActivity";
+    public static final String KEY_NOTES_LIST = "notes_list";
 
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
     private ArrayList<Note> notes;
     private DatabaseManager database;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,17 @@ public class HomeActivity extends AppCompatActivity
 
         database = new DatabaseManager(this);
 
+        if(savedInstanceState != null) {
+            notes = savedInstanceState.getParcelableArrayList(KEY_NOTES_LIST);
+        } else {
+            notes = database.getNotes();
+
+            if (notes == null) {
+                generateRandomNotes();
+            }
+        }
+
+        //FAB creazione note
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         assert frameLayout != null;
         frameLayout.getBackground().setAlpha(0);
@@ -67,14 +82,11 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-        //TODO prendere note da database/file
-        notes = new ArrayList<>();
-        generateRandomNotes();
-
+        //lista note
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new NotesAdapter(notes, this);   //adapter personalizzato che accetta la lista di eventi, context dell'app e filtro per la categoria
-        recyclerView.setAdapter(adapter);                  //l'adapter gestirà le CardView da inserire nel recycler view
-
+        adapter = new NotesAdapter(notes, this);    //adapter per la lista di note e creazione delle Card
+        recyclerView.setAdapter(adapter);
+        //layout a 2 colonne
         LinearLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -92,9 +104,12 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void generateRandomNotes(){
+        Lorem lorem = LoremIpsum.getInstance();
+        notes = new ArrayList<>();
         Note temp;
         for(int i = 0; i < 10; i++) {
-            temp = new Note("Note"+i,"This is note"+i);
+            temp = new Note(lorem.getWords(1, 4),   //genera da 1 a 4 parole
+                    lorem.getParagraphs(1, 3));     //genera da 1 a 3 paragrafi
             notes.add(temp);
         }
         database.saveNotes(notes);
@@ -124,7 +139,7 @@ public class HomeActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //TODO opzioni ordinamento
         if (id == R.id.action_settings) {
             return true;
         }
@@ -155,5 +170,11 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(START);
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(KEY_NOTES_LIST, notes);
     }
 }
