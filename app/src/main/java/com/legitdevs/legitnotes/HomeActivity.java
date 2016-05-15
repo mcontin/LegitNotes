@@ -2,9 +2,8 @@ package com.legitdevs.legitnotes;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-
+import com.legitdevs.legitnotes.database.DatabaseManager;
 import android.os.Bundle;
-
 import android.view.MotionEvent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,11 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-//import com.couchbase.lite.Database;
-//import com.couchbase.lite.Manager;
-//import com.couchbase.lite.android.AndroidContext;
-
 import java.util.ArrayList;
+
+import static android.support.v4.view.GravityCompat.*;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,6 +31,7 @@ public class HomeActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
     private ArrayList<Note> notes;
+    private DatabaseManager database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +40,13 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        database = new DatabaseManager(this);
+
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        assert frameLayout != null;
         frameLayout.getBackground().setAlpha(0);
         final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        assert fabMenu != null;
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
@@ -65,11 +66,10 @@ public class HomeActivity extends AppCompatActivity
                 frameLayout.setOnTouchListener(null);
             }
         });
+
         //TODO prendere note da database/file
         notes = new ArrayList<>();
         generateRandomNotes();
-
-//        helloCBL();
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new NotesAdapter(notes, this);   //adapter personalizzato che accetta la lista di eventi, context dell'app e filtro per la categoria
@@ -97,14 +97,14 @@ public class HomeActivity extends AppCompatActivity
             temp = new Note("Note"+i,"This is note"+i);
             notes.add(temp);
         }
+        database.saveNotes(notes);
     }
-
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawer.isDrawerOpen(START)) {
+            drawer.closeDrawer(START);
         } else {
             super.onBackPressed();
         }
@@ -153,7 +153,7 @@ public class HomeActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        drawer.closeDrawer(START);
         return true;
     }
 }

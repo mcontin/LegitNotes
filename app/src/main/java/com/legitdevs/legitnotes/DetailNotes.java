@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -17,7 +16,6 @@ public class DetailNotes extends AppCompatActivity implements ObservableScrollVi
 
     private ObservableScrollView scrollView;
     private ImageView attached;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
