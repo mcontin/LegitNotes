@@ -3,8 +3,11 @@ package com.legitdevs.legitnotes;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
@@ -25,9 +29,12 @@ import java.util.ArrayList;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String DIALOG = "start dialog";
+
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
     private ArrayList<Note> notes;
+    private FloatingActionButton FABQuickNote, FABFullNote, FABAudio, FABVideo, FABLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +49,7 @@ public class HomeActivity extends AppCompatActivity
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
-                frameLayout.getBackground().setAlpha(240);
+                frameLayout.getBackground().setAlpha(200);
                 frameLayout.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
@@ -50,6 +57,18 @@ public class HomeActivity extends AppCompatActivity
                         return true;
                     }
                 });
+
+                FABQuickNote = (FloatingActionButton) findViewById(R.id.fab_quick_note);
+                FABQuickNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        showQuickNote();
+                        fabMenu.collapse();
+
+                    }
+                });
+
             }
 
             @Override
@@ -58,6 +77,10 @@ public class HomeActivity extends AppCompatActivity
                 frameLayout.setOnTouchListener(null);
             }
         });
+
+
+
+
         //TODO prendere note da database/file
         notes = new ArrayList<>();
         generateRandomNotes();
@@ -92,6 +115,12 @@ public class HomeActivity extends AppCompatActivity
             temp = new Note("Note " + i, "This is note " + i);
             notes.add(temp);
         }
+    }
+
+    private void showQuickNote() {
+        FragmentManager fm = getSupportFragmentManager();
+        QuickNoteDialog quickNote = new QuickNoteDialog();
+        quickNote.show(fm, "fragment_edit_name");
     }
 
     @Override
