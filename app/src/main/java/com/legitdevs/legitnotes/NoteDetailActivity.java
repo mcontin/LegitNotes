@@ -20,7 +20,9 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     private Note note;
     public static final String BUNDLE="bundle";
 
-    private ObservableScrollView scrollView;
+    private ObservableScrollView scrollView;   @Override
+    public void onDownMotionEvent() {
+
     private ImageView attached;
     private TextView title;
     public  TextView text;
@@ -30,10 +32,16 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_notes);
 
-        Intent intent = getIntent();
-        Bundle receivedBundle = intent.getExtras();
-        if(receivedBundle != null)
-            note = receivedBundle.getParcelable(KEY_NOTE);
+        if(savedInstanceState != null) {
+            note = savedInstanceState.getParcelable(KEY_NOTE);
+        } else {
+            Intent intent = getIntent();
+            Bundle receivedBundle = intent.getExtras();
+
+            if(receivedBundle != null) {
+                note = receivedBundle.getParcelable(KEY_NOTE);
+            }
+        }
 
         TextView text = (TextView) findViewById(R.id.noteText);
         text.setText(note.getText());
@@ -69,5 +77,11 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(KEY_NOTE, note);
     }
 }

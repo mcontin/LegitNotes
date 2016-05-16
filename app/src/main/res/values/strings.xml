@@ -1,10 +1,8 @@
 <resources>
-    <string name="app_name">Editor Notes</string>
+    <string name="app_name">LegitNotes</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tincidunt vulputate efficitur. Proin tempor eget ante ac pretium. Nulla facilisi. Integer sed efficitur turpis, at porttitor ipsum. Nullam convallis quam est, ut viverra est lobortis vel. Vivamus aliquet ligula et turpis aliquet porta. Nullam sed velit tincidunt neque ultricies consequat. Nunc volutpat aliquet erat, id viverra enim consectetur in. Mauris ornare libero in erat lobortis venenatis. Duis quis diam eu risus convallis cursus in non nulla.
-    </string>
 
     <string name="action_settings">Settings</string>
     <string name="title_home_activity">Your notes</string>
