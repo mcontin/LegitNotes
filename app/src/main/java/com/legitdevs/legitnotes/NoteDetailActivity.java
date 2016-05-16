@@ -20,9 +20,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     private Note note;
     public static final String BUNDLE="bundle";
 
-    private ObservableScrollView scrollView;   @Override
-    public void onDownMotionEvent() {
-
+    private ObservableScrollView scrollView;
     private ImageView attached;
     private TextView title;
     public  TextView text;
