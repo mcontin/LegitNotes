@@ -23,7 +23,7 @@ public class EditNote extends AppCompatActivity {
         Bundle receivedBundle = intent.getExtras();
 
         if (receivedBundle!=null){
-            
+
             note = receivedBundle.getParcelable(DetailNotes.KEY_NOTE);
 
         }
