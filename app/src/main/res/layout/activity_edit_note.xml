@@ -1,45 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:fitsSystemWindows="true"
     tools:context=".EditNote">
 
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:id="@+id/noteContainer">
-    <EditText
-        android:id="@+id/editTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:capitalize="sentences"
-        android:hint="Nota"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/creationDate"
-        android:layout_below="@+id/title"
-        android:text="Data creazione"
-        android:layout_gravity="right"/>
-
-    <EditText
+    <LinearLayout
+        android:id="@+id/noteContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/creationDate"
-        android:inputType="textMultiLine"
-        android:background="@android:color/transparent"
-        android:id="@+id/editText"
-        android:capitalize="sentences"
-        android:gravity="top|left" />
-</LinearLayout>
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/editTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:capitalize="sentences"
+            android:hint="@string/new_title" />
+
+        <TextView
+            android:id="@+id/creationDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_gravity="right"
+            android:text="" />
+
+        <LinearLayout
+            android:id="@+id/save_and_media"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/creationDate"
+            android:layout_gravity="right"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_save_black_24dp" />
+
+            <Button
+                android:id="@+id/add_media"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/ic_perm_media_black_24dp" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/creationDate"
+            android:layout_marginTop="15dp"
+            android:background="@android:color/transparent"
+            android:capitalize="sentences"
+            android:gravity="top|left"
+            android:hint="@string/new_text"
+            android:inputType="textMultiLine" />
+
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -31,4 +31,9 @@
     <!--Strings related to dialogs-->
     <string name="dialog_note_create">Save</string>
     <string name="dialog_note_discard">Cancel</string>
+
+    <!--Edit Note new note-->
+    <string name="new_title">Titolo</string>
+    <string name="new_text">Scrivi qui la tua nota</string>
+
 </resources>
