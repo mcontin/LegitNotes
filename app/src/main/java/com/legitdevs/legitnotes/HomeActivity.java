@@ -4,6 +4,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -120,7 +121,6 @@ public class HomeActivity extends AppCompatActivity
         //layout a 2 colonne
         LinearLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-
 
 
         //DRAWER LATERALE

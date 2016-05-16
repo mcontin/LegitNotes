@@ -45,9 +45,6 @@
                 android:value=".DetailNotes" />
         </activity>
 
-        <activity android:name=".MainNotesActivity" >
-        </activity>
-
     </application>
 
 </manifest>
