@@ -24,7 +24,7 @@ public class EditNote extends AppCompatActivity {
 
         if (receivedBundle!=null){
             
-            note = receivedBundle.getParcelable(DetailNotes.KEY_NOTE);
+            note = receivedBundle.getParcelable(NoteDetailActivity.KEY_NOTE);
 
         }
 
