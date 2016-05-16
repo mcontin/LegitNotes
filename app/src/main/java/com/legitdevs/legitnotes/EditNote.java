@@ -23,11 +23,13 @@ public class EditNote extends AppCompatActivity {
         Bundle receivedBundle = intent.getExtras();
 
         if (receivedBundle!=null){
-
-            note = receivedBundle.getParcelable(DetailNotes.KEY_NOTE);
+            
+            note = receivedBundle.getParcelable(NoteDetailActivity.KEY_NOTE);
 
         }
 
 
+        title.setText(note.getTitle());
+        text.setText(note.getText());
     }
 }

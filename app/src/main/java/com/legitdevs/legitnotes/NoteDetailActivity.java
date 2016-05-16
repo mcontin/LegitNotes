@@ -4,17 +4,16 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.bumptech.glide.Glide;
+
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.nineoldandroids.view.ViewHelper;
 
-public class DetailNotes extends AppCompatActivity implements ObservableScrollViewCallbacks {
+public class NoteDetailActivity extends AppCompatActivity implements ObservableScrollViewCallbacks {
 
     public final static String KEY_NOTE = "note";
 
@@ -33,7 +32,8 @@ public class DetailNotes extends AppCompatActivity implements ObservableScrollVi
 
         Intent intent = getIntent();
         Bundle receivedBundle = intent.getExtras();
-        note = receivedBundle.getParcelable(KEY_NOTE);
+        if(receivedBundle != null)
+            note = receivedBundle.getParcelable(KEY_NOTE);
 
         TextView text = (TextView) findViewById(R.id.noteText);
         text.setText(note.getText());
@@ -46,7 +46,7 @@ public class DetailNotes extends AppCompatActivity implements ObservableScrollVi
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(getApplicationContext(), EditNote.class);
-                    i.putExtra(DetailNotes.KEY_NOTE, note);
+                    i.putExtra(NoteDetailActivity.KEY_NOTE, note);
                     startActivity(i);
                 }
             });
