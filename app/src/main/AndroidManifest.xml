@@ -47,8 +47,6 @@
                 android:value=".NoteDetailActivity" />
         </activity>
 
-        <activity android:name=".MainNotesActivity" >
-        </activity>
 
         <activity android:name=".NoteDetailActivity" >
             <meta-data

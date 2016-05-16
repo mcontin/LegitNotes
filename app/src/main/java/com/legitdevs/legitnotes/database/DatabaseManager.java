@@ -108,6 +108,33 @@ public class DatabaseManager {
         }
     }
 
+    public void saveNote(Note note) {
+        //mappa di note
+        Map<String, Object> notesMap = new HashMap<>();
+        //proprietà del documento a cui verrà aggiunta la mappa di note, quella vecchia verrà sovrascritta
+        Map<String, Object> propertiesWithNotes = new HashMap<>();
+
+        Document document = database.getExistingDocument(DOCUMENT_NOTES);
+
+        if(document == null){
+            document = database.getDocument(DOCUMENT_NOTES);
+        } else {
+            propertiesWithNotes.putAll(document.getProperties());
+            notesMap.putAll( (HashMap<String, Object>) propertiesWithNotes.get(PROPERTY_NOTES));
+        }
+
+        notesMap.put(Integer.toString(note.getId()), note.toHashMap());
+
+        propertiesWithNotes.put(PROPERTY_NOTES, notesMap);
+
+        try {
+            //inserisco la lista aggiornata nel documento
+            document.putProperties(propertiesWithNotes);
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * TODO
      * salva la categoria aggiunta dall'utente

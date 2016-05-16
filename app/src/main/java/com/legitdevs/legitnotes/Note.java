@@ -31,6 +31,7 @@ public class Note implements Parcelable{
     private String media;
     private boolean show = true; //per mostrarla o no quando saranno implementati i filtri per categoria
 
+    //TODO id = UUID()
     public Note() {
         title = "";
         date = new Date();  //today

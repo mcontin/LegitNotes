@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         card_view:cardElevation="3dp"
+
         card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
@@ -20,17 +21,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:id="@+id/content_first">
-
+                android:id="@+id/top_content">
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="HERE IS THE TITLE"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="2dp"
                     android:layout_weight="1"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
                 <ImageView
                     android:id="@+id/star"
                     android:layout_width="wrap_content"
@@ -38,10 +41,7 @@
                     android:src="@drawable/ic_star_border"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:foregroundGravity="right|top"
-                    android:scrollIndicators="top|right" />
-
-
+                    android:foregroundGravity="right|top"/>
             </LinearLayout>
 
 
@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/gray"
-                android:layout_below="@+id/content_first"
+                android:layout_below="@+id/top_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
@@ -60,15 +60,18 @@
                 android:orientation="horizontal"
                 android:layout_below="@+id/first_divider"
                 android:id="@+id/center_content">
-
                 <TextView
                     android:id="@+id/TEXT_NORMAL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="2dp"
                     android:layout_below="@+id/title"
                     android:text="NORMAL TEXT"
-                    android:layout_weight="1" />
-
+                    android:layout_weight="1"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <View
@@ -80,39 +83,36 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
-
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/second_divider"
                 android:orientation="horizontal"
                 android:background="@color/gray"
-                android:id="@+id/content_second">
-
+                android:id="@+id/bottom_content">
                 <ImageView
                     android:id="@+id/attach"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="2dp"
                     android:src="@drawable/ic_attach_file"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentBottom="true"
                     android:foregroundGravity="left|bottom" />
-
                 <TextView
                     android:id="@+id/text_border"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/TEXT_NORMAL"
                     android:text="ALLEGATO"
-                    android:layout_weight="1" />
-
+                    android:layout_marginBottom="1dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
-
-
-
-
         </RelativeLayout>
+
     </android.support.v7.widget.CardView>
+
 </LinearLayout>
