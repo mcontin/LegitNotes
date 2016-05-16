@@ -86,7 +86,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        showQuickNote();
+                        QuickNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
                         fabMenu.collapse();
 
                     }
@@ -146,11 +146,6 @@ public class HomeActivity extends AppCompatActivity
         database.saveNotes(notes);
     }
 
-    private void showQuickNote() {
-        FragmentManager fm = getSupportFragmentManager();
-        QuickNoteDialog quickNote = new QuickNoteDialog();
-        quickNote.show(fm, "fragment_edit_name");
-    }
 
     @Override
     public void onBackPressed() {
