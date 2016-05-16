@@ -1,0 +1,9 @@
+diff a/app/src/main/java/com/legitdevs/legitnotes/HomeActivity.java b/app/src/main/java/com/legitdevs/legitnotes/HomeActivity.java	(rejected hunks)
+@@ -110,6 +110,7 @@
+                     public void onClick(View v) {
+ 
+                         new AudioNoteActivity();
++                        Intent i = new Intent(getBaseContext(),AudioNoteActivity.class);
+                         startActivity(i);
+                         fabMenu.collapse();
+ 
