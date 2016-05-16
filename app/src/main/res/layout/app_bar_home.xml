@@ -54,15 +54,15 @@
                 fab:fab_title="One" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_photo"
+                android:id="@+id/fab_new_note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/accent"
                 fab:fab_colorPressed="@color/accent_dark"
                 fab:fab_plusIconColor="@color/white"
-                fab:fab_icon="@drawable/my_icon"
+                fab:fab_icon="@drawable/ic_create"
                 fab:fab_size="mini"
-                fab:fab_title="Two" />
+                fab:fab_title="New Note" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_quick_note"
