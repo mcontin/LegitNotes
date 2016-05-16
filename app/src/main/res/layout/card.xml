@@ -22,6 +22,8 @@
                 android:layout_height="wrap_content"
                 android:text="HERE IS THE TITLE"
                 android:layout_weight="1" />
+
+
             <TextView
                 android:id="@+id/TEXT_NORMAL"
                 android:layout_width="wrap_content"
