@@ -31,4 +31,7 @@
     <!--Strings related to dialogs-->
     <string name="dialog_note_create">Save</string>
     <string name="dialog_note_discard">Cancel</string>
+
+    <!--Strings related to search dialog-->
+    <string name="search_hint">Search notes...</string>
 </resources>

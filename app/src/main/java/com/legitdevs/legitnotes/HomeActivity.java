@@ -3,6 +3,7 @@ package com.legitdevs.legitnotes;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -48,6 +49,7 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        handleIntent(getIntent());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -144,6 +146,8 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     public void generateRandomNotes(){
@@ -158,6 +162,19 @@ public class HomeActivity extends AppCompatActivity
         database.saveNotes(notes);
     }
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //doMySearch(query);
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -186,6 +203,10 @@ public class HomeActivity extends AppCompatActivity
         //TODO opzioni ordinamento
         if (id == R.id.action_settings) {
             return true;
+        }
+
+        if (id== R.id.action_search){
+            onSearchRequested();
         }
 
         return super.onOptionsItemSelected(item);
