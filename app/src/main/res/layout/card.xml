@@ -15,44 +15,99 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/cardContent">
-            <TextView
-                android:id="@+id/title"
-                android:drawableRight="@drawable/ic_star_border"
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="HERE IS THE TITLE"
-                android:layout_weight="1"/>
+                android:orientation="horizontal"
+                android:id="@+id/content_first">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="HERE IS THE TITLE"
+                    android:layout_weight="1"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+                <ImageView
+                    android:id="@+id/star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star_border"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:foregroundGravity="right|top"
+                    android:scrollIndicators="top|right" />
+
+
+            </LinearLayout>
+
 
             <View
+                android:id="@+id/first_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                android:layout_below="@+id/content_first"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/first_divider"
+                android:id="@+id/center_content">
+
+                <TextView
+                    android:id="@+id/TEXT_NORMAL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title"
+                    android:text="NORMAL TEXT"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/second_divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/black"
-                android:layout_alignBottom="@+id/title"
+                android:layout_below="@+id/center_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
-            <TextView
-                android:id="@+id/TEXT_NORMAL"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/title"
-                android:text="NORMAL TEXT"
-                android:layout_weight="1" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/black"
-                android:layout_alignBottom="@+id/TEXT_NORMAL"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-            <TextView
-                android:id="@+id/text_border"
-                android:drawableLeft="@drawable/ic_attach_file"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/TEXT_NORMAL"
-                android:text="ALLEGATO"
-                android:layout_weight="1" />
 
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/second_divider"
+                android:orientation="horizontal"
+                android:background="@color/gray"
+                android:id="@+id/content_second">
+
+                <ImageView
+                    android:id="@+id/attach"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_attach_file"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    android:foregroundGravity="left|bottom" />
+
+                <TextView
+                    android:id="@+id/text_border"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/TEXT_NORMAL"
+                    android:text="ALLEGATO"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
 
 
 
