@@ -29,5 +29,7 @@ public class EditNote extends AppCompatActivity {
         }
 
 
+        title.setText(note.getTitle());
+        text.setText(note.getText());
     }
 }

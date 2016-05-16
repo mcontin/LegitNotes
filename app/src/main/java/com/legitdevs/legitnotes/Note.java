@@ -29,6 +29,7 @@ public class Note implements Parcelable{
     private String text;
     private String category;
     private String media;
+    private boolean show = true; //per mostrarla o no quando saranno implementati i filtri per categoria
 
     public Note() {
         title = "";
@@ -48,7 +49,7 @@ public class Note implements Parcelable{
     }
     public Note(HashMap<String, Object> map){
         this.title = (String) map.get(KEY_TITLE);
-        this.date = new Date( (Long) map.get(KEY_DATE));
+        this.date = new Date((Long)map.get(KEY_DATE));
         this.text = (String) map.get(KEY_TEXT);
         this.category = (String) map.get(KEY_CATEGORY);
         this.media = (String) map.get(KEY_MEDIA);
@@ -112,7 +113,22 @@ public class Note implements Parcelable{
         return hashMap;
     }
 
-    //PARCELIZZAZIONE = salvataggio oggetto Note nell'Intent
+    public void show() {
+        show = true;
+    }
+    public void hide() {
+        show = false;
+    }
+
+    public void filter(String categoryFilter) {
+        if (categoryFilter.equals(category)) {
+            show();
+            return;
+        }
+        hide();
+    }
+
+    //PARCELIZZAZIONE = salvataggio oggetto personalizzato Note nell'Intent
 
     //boh non so cosa faccia
     @Override

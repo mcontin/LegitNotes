@@ -108,4 +108,20 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * TODO
+     * salva la categoria aggiunta dall'utente
+     * @param category
+     */
+    public void addCategory(String category) {
+
+    }
+
+    /**
+     * TODO
+     * cancella la categoria scelta dall'utente
+     */
+    public void deleteCategory(String category) {
+
+    }
 }

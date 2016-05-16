@@ -33,7 +33,8 @@ public class DetailNotes extends AppCompatActivity implements ObservableScrollVi
 
         Intent intent = getIntent();
         Bundle receivedBundle = intent.getExtras();
-        note = receivedBundle.getParcelable(KEY_NOTE);
+        if(receivedBundle != null)
+            note = receivedBundle.getParcelable(KEY_NOTE);
 
         TextView text = (TextView) findViewById(R.id.noteText);
         text.setText(note.getText());
