@@ -20,33 +20,37 @@ public class QuickNoteDialog extends DialogFragment {
         // Empty constructor required for DialogFragment
     }
 
+    public static QuickNoteDialog getInstance(){
+        return new QuickNoteDialog();
+    }
+
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Quick Note");
+        // Get the layout inflater
+        LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.quick_note_layout, container, false);
-        final EditText input = (EditText) viewInflated.findViewById(R.id.txtQuickNote);
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(inflater.inflate(R.layout.quick_note_layout, null))
+                // Add action buttons
+                .setPositiveButton(R.string.dialog_note_create, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // sign in the user ...
+                    }
+                })
+                .setNegativeButton(R.string.dialog_note_discard, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        QuickNoteDialog.this.getDialog().cancel();
+                    }
+                });
 
-        builder.setView(viewInflated);
-
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                //[testo della nota] = input.getText().toString();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        return viewInflated;
+        return builder.create();
     }
 
 
