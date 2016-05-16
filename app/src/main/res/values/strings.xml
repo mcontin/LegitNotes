@@ -27,4 +27,8 @@
     <!--Strings related to edit-->
     <string name="edit_title">Title</string>
     <string name="edit_text">Text</string>
+
+    <!--Strings related to dialogs-->
+    <string name="dialog_note_create">Save</string>
+    <string name="dialog_note_discard">Cancel</string>
 </resources>

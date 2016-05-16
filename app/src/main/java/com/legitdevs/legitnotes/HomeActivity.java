@@ -41,7 +41,7 @@ public class HomeActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
     private ArrayList<Note> notes;
-    private FloatingActionButton FABQuickNote, FABNewNote, FABAudio, FABVideo, FABLocation;
+    private FloatingActionButton FABQuickNote, FABNewNote, FABNewAudioNote, FABVideo, FABLocation;
     private DatabaseManager database;
 
     @Override
@@ -86,7 +86,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        showQuickNote();
+                        QuickNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
                         fabMenu.collapse();
 
                     }
@@ -99,6 +99,17 @@ public class HomeActivity extends AppCompatActivity
 
                         Intent i = new Intent(getBaseContext(),EditNote.class);
                         startActivity(i);
+                        fabMenu.collapse();
+
+                    }
+                });
+
+                FABNewAudioNote = (FloatingActionButton) findViewById(R.id.fab_new_audio_note);
+                FABNewAudioNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        new AudioNoteActivity();
                         fabMenu.collapse();
 
                     }
@@ -146,11 +157,6 @@ public class HomeActivity extends AppCompatActivity
         database.saveNotes(notes);
     }
 
-    private void showQuickNote() {
-        FragmentManager fm = getSupportFragmentManager();
-        QuickNoteDialog quickNote = new QuickNoteDialog();
-        quickNote.show(fm, "fragment_edit_name");
-    }
 
     @Override
     public void onBackPressed() {
