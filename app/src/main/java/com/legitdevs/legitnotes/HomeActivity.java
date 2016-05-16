@@ -109,7 +109,8 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        new AudioNoteActivity();
+                        Intent i = new Intent(getApplicationContext(),AudioNoteActivity.class);
+                        startActivity(i);
                         fabMenu.collapse();
 
                     }
