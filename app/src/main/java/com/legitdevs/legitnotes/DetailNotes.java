@@ -45,7 +45,7 @@ public class DetailNotes extends AppCompatActivity implements ObservableScrollVi
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getBaseContext(),EditNote.class);
+                    Intent i = new Intent(getApplicationContext(), EditNote.class);
                     i.putExtra(DetailNotes.KEY_NOTE, note);
                     startActivity(i);
                 }

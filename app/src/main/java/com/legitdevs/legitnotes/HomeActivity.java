@@ -3,6 +3,7 @@ package com.legitdevs.legitnotes;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -40,7 +41,7 @@ public class HomeActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
     private ArrayList<Note> notes;
-    private FloatingActionButton FABQuickNote, FABFullNote, FABAudio, FABVideo, FABLocation;
+    private FloatingActionButton FABQuickNote, FABNewNote, FABAudio, FABVideo, FABLocation;
     private DatabaseManager database;
 
     @Override
@@ -86,6 +87,18 @@ public class HomeActivity extends AppCompatActivity
                     public void onClick(View v) {
 
                         showQuickNote();
+                        fabMenu.collapse();
+
+                    }
+                });
+
+                FABNewNote = (FloatingActionButton) findViewById(R.id.fab_new_note);
+                FABNewNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent i = new Intent(getBaseContext(),EditNote.class);
+                        startActivity(i);
                         fabMenu.collapse();
 
                     }
