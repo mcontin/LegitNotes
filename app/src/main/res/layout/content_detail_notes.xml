@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.ksoichiro.android.observablescrollview.ObservableScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".DetailNotes">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/mediaView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_media_height"
+            android:src="@drawable/placeholder"
+            android:background="@color/colorAccent"/>
+
+        <View
+            android:id="@+id/anchor"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_media_height"
+            android:minHeight="@dimen/detail_media_height" />
+
+
+        <RelativeLayout
+            android:background="#ffffff"
+            android:layout_below="@+id/anchor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp">
+
+
+            <TextView
+                android:id="@+id/noteText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginTop="3dp"/>
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</com.github.ksoichiro.android.observablescrollview.ObservableScrollView>

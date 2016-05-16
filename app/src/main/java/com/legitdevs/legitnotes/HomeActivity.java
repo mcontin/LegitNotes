@@ -2,19 +2,21 @@ package com.legitdevs.legitnotes;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import com.legitdevs.legitnotes.database.DatabaseManager;
+import com.thedeanda.lorem.Lorem;
+import com.thedeanda.lorem.LoremIpsum;
+import android.os.Bundle;
 import android.view.MotionEvent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,15 +28,20 @@ import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 
+import static android.support.v4.view.GravityCompat.*;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String DIALOG = "start dialog";
+    private static final String TAG = "HomeActivity";
+    public static final String KEY_NOTES_LIST = "notes_list";
 
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
     private ArrayList<Note> notes;
     private FloatingActionButton FABQuickNote, FABFullNote, FABAudio, FABVideo, FABLocation;
+    private DatabaseManager database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +50,24 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        database = new DatabaseManager(this);
+
+        if(savedInstanceState != null) {
+            notes = savedInstanceState.getParcelableArrayList(KEY_NOTES_LIST);
+        } else {
+            notes = database.getNotes();
+
+            if (notes == null) {
+                generateRandomNotes();
+            }
+        }
+
+        //FAB creazione note
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        assert frameLayout != null;
         frameLayout.getBackground().setAlpha(0);
         final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        assert fabMenu != null;
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
@@ -78,23 +100,13 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-
-
-
-        //TODO prendere note da database/file
-        notes = new ArrayList<>();
-        generateRandomNotes();
-
+        //lista note
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new NotesAdapter(notes, this);   //adapter personalizzato che accetta la lista di eventi, context dell'app e filtro per la categoria
-        recyclerView.setAdapter(adapter);                  //l'adapter gestirà le CardView da inserire nel recycler view
-
+        adapter = new NotesAdapter(notes, this);    //adapter per la lista di note e creazione delle Card
+        recyclerView.setAdapter(adapter);
+        //layout a 2 colonne
         LinearLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-
-
-
-
 
 
 
@@ -110,11 +122,15 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void generateRandomNotes(){
+        Lorem lorem = LoremIpsum.getInstance();
+        notes = new ArrayList<>();
         Note temp;
         for(int i = 0; i < 10; i++) {
-            temp = new Note("Note " + i, "This is note " + i);
+            temp = new Note(lorem.getWords(1, 4),   //genera da 1 a 4 parole
+                    lorem.getParagraphs(1, 3));     //genera da 1 a 3 paragrafi
             notes.add(temp);
         }
+        database.saveNotes(notes);
     }
 
     private void showQuickNote() {
@@ -126,8 +142,8 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawer.isDrawerOpen(START)) {
+            drawer.closeDrawer(START);
         } else {
             super.onBackPressed();
         }
@@ -147,7 +163,7 @@ public class HomeActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //TODO opzioni ordinamento
         if (id == R.id.action_settings) {
             return true;
         }
@@ -176,7 +192,13 @@ public class HomeActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        drawer.closeDrawer(START);
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(KEY_NOTES_LIST, notes);
     }
 }

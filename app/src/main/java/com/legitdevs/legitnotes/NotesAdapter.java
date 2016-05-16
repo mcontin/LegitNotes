@@ -1,6 +1,8 @@
 package com.legitdevs.legitnotes;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +20,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
 
     private ArrayList<Note> notes;  //lista di eventi
     private Context ctx;
-    private int filter;
 
     public NotesAdapter(ArrayList<Note> notes, Context ctx) {
         this.notes = notes;
@@ -26,7 +27,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
     }
 
     /**
-     * Chiamato quando il recycler view ha bisogno di una card per mostrare un evento
+     * Chiamato quando il recycler view ha bisogno di una card per mostrare una nota
      *
      * @param viewGroup view padre di ogni carta (recyclerview in teoria)
      * @param viewType  tipo della view che sarà popolata (CardView)
@@ -48,7 +49,21 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
     public void onBindViewHolder(CardViewHolder cardHolder, final int position) {
         cardHolder.noteTitle.setText(notes.get(position).getTitle());
 
-        cardHolder.noteText.setText(notes.get(position).getText());
+        if(notes.get(position).getText().length() > 100) {
+            cardHolder.noteSnippet.setText(notes.get(position).getText()
+                    .substring(0, 99).concat("..."));  //visualizzo solo i primi 100 caratteri
+        } else {
+            cardHolder.noteSnippet.setText(notes.get(position).getText());
+        }
+
+        cardHolder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent vIntent = new Intent(ctx, DetailNotes.class);
+                vIntent.putExtra(DetailNotes.KEY_NOTE, notes.get(position));
+                ctx.startActivity(vIntent);
+            }
+        });
 
     }
 
@@ -75,13 +90,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
     public static class CardViewHolder extends RecyclerView.ViewHolder {
         CardView card;
         TextView noteTitle;
-        TextView noteText;
+        TextView noteSnippet;
 
         CardViewHolder(View itemView) {
             super(itemView);
             card = (CardView) itemView.findViewById(R.id.cardView);
             noteTitle = (TextView) itemView.findViewById(R.id.title);
-            noteText = (TextView) itemView.findViewById(R.id.text);
+            noteSnippet = (TextView) itemView.findViewById(R.id.text);
         }
     }
 
