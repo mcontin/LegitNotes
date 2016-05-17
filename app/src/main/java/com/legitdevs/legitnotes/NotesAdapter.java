@@ -76,12 +76,30 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         return notes.size();
     }
 
-    public void addEvents(List<Note> eventsToAdd) {
-        for (Note newEvent : eventsToAdd) {
-            notes.add(newEvent);
-            notifyItemInserted(notes.size() - 1);
-        }
+    public void updateNotes(ArrayList<Note> notes) {
+        this.notes = notes;
+        orderBy();
+
+        notifyDataSetChanged();
     }
+
+    public void addNote(Note note) {
+        notes.add(note);
+        orderBy();
+
+        notifyItemInserted(notes.indexOf(note));
+    }
+
+    public void removeNote(Note note) {
+        notes.remove(note);
+        orderBy();
+
+        notifyItemRemoved(notes.indexOf(note));
+    }
+
+    public void orderBy() {
+
+    };
 
     /**
      * "Contenitore" di ogni card

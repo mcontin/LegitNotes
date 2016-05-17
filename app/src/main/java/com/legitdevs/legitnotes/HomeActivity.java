@@ -164,8 +164,7 @@ public class HomeActivity extends AppCompatActivity
         //bisogna "riprendere" il database sennò usa quello dello stato precedente
         database = new DatabaseManager(this);
         notes = database.getNotes();
-        adapter = new NotesAdapter(notes, this);
-        recyclerView.swapAdapter(adapter, false);
+        adapter.updateNotes(notes);
     }
 
     public void generateRandomNotes(){
