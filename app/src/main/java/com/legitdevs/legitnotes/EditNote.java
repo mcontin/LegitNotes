@@ -42,9 +42,6 @@ public class EditNote extends AppCompatActivity {
         date = (TextView) findViewById(R.id.creationDate);
         database = new DatabaseManager(this);
 
-        ActionBar bar = getSupportActionBar();
-        bar.setDisplayHomeAsUpEnabled(true);
-
         Intent intent = getIntent();
         Bundle receivedBundle = intent.getExtras();
 
@@ -56,10 +53,9 @@ public class EditNote extends AppCompatActivity {
             media=note.getMedia();
         } else {
             note = new Note();
-            current = new Date();
-            note.setDate(current);
             date.setText(DateFormat.getDateTimeInstance().format(current));
         }
+
         Button save = (Button) findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {
             @Override

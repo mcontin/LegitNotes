@@ -162,6 +162,10 @@ public class HomeActivity extends AppCompatActivity
     protected void onRestart() {
         super.onRestart();
 
+        updateNotes();
+    }
+
+    public void updateNotes() {
         //bisogna "riprendere" il database sennò usa quello dello stato precedente
         database = new DatabaseManager(this);
         notes = database.getNotes();
@@ -172,7 +176,7 @@ public class HomeActivity extends AppCompatActivity
         Lorem lorem = LoremIpsum.getInstance();
         notes = new ArrayList<>();
         Note temp;
-        for(int i = 0; i < 50; i++) {
+        for(int i = 0; i < 10; i++) {
             temp = new Note(lorem.getWords(1, 4),   //genera da 1 a 4 parole
                     lorem.getParagraphs(1, 3));     //genera da 1 a 3 paragrafi
             notes.add(temp);
@@ -225,7 +229,7 @@ public class HomeActivity extends AppCompatActivity
             final String title = note.getTitle().toLowerCase();
             if (title.contains(query)) {
                 filteredNote.add(note);
-                note.setTitle(highlight(query,note.getTitle()));
+                note.setTitle(highlight(query, note.getTitle()));
 
             }
         }
