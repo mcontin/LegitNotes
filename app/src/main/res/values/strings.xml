@@ -38,5 +38,6 @@
     <!--Edit Note new note-->
     <string name="new_title">Title</string>
     <string name="new_text">Write here your note</string>
+    <string name="save_note">Save note</string>
 
 </resources>

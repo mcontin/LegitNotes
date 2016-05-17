@@ -17,18 +17,20 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
     public final static String KEY_NOTE = "note";
 
-    private Note note;
-    public static final String BUNDLE="bundle";
+    public static NoteDetailActivity activity;
 
+    private Note note;
     private ObservableScrollView scrollView;
     private ImageView attached;
     private TextView title;
-    public  TextView text;
+    private TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_notes);
+
+        activity = this;    //PER CHIUDERE L'ACTIVITY DOPO AVER SALVATO LA NOTA PER NON AVERE PROBLEMI DI UP NAVIGATION
 
         if(savedInstanceState != null) {
             note = savedInstanceState.getParcelable(KEY_NOTE);
@@ -81,5 +83,11 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(KEY_NOTE, note);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        note = null;
     }
 }

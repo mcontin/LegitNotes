@@ -14,6 +14,7 @@ import com.thedeanda.lorem.LoremIpsum;
 
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.support.v7.widget.GridLayoutManager;
@@ -150,6 +151,17 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        //bisogna "riprendere" il database sennò usa quello dello stato precedente
+        database = new DatabaseManager(this);
+        notes = database.getNotes();
+        adapter = new NotesAdapter(notes, this);
+        recyclerView.swapAdapter(adapter, false);
     }
 
     public void generateRandomNotes(){
