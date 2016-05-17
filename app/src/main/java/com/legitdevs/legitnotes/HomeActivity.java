@@ -47,6 +47,7 @@ public class HomeActivity extends AppCompatActivity
     public static final String DIALOG = "start dialog";
     private static final String TAG = "HomeActivity";
     public static final String KEY_NOTES_LIST = "notes_list";
+    public final static String KEY_NOTE = "note";
 
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
