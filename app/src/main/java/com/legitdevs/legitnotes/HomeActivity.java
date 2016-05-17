@@ -14,6 +14,9 @@ import com.thedeanda.lorem.LoremIpsum;
 
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
@@ -30,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -218,19 +222,51 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {return false;}
+    public boolean onQueryTextSubmit(String query) {
+//        final ArrayList<Note> filteredNotes= filter(database.getNotes(), query);
+//        adapter.animateTo(filteredNotes);
+//        recyclerView.scrollToPosition(0);
+//        return true;
+        return false;
+        }
 
     private ArrayList<Note> filter(ArrayList<Note> notes, String query) {
         query = query.toLowerCase();
 
         final ArrayList<Note> filteredNote = new ArrayList<>();
         for (Note note : notes) {
-            final String text = note.getText().toLowerCase();
-            if (text.contains(query)) {
+            final String title = note.getTitle().toLowerCase();
+            if (title.contains(query)) {
                 filteredNote.add(note);
+                highlight(query,note.getTitle());
             }
         }
         return filteredNote;
+    }
+
+    public static String highlight(String search, String originalText) {
+        // ignore case and accents
+        // the same thing should have been done for the search text
+
+        int start = originalText.indexOf(search);
+        if (start < 0 || search.equals("")) {
+            // not found, nothing to to
+            return originalText;
+        } else {
+            // highlight each appearance in the original text
+            // while searching in normalized text
+            Spannable highlighted = new SpannableString(originalText);
+            while (start >= 0) {
+                int spanStart = Math.min(start, originalText.length());
+                int spanEnd = Math.min(start + search.length(), originalText.length());
+
+                highlighted.setSpan(new BackgroundColorSpan(R.color.accent), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                start = originalText.indexOf(search, spanEnd);
+            }
+
+            return highlighted.toString();
+        }
     }
 
     @Override
@@ -239,6 +275,7 @@ public class HomeActivity extends AppCompatActivity
         adapter.animateTo(filteredNotes);
         recyclerView.scrollToPosition(0);
         return true;
+//        return false;
     }
 
     @Override
