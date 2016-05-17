@@ -14,6 +14,7 @@ import com.thedeanda.lorem.LoremIpsum;
 
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
@@ -57,7 +58,6 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        handleIntent(getIntent());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -138,10 +138,10 @@ public class HomeActivity extends AppCompatActivity
         //lista note
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new NotesAdapter(notes, this);    //adapter per la lista di note e creazione delle Card
-        recyclerView.setAdapter(adapter);
         //layout a 2 colonne
-        LinearLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
 
 
         //DRAWER LATERALE
@@ -179,19 +179,6 @@ public class HomeActivity extends AppCompatActivity
         database.saveNotes(notes);
     }
 
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            //doMySearch(query);
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -237,7 +224,8 @@ public class HomeActivity extends AppCompatActivity
             final String title = note.getTitle().toLowerCase();
             if (title.contains(query)) {
                 filteredNote.add(note);
-                highlight(query,note.getTitle());
+                note.setTitle(highlight(query,note.getTitle()));
+
             }
         }
         return filteredNote;
@@ -246,8 +234,9 @@ public class HomeActivity extends AppCompatActivity
     public static String highlight(String search, String originalText) {
         // ignore case and accents
         // the same thing should have been done for the search text
+        String normalizedText = Normalizer.normalize(originalText, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
 
-        int start = originalText.indexOf(search);
+        int start = normalizedText.indexOf(search);
         if (start < 0 || search.equals("")) {
             // not found, nothing to to
             return originalText;
@@ -261,7 +250,7 @@ public class HomeActivity extends AppCompatActivity
 
                 highlighted.setSpan(new BackgroundColorSpan(R.color.accent), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                start = originalText.indexOf(search, spanEnd);
+                start = normalizedText.indexOf(search, spanEnd);
             }
 
             return highlighted.toString();
