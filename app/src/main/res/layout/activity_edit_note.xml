@@ -10,7 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".EditNote">
 
-
     <LinearLayout
         android:id="@+id/noteContainer"
         android:layout_width="match_parent"

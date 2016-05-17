@@ -2,8 +2,13 @@ package com.legitdevs.legitnotes;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,9 +38,12 @@ public class EditNote extends AppCompatActivity {
         setContentView(R.layout.activity_edit_note);
 
         title = (EditText) findViewById(R.id.editTitle);
-        text=(RichEditor)findViewById(R.id.editText);
+        text = (RichEditor) findViewById(R.id.editText);
         date = (TextView) findViewById(R.id.creationDate);
         database = new DatabaseManager(this);
+
+        ActionBar bar = getSupportActionBar();
+        bar.setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         Bundle receivedBundle = intent.getExtras();
@@ -229,5 +237,38 @@ public class EditNote extends AppCompatActivity {
                 text.insertTodo();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.save_note) {
+
+            DatabaseManager database = new DatabaseManager(this);
+
+            //TODO setters prendendo dagli edit text
+            note.setTitle("");
+            note.setText("");
+            //...
+
+            database.addNote(note);
+
+            Intent intent = new Intent(this, NoteDetailActivity.class);
+            intent.putExtra(NoteDetailActivity.KEY_NOTE, note);
+            startActivity(intent);
+            NoteDetailActivity.activity.finish();
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.editor, menu);
+
+        return true;
     }
 }
