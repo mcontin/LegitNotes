@@ -30,11 +30,13 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.support.v4.view.GravityCompat.*;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+                    SearchView.OnQueryTextListener {
 
     public static final String DIALOG = "start dialog";
     private static final String TAG = "HomeActivity";
@@ -192,14 +194,38 @@ public class HomeActivity extends AppCompatActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home, menu);
 
-        // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
-        // Assumes current activity is the searchable activity
+        final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 
+        searchView.setOnQueryTextListener(this);
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {return false;}
+
+    private ArrayList<Note> filter(ArrayList<Note> notes, String query) {
+        query = query.toLowerCase();
+
+        final ArrayList<Note> filteredNote = new ArrayList<>();
+        for (Note note : notes) {
+            final String text = note.getText().toLowerCase();
+            if (text.contains(query)) {
+                filteredNote.add(note);
+            }
+        }
+        return filteredNote;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        final ArrayList<Note> filteredNotes= filter(database.getNotes(), newText);
+        adapter.animateTo(filteredNotes);
+        recyclerView.scrollToPosition(0);
         return true;
     }
 
@@ -250,4 +276,6 @@ public class HomeActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(KEY_NOTES_LIST, notes);
     }
+
+
 }

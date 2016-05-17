@@ -99,4 +99,56 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         }
     }
 
+
+    public void animateTo(ArrayList<Note> notes) {
+        applyAndAnimateRemovals(notes);
+        applyAndAnimateAdditions(notes);
+        applyAndAnimateMovedItems(notes);
+    }
+
+    private void applyAndAnimateRemovals(ArrayList<Note> newNotes) {
+        for (int i = notes.size() - 1; i >= 0; i--) {
+            final Note note = notes.get(i);
+            if (!newNotes.contains(note)) {
+                removeItem(i);
+            }
+        }
+    }
+
+    private void applyAndAnimateAdditions(ArrayList<Note> newNotes) {
+        for (int i = 0, count = newNotes.size(); i < count; i++) {
+            final Note note = newNotes.get(i);
+            if (!notes.contains(note)) {
+                addItem(i, note);
+            }
+        }
+    }
+
+    private void applyAndAnimateMovedItems(ArrayList<Note> newNotes) {
+        for (int toPosition = newNotes.size() - 1; toPosition >= 0; toPosition--) {
+            final Note note = newNotes.get(toPosition);
+            final int fromPosition = notes.indexOf(note);
+            if (fromPosition >= 0 && fromPosition != toPosition) {
+                moveItem(fromPosition, toPosition);
+            }
+        }
+    }
+
+    public Note removeItem(int position) {
+        final Note note = notes.remove(position);
+        notifyItemRemoved(position);
+        return note;
+    }
+
+    public void addItem(int position, Note note) {
+       notes.add(position, note);
+        notifyItemInserted(position);
+    }
+
+    public void moveItem(int fromPosition, int toPosition) {
+        final Note note = notes.remove(fromPosition);
+        notes.add(toPosition, note);
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
 }
