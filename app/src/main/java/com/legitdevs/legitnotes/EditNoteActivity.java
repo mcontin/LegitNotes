@@ -25,7 +25,6 @@ public class EditNoteActivity extends AppCompatActivity {
     private RichEditor text;
     private Note note;
     private TextView date;
-    private Date current;
     private DatabaseManager database;
     private String media;
 
@@ -45,14 +44,15 @@ public class EditNoteActivity extends AppCompatActivity {
 
         if (receivedBundle != null) {
             note = receivedBundle.getParcelable(NoteDetailActivity.KEY_NOTE);
-            title.setText(note.getTitle());
-            text.setHtml(note.getText());
-            date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
-            media=note.getMedia();
         } else {
             note = new Note();
-            date.setText(DateFormat.getDateTimeInstance().format(current));
         }
+
+        title.setText(note.getTitle());
+        text.setHtml(note.getText());
+        date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
+        media = note.getMedia();
+
         text.setPadding(10, 10, 10, 10);
         text.setPlaceholder(String.valueOf(R.string.new_text));
         text.setOnClickListener(new View.OnClickListener() {
