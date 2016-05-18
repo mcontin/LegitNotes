@@ -69,7 +69,7 @@ public class HomeActivity extends AppCompatActivity
         } else {
             notes = database.getNotes();
 
-            if (notes == null) {
+            if (notes.size() == 0) {
                 generateRandomNotes();
             }
         }
