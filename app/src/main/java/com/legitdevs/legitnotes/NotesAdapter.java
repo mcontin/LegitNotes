@@ -130,7 +130,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         }
     }
 
-
     public void animateTo(ArrayList<Note> notes) {
         applyAndAnimateRemovals(notes);
         applyAndAnimateAdditions(notes);
@@ -167,19 +166,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
 
     public Note removeItem(int position) {
         final Note note = notes.remove(position);
-        notifyDataSetChanged();
+        notifyItemRemoved(position);
         return note;
     }
 
     public void addItem(int position, Note note) {
        notes.add(position, note);
-        notifyDataSetChanged();
+       notifyItemInserted(position);
     }
 
     public void moveItem(int fromPosition, int toPosition) {
         final Note note = notes.remove(fromPosition);
         notes.add(toPosition, note);
-        notifyDataSetChanged();
+        notifyItemMoved(fromPosition, toPosition);
     }
 
 }

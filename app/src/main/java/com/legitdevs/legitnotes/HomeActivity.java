@@ -20,6 +20,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.support.v7.widget.RecyclerView;
@@ -233,7 +234,8 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        final ArrayList<Note> filteredNotes = filter(notes, newText);
+        Log.i(TAG, "onQueryTextChange: " + newText);
+        final ArrayList<Note> filteredNotes = filter(DatabaseManager.getInstance(this).getNotes(), newText);
         adapter.animateTo(filteredNotes);
         recyclerView.scrollToPosition(0);
         return true;
