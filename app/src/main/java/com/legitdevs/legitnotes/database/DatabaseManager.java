@@ -31,6 +31,15 @@ public class DatabaseManager {
     private Database database;
     private Context context;
 
+    private static DatabaseManager instance;
+
+    public static DatabaseManager getInstance(Context context) {
+        if (instance == null) {
+            instance = new DatabaseManager(context);
+        }
+        return instance;
+    }
+
     public DatabaseManager(Context context) {
         this.context = context;
         createDatabase();
@@ -68,7 +77,7 @@ public class DatabaseManager {
             document = database.getDocument(DOCUMENT_NOTES);
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
     /**
