@@ -46,7 +46,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
      */
     @Override
     public void onBindViewHolder(CardViewHolder cardHolder, final int position) {
-        cardHolder.noteTitle.setText(notes.get(position).getTitle());
+        cardHolder.noteTitle.setText(getTitleFormatted(notes.get(position).getTitle()));
 
         cardHolder.noteSnippet.setText(notes.get(position).getText());
 
@@ -67,12 +67,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
             }
         });
 
-        cardHolder.attachment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO aprire allegato/i
-            }
-        });
+//        cardHolder.attachment.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //TODO aprire allegato/i
+//            }
+//        });
 
     }
 
@@ -125,8 +125,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
             super(itemView);
             card = (CardView) itemView.findViewById(R.id.cardView);
             noteTitle = (TextView) itemView.findViewById(R.id.title);
-            noteSnippet = (TextView) itemView.findViewById(R.id.TEXT_NORMAL);
-            attachment = (LinearLayout) itemView.findViewById(R.id.bottom_content);
+            noteSnippet = (TextView) itemView.findViewById(R.id.text);
+            //attachment = (LinearLayout) itemView.findViewById(R.id.bottom_content);
         }
     }
 
@@ -179,6 +179,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         final Note note = notes.remove(fromPosition);
         notes.add(toPosition, note);
         notifyDataSetChanged();
+    }
+
+    public String getTitleFormatted(String title) {
+        //riformatta il nome dell'azienda(ZILIDIUM ==> Zilidium)
+        title = title.toLowerCase();
+        StringBuilder rackingSystemSb = new StringBuilder();
+        rackingSystemSb.append(title);
+        rackingSystemSb.setCharAt(0, Character.toUpperCase(rackingSystemSb.charAt(0)));
+        title = rackingSystemSb.toString();
+        return title;
     }
 
 }
