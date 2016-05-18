@@ -2,20 +2,18 @@ package com.legitdevs.legitnotes;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import android.app.FragmentTransaction;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
+
 import com.legitdevs.legitnotes.database.DatabaseManager;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
-import android.os.Bundle;
+
 import android.view.MotionEvent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -24,7 +22,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
@@ -109,8 +106,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        Intent i = new Intent(getApplicationContext(),AudioNoteActivity.class);
-                        startActivity(i);
+                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
                         fabMenu.collapse();
 
                     }

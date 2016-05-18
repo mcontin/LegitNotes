@@ -48,7 +48,7 @@
                 android:value=".HomeActivity" />
         </activity>
 
-        <activity android:name=".AudioNoteActivity">
+        <activity android:name=".AudioNoteDialog">
         </activity>
 
     </application>
