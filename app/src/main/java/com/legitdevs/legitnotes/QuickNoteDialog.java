@@ -13,8 +13,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import com.legitdevs.legitnotes.database.DatabaseManager;
 
 public class QuickNoteDialog extends DialogFragment {
+
+    private TextView title;
+    private TextView text;
+    private Context context;
 
     public QuickNoteDialog() {
         // Empty constructor required for DialogFragment
@@ -36,12 +43,20 @@ public class QuickNoteDialog extends DialogFragment {
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.quick_note_layout, null))
+        View view = inflater.inflate(R.layout.quick_note_layout, null);
+        title = (TextView) view.findViewById(R.id.quickTitle);
+        text = (TextView) view.findViewById(R.id.quickText);
+
+        builder.setView(view)
                 // Add action buttons
                 .setPositiveButton(R.string.dialog_note_create, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        // sign in the user ...
+                        Note note = new Note(title.getText().toString(), text.getText().toString());
+                        DatabaseManager database = new DatabaseManager(getActivity().getApplicationContext());
+                        database.addNote(note);
+                        ((HomeActivity) getActivity()).updateNotes();
+                        //database.addNote(note);
                     }
                 })
                 .setNegativeButton(R.string.dialog_note_discard, new DialogInterface.OnClickListener() {
