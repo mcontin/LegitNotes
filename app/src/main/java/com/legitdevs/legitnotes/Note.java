@@ -45,7 +45,7 @@ public class Note implements Parcelable{
         media = "";
     }
     public Note(HashMap<String, Object> map){
-        id = (UUID) map.get(KEY_ID);
+        id = UUID.fromString( (String)map.get(KEY_ID) );
         title = (String) map.get(KEY_TITLE);
         date = new Date((Long)map.get(KEY_DATE));
         text = (String) map.get(KEY_TEXT);

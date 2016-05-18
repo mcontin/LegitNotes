@@ -14,6 +14,11 @@ import com.thedeanda.lorem.LoremIpsum;
 
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.support.v7.widget.GridLayoutManager;
@@ -29,16 +34,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.support.v4.view.GravityCompat.*;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+                    SearchView.OnQueryTextListener {
 
     public static final String DIALOG = "start dialog";
     private static final String TAG = "HomeActivity";
     public static final String KEY_NOTES_LIST = "notes_list";
+    public final static String KEY_NOTE = "note";
 
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
@@ -50,7 +59,6 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        handleIntent(getIntent());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -131,10 +139,10 @@ public class HomeActivity extends AppCompatActivity
         //lista note
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new NotesAdapter(notes, this);    //adapter per la lista di note e creazione delle Card
-        recyclerView.setAdapter(adapter);
         //layout a 2 colonne
-        LinearLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
 
 
         //DRAWER LATERALE
@@ -150,11 +158,25 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        updateNotes();
+    }
+
+    public void updateNotes() {
+        //bisogna "riprendere" il database sennò usa quello dello stato precedente
+        database = new DatabaseManager(this);
+        notes = database.getNotes();
+        adapter.updateNotes(notes);
+    }
+
     public void generateRandomNotes(){
         Lorem lorem = LoremIpsum.getInstance();
         notes = new ArrayList<>();
         Note temp;
-        for(int i = 0; i < 50; i++) {
+        for(int i = 0; i < 10; i++) {
             temp = new Note(lorem.getWords(1, 4),   //genera da 1 a 4 parole
                     lorem.getParagraphs(1, 3));     //genera da 1 a 3 paragrafi
             notes.add(temp);
@@ -162,19 +184,6 @@ public class HomeActivity extends AppCompatActivity
         database.saveNotes(notes);
     }
 
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            //doMySearch(query);
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -192,15 +201,74 @@ public class HomeActivity extends AppCompatActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home, menu);
 
-        // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
-        // Assumes current activity is the searchable activity
+        final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+
+        searchView.setOnQueryTextListener(this);
+
 
         return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+//        final ArrayList<Note> filteredNotes= filter(database.getNotes(), query);
+//        adapter.animateTo(filteredNotes);
+//        recyclerView.scrollToPosition(0);
+//        return true;
+        return false;
+        }
+
+    private ArrayList<Note> filter(ArrayList<Note> notes, String query) {
+        query = query.toLowerCase();
+
+        final ArrayList<Note> filteredNote = new ArrayList<>();
+        for (Note note : notes) {
+            final String title = note.getTitle().toLowerCase();
+            if (title.contains(query)) {
+                filteredNote.add(note);
+                note.setTitle(highlight(query, note.getTitle()));
+
+            }
+        }
+        return filteredNote;
+    }
+
+    public static String highlight(String search, String originalText) {
+        // ignore case and accents
+        // the same thing should have been done for the search text
+        String normalizedText = Normalizer.normalize(originalText, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
+
+        int start = normalizedText.indexOf(search);
+        if (start < 0 || search.equals("")) {
+            // not found, nothing to to
+            return originalText;
+        } else {
+            // highlight each appearance in the original text
+            // while searching in normalized text
+            Spannable highlighted = new SpannableString(originalText);
+            while (start >= 0) {
+                int spanStart = Math.min(start, originalText.length());
+                int spanEnd = Math.min(start + search.length(), originalText.length());
+
+                highlighted.setSpan(new BackgroundColorSpan(R.color.accent), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                start = normalizedText.indexOf(search, spanEnd);
+            }
+
+            return highlighted.toString();
+        }
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        final ArrayList<Note> filteredNotes= filter(database.getNotes(), newText);
+        adapter.animateTo(filteredNotes);
+        recyclerView.scrollToPosition(0);
+        return true;
+//        return false;
     }
 
     @Override
@@ -250,4 +318,6 @@ public class HomeActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(KEY_NOTES_LIST, notes);
     }
+
+
 }
