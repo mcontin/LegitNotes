@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
 
@@ -47,12 +48,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
     public void onBindViewHolder(CardViewHolder cardHolder, final int position) {
         cardHolder.noteTitle.setText(notes.get(position).getTitle());
 
-        if(notes.get(position).getText().length() > 100) {
-            cardHolder.noteSnippet.setText(notes.get(position).getText()
-                    .substring(0, 99).concat("..."));  //visualizzo solo i primi 100 caratteri
-        } else {
-            cardHolder.noteSnippet.setText(notes.get(position).getText());
-        }
+        cardHolder.noteSnippet.setText(notes.get(position).getText());
 
         cardHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,8 +62,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         cardHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                RemoveDialog.getInstance(notes.get(position)).show(((HomeActivity)ctx).getSupportFragmentManager(), "dialog");
+                RemoveDialog.getInstance(notes.get(position)).show(((HomeActivity) ctx).getSupportFragmentManager(), "dialog");
                 return true;
+            }
+        });
+
+        cardHolder.attachment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO aprire allegato/i
             }
         });
 
@@ -116,12 +119,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         CardView card;
         TextView noteTitle;
         TextView noteSnippet;
+        LinearLayout attachment;
 
         CardViewHolder(View itemView) {
             super(itemView);
             card = (CardView) itemView.findViewById(R.id.cardView);
             noteTitle = (TextView) itemView.findViewById(R.id.title);
             noteSnippet = (TextView) itemView.findViewById(R.id.TEXT_NORMAL);
+            attachment = (LinearLayout) itemView.findViewById(R.id.bottom_content);
         }
     }
 
