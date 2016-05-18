@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".EditDialog">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_note"
+        android:id="@+id/buttonEdit"
+        style="@style/Base.Widget.AppCompat.ButtonBar.AlertDialog"
+        android:gravity="start|center_vertical"
+        android:drawableLeft="@drawable/ic_create_black_24dp"
+        android:drawableStart="@drawable/ic_create_black_24dp"
+        android:drawablePadding="10dp"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="18sp"
+        android:onClick=""
+        android:background="@drawable/dialog_button_background" />
+
+    <Button
+        style="@style/Base.Widget.AppCompat.ButtonBar.AlertDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_note"
+        android:id="@+id/buttonDelete"
+        android:gravity="start|center_vertical"
+        android:drawableLeft="@drawable/ic_delete_black_24dp"
+        android:drawableStart="@drawable/ic_delete_black_24dp"
+        android:drawablePadding="10dp"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="18sp"
+        android:background="@drawable/dialog_button_background" />
+</LinearLayout>
