@@ -62,34 +62,10 @@ public class EditNoteActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                note.setTitle(title.getText().toString());
-                note.setText(text.getHtml().toString());
-                database.addNote(note);
-            }
-        });
 
-        findViewById(R.id.add_media).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                media += "";
-                note.setMedia(media);
-            }
-        });
 
-        findViewById(R.id.action_undo).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.undo();
-            }
-        });
 
-        findViewById(R.id.action_redo).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.redo();
-            }
-        });
+
 
         findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -103,11 +79,7 @@ public class EditNoteActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.action_subscript).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setSubscript();
-            }
-        });
+
 
         findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -127,41 +99,9 @@ public class EditNoteActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.action_heading1).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setHeading(1);
-            }
-        });
 
-        findViewById(R.id.action_heading2).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setHeading(2);
-            }
-        });
 
-        findViewById(R.id.action_heading3).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setHeading(3);
-            }
-        });
 
-        findViewById(R.id.action_heading4).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setHeading(4);
-            }
-        });
-
-        findViewById(R.id.action_heading5).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setHeading(5);
-            }
-        });
-
-        findViewById(R.id.action_heading6).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setHeading(6);
-            }
-        });
 
         findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
             private boolean isChanged;
@@ -181,47 +121,7 @@ public class EditNoteActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.action_indent).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setIndent();
-            }
-        });
 
-        findViewById(R.id.action_outdent).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setOutdent();
-            }
-        });
-
-        findViewById(R.id.action_align_left).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setAlignLeft();
-            }
-        });
-
-        findViewById(R.id.action_align_center).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setAlignCenter();
-            }
-        });
-
-        findViewById(R.id.action_align_right).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setAlignRight();
-            }
-        });
-
-        findViewById(R.id.action_blockquote).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setBlockquote();
-            }
-        });
-
-        findViewById(R.id.action_insert_link).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.insertLink("https://", "");
-            }
-        });
         findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 text.insertTodo();
