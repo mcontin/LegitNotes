@@ -12,23 +12,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/mediaView"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_media_height"
-            android:src="@drawable/placeholder"
-            android:background="@color/colorAccent"/>
+        <!--<ImageView-->
+            <!--android:id="@+id/mediaView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/detail_media_height"-->
+            <!--android:src="@drawable/placeholder"-->
+            <!--android:background="@color/colorAccent"/>-->
 
-        <View
-            android:id="@+id/anchor"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_media_height"
-            android:minHeight="@dimen/detail_media_height" />
+        <!--<View-->
+            <!--android:id="@+id/anchor"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/detail_media_height"-->
+            <!--android:minHeight="@dimen/detail_media_height" />-->
 
 
         <RelativeLayout
             android:background="#ffffff"
-            android:layout_below="@+id/anchor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingLeft="16dp"
