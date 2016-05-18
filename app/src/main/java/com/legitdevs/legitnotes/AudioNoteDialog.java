@@ -64,7 +64,7 @@ public class AudioNoteDialog extends DialogFragment {
         btnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!recording) {
+                if (!recording) {
 
                     mRecorder = new MediaRecorder();
                     mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -98,7 +98,7 @@ public class AudioNoteDialog extends DialogFragment {
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!playing) {
+                if (!playing) {
 
                     mPlayer = new MediaPlayer();
                     try {
@@ -141,5 +141,4 @@ public class AudioNoteDialog extends DialogFragment {
     public void onDetach() {
         super.onDetach();
     }
-
 }
