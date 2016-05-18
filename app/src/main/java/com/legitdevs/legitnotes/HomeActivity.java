@@ -18,11 +18,8 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -36,7 +33,6 @@ import android.widget.FrameLayout;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.support.v4.view.GravityCompat.*;
 
@@ -108,7 +104,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        Intent i = new Intent(getBaseContext(),EditNote.class);
+                        Intent i = new Intent(getBaseContext(),EditNoteActivity.class);
                         startActivity(i);
                         fabMenu.collapse();
 

@@ -40,7 +40,7 @@ public class CardDialog extends DialogFragment {
                 .setItems(array, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (array[which] == array[0]) {
-                            Intent i = new Intent(getContext(), EditNote.class);
+                            Intent i = new Intent(getContext(), EditNoteActivity.class);
                             i.putExtra(HomeActivity.KEY_NOTE, getArguments().getParcelable(KEY_NOTE));
                             startActivity(i);
                         } else {

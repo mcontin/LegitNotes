@@ -5,12 +5,10 @@ import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -21,7 +19,7 @@ import java.util.Date;
 
 import jp.wasabeef.richeditor.RichEditor;
 
-public class EditNote extends AppCompatActivity {
+public class EditNoteActivity extends AppCompatActivity {
 
     private EditText title;
     private RichEditor text;
@@ -48,29 +46,32 @@ public class EditNote extends AppCompatActivity {
         if (receivedBundle != null) {
             note = receivedBundle.getParcelable(NoteDetailActivity.KEY_NOTE);
             title.setText(note.getTitle());
-            //text.setText(note.getText());
+            text.setHtml(note.getText());
             date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
             media=note.getMedia();
         } else {
             note = new Note();
             date.setText(DateFormat.getDateTimeInstance().format(current));
         }
+        text.setPadding(10, 10, 10, 10);
+        text.setPlaceholder(String.valueOf(R.string.new_text));
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.focusEditor();
+            }
+        });
 
-        Button save = (Button) findViewById(R.id.save);
-        save.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 note.setTitle(title.getText().toString());
-                //note.setText(text.getText().toString());
-                /*if (note.getId() != 0) {
-                    database.updateNote();
-                } else {
-                    database.saveNote();
-                }*/
+                note.setText(text.getHtml().toString());
+                database.addNote(note);
             }
         });
-        Button add_media=(Button)findViewById(R.id.add_media);
-        add_media.setOnClickListener(new View.OnClickListener() {
+
+        findViewById(R.id.add_media).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 media += "";
@@ -216,16 +217,9 @@ public class EditNote extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.action_insert_image).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.insertImage("http://www.1honeywan.com/dachshund/image/7.21/7.21_3_thumb.JPG",
-                        "dachshund");
-            }
-        });
-
         findViewById(R.id.action_insert_link).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                text.insertLink("https://github.com/wasabeef", "wasabeef");
+                text.insertLink("https://", "");
             }
         });
         findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
