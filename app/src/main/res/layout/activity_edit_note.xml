@@ -34,7 +34,7 @@
             android:layout_gravity="right"
             android:text="" />
 
-        <HorizontalScrollView
+        <!--<HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/black">
@@ -127,7 +127,18 @@
             android:capitalize="sentences"
             android:gravity="top|left"
             android:hint="@string/new_text" />
+        -->
 
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/creationDate"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="15dp"
+            android:capitalize="sentences"
+            android:gravity="top|left"
+            android:hint="@string/new_text" />
 
     </LinearLayout>
 
