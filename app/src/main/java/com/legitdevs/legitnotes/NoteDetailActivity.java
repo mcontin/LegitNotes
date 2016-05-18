@@ -53,7 +53,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getApplicationContext(), EditNote.class);
+                    Intent i = new Intent(getApplicationContext(), EditNoteActivity.class);
                     i.putExtra(NoteDetailActivity.KEY_NOTE, note);
                     startActivity(i);
                 }

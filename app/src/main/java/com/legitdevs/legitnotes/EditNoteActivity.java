@@ -19,7 +19,7 @@ import java.util.Date;
 
 import jp.wasabeef.richeditor.RichEditor;
 
-public class EditNote extends AppCompatActivity {
+public class EditNoteActivity extends AppCompatActivity {
 
     private EditText title;
     private RichEditor text;
