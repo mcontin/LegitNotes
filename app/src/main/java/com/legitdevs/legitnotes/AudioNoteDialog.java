@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,6 +122,14 @@ public class AudioNoteDialog extends DialogFragment {
         });
 
         return view;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        return builder.create();
     }
 
     @Override
