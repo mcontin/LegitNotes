@@ -2,13 +2,9 @@ package com.legitdevs.legitnotes;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.design.widget.TextInputEditText;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * Created by mattia on 13/05/16.
@@ -23,40 +19,40 @@ public class Note implements Parcelable{
     public static final String KEY_CATEGORY = "category";
     public static final String KEY_MEDIA = "media";
 
-    private int id;
+    private UUID id;
     private String title;
     private Date date;
     private String text;
     private String category;
     private String media;
-    private boolean show = true; //per mostrarla o no quando saranno implementati i filtri per categoria
 
+    //TODO id = UUID()
     public Note() {
+        id = UUID.randomUUID();
         title = "";
         date = new Date();  //today
         text = "";
         category = "";
         media = "";
-        id = hashCode();
     }
     public Note(String title, String text) {
+        id = UUID.randomUUID();
         this.title = title;
         date = new Date();  //today
         this.text = text;
         category = "";
         media = "";
-        id = hashCode();
     }
     public Note(HashMap<String, Object> map){
-        this.title = (String) map.get(KEY_TITLE);
-        this.date = new Date((Long)map.get(KEY_DATE));
-        this.text = (String) map.get(KEY_TEXT);
-        this.category = (String) map.get(KEY_CATEGORY);
-        this.media = (String) map.get(KEY_MEDIA);
-        id = hashCode();
+        id = UUID.fromString( (String)map.get(KEY_ID) );
+        title = (String) map.get(KEY_TITLE);
+        date = new Date((Long)map.get(KEY_DATE));
+        text = (String) map.get(KEY_TEXT);
+        category = (String) map.get(KEY_CATEGORY);
+        media = (String) map.get(KEY_MEDIA);
     }
 
-    public int getId(){
+    public UUID getId(){
         return id;
     }
 
@@ -95,11 +91,6 @@ public class Note implements Parcelable{
         this.media = media;
     }
 
-    @Override
-    public int hashCode() {
-        return title.concat(text).concat(category).hashCode();
-    }
-
     public HashMap<String, Object> toHashMap(){
         HashMap<String, Object> hashMap = new HashMap<>();
 
@@ -113,21 +104,6 @@ public class Note implements Parcelable{
         return hashMap;
     }
 
-    public void show() {
-        show = true;
-    }
-    public void hide() {
-        show = false;
-    }
-
-    public void filter(String categoryFilter) {
-        if (categoryFilter.equals(category)) {
-            show();
-            return;
-        }
-        hide();
-    }
-
     //PARCELIZZAZIONE = salvataggio oggetto personalizzato Note nell'Intent
 
     //boh non so cosa faccia
@@ -138,7 +114,7 @@ public class Note implements Parcelable{
     //scrivo i dati dell'oggetto nel Parcel di destinazione
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeString(id.toString());
         dest.writeString(title);
         dest.writeLong(date.getTime());
         dest.writeString(text);
@@ -147,7 +123,7 @@ public class Note implements Parcelable{
     }
     //creo un oggetto Note con la Parcel in arrivo
     public Note(Parcel in){
-        id = in.readInt();
+        id = UUID.fromString(in.readString());
         title = in.readString();
         date = new Date(in.readLong());
         text = in.readString();
