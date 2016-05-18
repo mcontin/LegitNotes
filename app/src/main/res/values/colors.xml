@@ -14,4 +14,7 @@
     <color name="gray">#606060</color>
     <color name="note_text">#454545</color>
     <color name="note_title">#1d1d1d</color>
+
+    <color name="default_button">#f0f0f0</color>
+    <color name="pressed_button">#dcdcdc</color>
 </resources>

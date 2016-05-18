@@ -22,7 +22,6 @@ import android.widget.TextView;
 import java.io.File;
 import java.io.IOException;
 
-import nl.changer.audiowife.AudioWife;
 
 public class AudioNoteDialog extends DialogFragment {
 
@@ -86,10 +85,10 @@ public class AudioNoteDialog extends DialogFragment {
                     mRecorder.release();
                     mRecorder = null;
 
-                    if(awContainer.getChildCount() == 0)
+                    AudioWife.getInstance().release();
+                    awContainer.removeAllViewsInLayout();
                     AudioWife.getInstance().init(getContext(), mFileUri)
-                            .useDefaultUi(awContainer, inflater);
-
+                                .useDefaultUi(awContainer, inflater);
                     btnRecord.setText("Start recording");
                     recording = false;
                 }
@@ -147,4 +146,5 @@ public class AudioNoteDialog extends DialogFragment {
     public void onDetach() {
         super.onDetach();
     }
+
 }

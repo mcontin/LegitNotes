@@ -62,7 +62,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         cardHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                RemoveDialog.getInstance(notes.get(position), position).show(((HomeActivity) ctx).getSupportFragmentManager(), "dialog");
+                
+                EditDialog.getInstance(notes.get(position)).show(((HomeActivity) ctx).getSupportFragmentManager(), "dialog");
+
                 return true;
             }
         });
