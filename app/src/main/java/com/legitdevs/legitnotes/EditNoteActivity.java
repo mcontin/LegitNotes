@@ -127,25 +127,35 @@ public class EditNoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        Intent intent = null;
+        switch(item.getItemId()){
+            case R.id.save_note:
+                note.setTitle(title.getText().toString());
+                note.setText(text.getText().toString());
+                //note.setMedia(media);
 
-        if (id == R.id.save_note) {
+                DatabaseManager.getInstance(this).addNote(note);
 
+                intent = new Intent(this, NoteDetailActivity.class);
+                intent.putExtra(NoteDetailActivity.KEY_NOTE, note);
 
-            //TODO setters prendendo dagli edit text
-            note.setTitle(title.getText().toString());
-            note.setText(text.getText().toString());
-            //note.setMedia(media);
+                break;
 
-            DatabaseManager.getInstance(this).addNote(note);
+            case R.id.delete_note:
+                if(HomeActivity.activity != null)
+                    HomeActivity.activity.finish();
+                DatabaseManager.getInstance(this).removeNote(note);
+                intent = new Intent(this, HomeActivity.class);
 
-            Intent intent = new Intent(this, NoteDetailActivity.class);
-            intent.putExtra(NoteDetailActivity.KEY_NOTE, note);
-            if(NoteDetailActivity.activity!=null)
-                NoteDetailActivity.activity.finish();
-            startActivity(intent);
-            finish();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+
+        if(NoteDetailActivity.activity != null)
+            NoteDetailActivity.activity.finish();
+        startActivity(intent);
+        finish();
 
         return super.onOptionsItemSelected(item);
     }

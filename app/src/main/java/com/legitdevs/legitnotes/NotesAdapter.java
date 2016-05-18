@@ -109,8 +109,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
 
     public void orderBy() {
 
-    };
-
+    }
 
     /**
      * "Contenitore" di ogni card
