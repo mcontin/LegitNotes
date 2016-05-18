@@ -51,7 +51,7 @@
                 fab:fab_plusIconColor="@color/white"
                 fab:fab_icon="@drawable/my_icon"
                 fab:fab_size="mini"
-                fab:fab_title="One" />
+                fab:fab_title="Audio Note" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_new_note"
