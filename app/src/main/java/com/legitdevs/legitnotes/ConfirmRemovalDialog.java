@@ -36,7 +36,7 @@ public class ConfirmRemovalDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(getResources().getString(R.string.remove_note))
+        builder.setTitle(getResources().getString(R.string.confirm))
                 .setMessage(R.string.remove_dialog_message)
                 .setPositiveButton(R.string.remove_dialog_positive, new DialogInterface.OnClickListener() {
                     @Override

@@ -34,7 +34,7 @@
     <string name="remove_dialog_message">Do you really want to delete this note?</string>
     <string name="search_hint">Search notes…</string>
     <string name="edit_note">Edit</string>
-    <string name="remove_note">Remove</string>
+    <string name="confirm">Confirm</string>
     <string name="remove_dialog_positive">Yes</string>
     <string name="remove_dialog_negative">No</string>
 
