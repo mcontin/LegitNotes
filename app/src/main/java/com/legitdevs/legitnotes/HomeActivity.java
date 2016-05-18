@@ -43,7 +43,8 @@ import static android.support.v4.view.GravityCompat.*;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-                    SearchView.OnQueryTextListener {
+        SearchView.OnQueryTextListener,
+        IDeletionListener {
 
     public static final String DIALOG = "start dialog";
     private static final String TAG = "HomeActivity";
@@ -174,6 +175,11 @@ public class HomeActivity extends AppCompatActivity
         adapter.updateNotes(notes);
     }
 
+    @Override
+    public void onNoteDeleted(int position) {
+        adapter.removeNote(position);
+    }
+
     public void generateRandomNotes(){
         Lorem lorem = LoremIpsum.getInstance();
         notes = new ArrayList<>();
@@ -212,8 +218,6 @@ public class HomeActivity extends AppCompatActivity
 
         return true;
     }
-
-
 
     @Override
     public boolean onQueryTextSubmit(String query) {

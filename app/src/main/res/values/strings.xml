@@ -23,7 +23,6 @@
         completions."
     </string>
 
-
     <!--Strings related to edit-->
     <string name="edit_title">Title</string>
     <string name="edit_text">Text</string>
@@ -38,10 +37,11 @@
     <string name="remove_dialog_positive">Yes</string>
     <string name="remove_dialog_negative">No</string>
 
-    <!--Edit Note new note-->
+    <!--Note editor-->
     <string name="new_title">Title</string>
-    <string name="new_text">Write here your note</string>
+    <string name="new_text">Write your note here</string>
     <string name="save_note">Save note</string>
+    <string name="delete_note">Delete note</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 public class RemoveDialog extends DialogFragment {
 
     public final static String KEY_NOTE = "note";
+    public final static String KEY_POSITION = "position";
 
     private String[] buttons = {"Edit", "Remove"};
 
@@ -22,9 +23,10 @@ public class RemoveDialog extends DialogFragment {
         // Required empty public constructor
     }
 
-    public static RemoveDialog getInstance(Note note){
+    public static RemoveDialog getInstance(Note note, int position){
         RemoveDialog removeDialog = new RemoveDialog();
         Bundle bundle = new Bundle();
+        bundle.putInt(KEY_POSITION, position);
         bundle.putParcelable(KEY_NOTE, note);
         removeDialog.setArguments(bundle);
         return removeDialog;
@@ -47,7 +49,7 @@ public class RemoveDialog extends DialogFragment {
                                 break;
                             //delete
                             case 1:
-                                ConfirmRemovalDialog.getInstance((Note) getArguments().getParcelable(KEY_NOTE)).show(getFragmentManager(),"dialog");
+                                ConfirmRemovalDialog.getInstance(getArguments()).show(getFragmentManager(),"dialog");
                                 dismiss();
                                 break;
                         }

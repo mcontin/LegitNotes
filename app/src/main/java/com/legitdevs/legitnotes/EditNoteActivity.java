@@ -18,10 +18,15 @@ import java.util.Date;
 
 import jp.wasabeef.richeditor.RichEditor;
 
-public class EditNoteActivity extends AppCompatActivity {
+public class EditNoteActivity extends AppCompatActivity
+    implements IDeletionListener{
 
+    private static final String KEY_NOTE = "note";
+    private static final String KEY_POSITION = "position";
     private EditText title;
     private EditText text;
+
+
     //private RichEditor text;
     private Note note;
     private TextView date;
@@ -127,7 +132,7 @@ public class EditNoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = null;
+
         switch(item.getItemId()){
             case R.id.save_note:
                 note.setTitle(title.getText().toString());
@@ -136,28 +141,32 @@ public class EditNoteActivity extends AppCompatActivity {
 
                 DatabaseManager.getInstance(this).addNote(note);
 
-                intent = new Intent(this, NoteDetailActivity.class);
-                intent.putExtra(NoteDetailActivity.KEY_NOTE, note);
+                //nota modificata, devo killare l'activity di dettaglio precedente
+                if(NoteDetailActivity.activity != null)
+                    NoteDetailActivity.activity.finish();
 
                 break;
 
             case R.id.delete_note:
-                if(HomeActivity.activity != null)
-                    HomeActivity.activity.finish();
-                DatabaseManager.getInstance(this).removeNote(note);
-                intent = new Intent(this, HomeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(KEY_NOTE, note);
+                bundle.putInt(KEY_POSITION, -1); //non serve la posizione in questa activity
+                ConfirmRemovalDialog.getInstance(bundle).show(getSupportFragmentManager(),"dialog");
 
                 break;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
-        if(NoteDetailActivity.activity != null)
-            NoteDetailActivity.activity.finish();
-        startActivity(intent);
-        finish();
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onNoteDeleted(int position) {
+        Intent intent = new Intent(this, HomeActivity.class);
+        if(HomeActivity.activity != null)
+            HomeActivity.activity.finish();
+        startActivity(intent);
     }
 
     @Override
