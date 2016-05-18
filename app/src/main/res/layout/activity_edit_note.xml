@@ -124,10 +124,12 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/creationDate"
             android:layout_marginTop="15dp"
+            android:inputType="textMultiLine"
             android:capitalize="sentences"
             android:gravity="top|left"
-            android:hint="@string/new_text" />
-        -->
+            android:focusable="true"
+            android:hint="@string/new_text" />-->
+
 
         <EditText
             android:id="@+id/editText"
@@ -136,6 +138,7 @@
             android:layout_below="@+id/creationDate"
             android:background="@android:color/transparent"
             android:layout_marginTop="15dp"
+            android:inputType="textMultiLine"
             android:capitalize="sentences"
             android:gravity="top|left"
             android:hint="@string/new_text" />

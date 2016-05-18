@@ -34,7 +34,7 @@ public class EditNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_note);
 
         title = (EditText) findViewById(R.id.editTitle);
-        title = (EditText) findViewById(R.id.editText);
+        text = (EditText) findViewById(R.id.editText);
         //text = (RichEditor) findViewById(R.id.editText);
         date = (TextView) findViewById(R.id.creationDate);
 
@@ -131,17 +131,19 @@ public class EditNoteActivity extends AppCompatActivity {
 
         if (id == R.id.save_note) {
 
+
             //TODO setters prendendo dagli edit text
-            note.setTitle("");
-            note.setText("");
-            //...
+            note.setTitle(title.getText().toString());
+            note.setText(text.getText().toString());
+            //note.setMedia(media);
 
             DatabaseManager.getInstance(this).addNote(note);
 
             Intent intent = new Intent(this, NoteDetailActivity.class);
             intent.putExtra(NoteDetailActivity.KEY_NOTE, note);
+            if(NoteDetailActivity.activity!=null)
+                NoteDetailActivity.activity.finish();
             startActivity(intent);
-            NoteDetailActivity.activity.finish();
             finish();
         }
 
