@@ -33,11 +33,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-
 import java.text.Normalizer;
 import java.util.ArrayList;
 
-import nl.changer.audiowife.AudioWife;
 
 import static android.support.v4.view.GravityCompat.*;
 
