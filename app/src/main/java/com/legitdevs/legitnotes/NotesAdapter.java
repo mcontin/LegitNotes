@@ -2,9 +2,6 @@ package com.legitdevs.legitnotes;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by mattia on 07/04/16.
@@ -70,7 +66,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         cardHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                CardDialog.getInstance(notes.get(position)).show(((HomeActivity)ctx).getSupportFragmentManager(), "dialog");
+                RemoveDialog.getInstance(notes.get(position)).show(((HomeActivity)ctx).getSupportFragmentManager(), "dialog");
                 return true;
             }
         });
@@ -167,7 +163,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
     public Note removeItem(int position) {
         final Note note = notes.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position,getItemCount());
+        notifyItemRangeChanged(position, getItemCount());
         return note;
     }
 

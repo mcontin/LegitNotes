@@ -25,7 +25,6 @@ public class EditNoteActivity extends AppCompatActivity {
     private RichEditor text;
     private Note note;
     private TextView date;
-    private DatabaseManager database;
     private String media;
 
 
@@ -37,7 +36,6 @@ public class EditNoteActivity extends AppCompatActivity {
         title = (EditText) findViewById(R.id.editTitle);
         text = (RichEditor) findViewById(R.id.editText);
         date = (TextView) findViewById(R.id.creationDate);
-        database = new DatabaseManager(this);
 
         Intent intent = getIntent();
         Bundle receivedBundle = intent.getExtras();
@@ -67,7 +65,7 @@ public class EditNoteActivity extends AppCompatActivity {
             public void onClick(View v) {
                 note.setTitle(title.getText().toString());
                 note.setText(text.getHtml().toString());
-                database.addNote(note);
+                DatabaseManager.getInstance(getApplicationContext()).addNote(note);
             }
         });
 
@@ -235,14 +233,12 @@ public class EditNoteActivity extends AppCompatActivity {
 
         if (id == R.id.save_note) {
 
-            DatabaseManager database = new DatabaseManager(this);
-
             //TODO setters prendendo dagli edit text
             note.setTitle("");
             note.setText("");
             //...
 
-            database.addNote(note);
+            DatabaseManager.getInstance(this).addNote(note);
 
             Intent intent = new Intent(this, NoteDetailActivity.class);
             intent.putExtra(NoteDetailActivity.KEY_NOTE, note);
