@@ -17,17 +17,15 @@ import com.legitdevs.legitnotes.database.DatabaseManager;
 public class ConfirmRemovalDialog extends DialogFragment {
 
     public final static String KEY_NOTE = "note";
-
+    public final static String KEY_POSITION = "position";
 
     public ConfirmRemovalDialog() {
         // Required empty public constructor
     }
 
-    public static ConfirmRemovalDialog getInstance(Note note){
+    public static ConfirmRemovalDialog getInstance(Bundle arguments){
         ConfirmRemovalDialog confirmRemovalDialog = new ConfirmRemovalDialog();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_NOTE, note);
-        confirmRemovalDialog.setArguments(bundle);
+        confirmRemovalDialog.setArguments(arguments);
         return confirmRemovalDialog;
     }
 
@@ -36,13 +34,22 @@ public class ConfirmRemovalDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+        final IDeletionListener listener = (IDeletionListener) getActivity();
+
         builder.setTitle(getResources().getString(R.string.confirm))
                 .setMessage(R.string.remove_dialog_message)
                 .setPositiveButton(R.string.remove_dialog_positive, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DatabaseManager.getInstance(getContext()).removeNote((Note)getArguments().getParcelable(KEY_NOTE));
-                        ((HomeActivity)getActivity()).updateNotes();
+
+                        DatabaseManager.getInstance(getContext()).removeNote((Note) getArguments().getParcelable(KEY_NOTE));
+
+                        //nota modificata, devo killare l'activity di dettaglio precedente
+                        if(NoteDetailActivity.activity != null)
+                            NoteDetailActivity.activity.finish();
+
+                        listener.onNoteDeleted(getArguments().getInt(KEY_POSITION));
+
                         dismiss();
                     }
                 })

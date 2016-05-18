@@ -46,7 +46,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
      */
     @Override
     public void onBindViewHolder(CardViewHolder cardHolder, final int position) {
-        cardHolder.noteTitle.setText(getTitleFormatted(notes.get(position).getTitle()));
+        cardHolder.noteTitle.setText(notes.get(position).getTitle());
 
         cardHolder.noteSnippet.setText(notes.get(position).getText());
 
@@ -62,7 +62,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         cardHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                
                 EditDialog.getInstance(notes.get(position)).show(((HomeActivity) ctx).getSupportFragmentManager(), "dialog");
+
                 return true;
             }
         });
@@ -100,11 +102,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         notifyItemInserted(notes.indexOf(note));
     }
 
-    public void removeNote(Note note) {
-        notes.remove(note);
+    public void removeNote(int position) {
+        notes.remove(position);
         orderBy();
 
-        notifyItemRemoved(notes.indexOf(note));
+        notifyItemRemoved(position);
     }
 
     public void orderBy() {
@@ -180,6 +182,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         notifyDataSetChanged();
     }
 
+    /*
     public String getTitleFormatted(String title) {
         //riformatta il nome dell'azienda(ZILIDIUM ==> Zilidium)
         title = title.toLowerCase();
@@ -189,5 +192,5 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         title = rackingSystemSb.toString();
         return title;
     }
-
+    */
 }

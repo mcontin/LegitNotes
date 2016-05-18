@@ -1,12 +1,17 @@
 package com.legitdevs.legitnotes;
 
 
+import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +19,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 
 import nl.changer.audiowife.AudioWife;
 
@@ -25,95 +28,111 @@ public class AudioNoteDialog extends DialogFragment {
 
     public static final String TAG = "AudioNoteDialog";
 
+    private Button btnRecord;
+    private Button btnPlay;
 
-    private static final String LOG_TAG = "AudioRecordTest";
-    private static final int INTENT_PICK_AUDIO = 1;
+    private boolean recording = false;
+    private boolean playing = false;
 
-    private Context mContext;
+    private MediaRecorder mRecorder;
+    private MediaPlayer mPlayer;
 
-    private View mPlayMedia;
-    private View mPauseMedia;
-    private SeekBar mMediaSeekBar;
-    private TextView mRunTime;
-    private TextView mTotalTime;
-    private TextView mPlaybackTime;
-    private static String mFileName = null;
+    private ViewGroup awContainer;
 
+    private String mFileName;
+    private Uri mFileUri;
 
-
-
-
-    public static AudioNoteDialog getInstance(){
+    public static AudioNoteDialog getInstance() {
         return new AudioNoteDialog();
     }
 
-
-
-
-    Button btnRecord,btnReplay;
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.audio_note_layout, container, false);
         getDialog().requestWindowFeature(STYLE_NO_TITLE);
 
-        View pickAudio = view.findViewById(R.id.pickAudio);
-
-        //inizializza le variabili
-
-        mPlayMedia = view.findViewById(R.id.play);
-        mPauseMedia = view.findViewById(R.id.pause);
-        mMediaSeekBar = (SeekBar) view.findViewById(R.id.media_seekbar);
-        mRunTime = (TextView) view.findViewById(R.id.run_time);
-        mTotalTime = (TextView) view.findViewById(R.id.total_time);
-
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/tempaudio.3gp";
+        mFileName += "/audiorecordtest.3gp";
+        mFileUri = Uri.parse(mFileName);
 
+        awContainer = (ViewGroup) view.findViewById(R.id.playerContainer);
 
-        //selezione del file da ascoltare
+        btnRecord = (Button) view.findViewById(R.id.btnRecord);
+        btnRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!recording) {
 
-        File externalFile = new File(Environment.getExternalStorageDirectory(),"tempaudio.3gp");
+                    mRecorder = new MediaRecorder();
+                    mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                    mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                    mRecorder.setOutputFile(mFileName);
+                    mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
-        Uri myURI = Uri.fromFile(externalFile);
+                    try {
+                        mRecorder.prepare();
+                    } catch (IOException e) {
+                        Log.e(TAG, "prepare() failed");
+                    }
 
+                    mRecorder.start();
 
-        // AudioWife takes care of click handler for play/pause button
-        AudioWife.getInstance()
-                .init(mContext, myURI)
-                .setPlayView(mPlayMedia)
-                .setPauseView(mPauseMedia)
-                .setSeekBar(mMediaSeekBar)
-                .setRuntimeView(mRunTime)
-                .setTotalTimeView(mTotalTime);
+                    btnRecord.setText("Stop recording");
+                    recording = true;
+                } else {
 
+                    mRecorder.stop();
+                    mRecorder.release();
+                    mRecorder = null;
 
-        // to explicitly pause
-        AudioWife.getInstance().pause();
+                    if(awContainer.getChildCount() == 0)
+                    AudioWife.getInstance().init(getContext(), mFileUri)
+                            .useDefaultUi(awContainer, inflater);
 
+                    btnRecord.setText("Start recording");
+                    recording = false;
+                }
+            }
+        });
 
-        // when done playing, release the resources
-        AudioWife.getInstance().release();
+        btnPlay = (Button) view.findViewById(R.id.btnPlay);
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!playing) {
+
+                    mPlayer = new MediaPlayer();
+                    try {
+                        mPlayer.setDataSource(mFileName);
+                        mPlayer.prepare();
+                        mPlayer.start();
+                    } catch (IOException e) {
+                        Log.e(TAG, "prepare() failed");
+                    }
+
+                    btnPlay.setText("Stop playing");
+                    playing = true;
+                } else {
+                    mPlayer.release();
+                    mPlayer = null;
+
+                    btnPlay.setText("Start playing");
+                    playing = false;
+                }
+            }
+        });
 
         return view;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//    @NonNull
+//    @Override
+//    public Dialog onCreateDialog(Bundle savedInstanceState) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//
+//        return builder.create();
+//    }
 
     @Override
     public void onAttach(Context context) {
@@ -124,22 +143,4 @@ public class AudioNoteDialog extends DialogFragment {
     public void onDetach() {
         super.onDetach();
     }
-
-
- /*
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mRecorder != null) {
-            mRecorder.release();
-            mRecorder = null;
-        }
-
-        if (mPlayer != null) {
-            mPlayer.release();
-            mPlayer = null;
-        }
-    }
-*/
-
 }
