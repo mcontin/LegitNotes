@@ -125,7 +125,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        //AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
                         fabMenu.collapse();
 
                     }

@@ -9,6 +9,13 @@
     tools:context="nl.changer.audiowifedemo.MainActivity"
     tools:ignore="MergeRootFrame" >
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Record audio"
+        android:id="@+id/btnRecord"
+        android:layout_gravity="center_horizontal" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp "
@@ -108,13 +115,11 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/pickAudio"
-        android:layout_width="match_parent"
+        android:id="@+id/btnPlay"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:text="Pick Audio"
-        android:textColor="#000000" />
+        android:layout_width="wrap_content">
+
+    </Button>
 
     <!--
          <TextView
