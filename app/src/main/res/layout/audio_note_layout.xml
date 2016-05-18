@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="@dimen/abc_config_prefDialogWidth"
+    android:layout_height="@dimen/abc_dialog_fixed_height_major"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp"
@@ -14,11 +14,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/btnPlay"
-        android:text="Play audio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <!--<Button-->
+        <!--android:id="@+id/btnPlay"-->
+        <!--android:text="Play audio"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
 
     <FrameLayout
         android:id="@+id/playerContainer"

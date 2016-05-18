@@ -96,43 +96,47 @@ public class AudioNoteDialog extends DialogFragment {
             }
         });
 
-        btnPlay = (Button) view.findViewById(R.id.btnPlay);
-        btnPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!playing) {
-
-                    mPlayer = new MediaPlayer();
-                    try {
-                        mPlayer.setDataSource(mFileName);
-                        mPlayer.prepare();
-                        mPlayer.start();
-                    } catch (IOException e) {
-                        Log.e(TAG, "prepare() failed");
-                    }
-
-                    btnPlay.setText("Stop playing");
-                    playing = true;
-                } else {
-                    mPlayer.release();
-                    mPlayer = null;
-
-                    btnPlay.setText("Start playing");
-                    playing = false;
-                }
-            }
-        });
+//        btnPlay = (Button) view.findViewById(R.id.btnPlay);
+//        btnPlay.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!playing) {
+//
+//                    mPlayer = new MediaPlayer();
+//                    try {
+//                        mPlayer.setDataSource(mFileName);
+//                        mPlayer.prepare();
+//                        mPlayer.start();
+//                    } catch (IOException e) {
+//                        Log.e(TAG, "prepare() failed");
+//                    }
+//
+//                    btnPlay.setText("Stop playing");
+//                    playing = true;
+//                } else {
+//                    mPlayer.release();
+//                    mPlayer = null;
+//
+//                    btnPlay.setText("Start playing");
+//                    playing = false;
+//                }
+//            }
+//        });
 
         return view;
     }
 
-//    @NonNull
-//    @Override
-//    public Dialog onCreateDialog(Bundle savedInstanceState) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//
-//        return builder.create();
-//    }
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle("porcodio");
+        builder.setView(R.id.)
+
+        return builder.create();
+    }
+
 
     @Override
     public void onAttach(Context context) {
