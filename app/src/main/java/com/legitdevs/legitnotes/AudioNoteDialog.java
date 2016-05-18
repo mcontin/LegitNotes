@@ -1,159 +1,47 @@
 package com.legitdevs.legitnotes;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
+
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
-
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+
+import nl.changer.audiowife.AudioWife;
 
 public class AudioNoteDialog extends DialogFragment {
 
-public static final String TAG = "AudioNoteDialog";
-
-/*
-    class RecordButton extends Button {
-        boolean mStartRecording = true;
-
-        OnClickListener clicker = new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                onRecord(mStartRecording);
-                if (mStartRecording) {
-                    setText("Stop recording");
-                } else {
-                    setText("Start recording");
-                }
-                mStartRecording = !mStartRecording;
-            }
-        };
-
-        public RecordButton(Context ctx) {
-            super(ctx);
-            setText("Start recording");
-            setOnClickListener(clicker);
-        }
-    }
-
-    class PlayButton extends Button {
-        boolean mStartPlaying = true;
-
-        OnClickListener clicker = new OnClickListener() {
-            public void onClick(View v) {
-                onPlay(mStartPlaying);
-                if (mStartPlaying) {
-                    setText("Stop playing");
-                } else {
-                    setText("Start playing");
-                }
-                mStartPlaying = !mStartPlaying;
-            }
-        };
-
-        public PlayButton(Context ctx) {
-            super(ctx);
-            setText("Start playing");
-            setOnClickListener(clicker);
-        }
-    }
-
-
-
-
-
-
+    public static final String TAG = "AudioNoteDialog";
 
 
     private static final String LOG_TAG = "AudioRecordTest";
+    private static final int INTENT_PICK_AUDIO = 1;
+
+    private Context mContext;
+
+    private View mPlayMedia;
+    private View mPauseMedia;
+    private SeekBar mMediaSeekBar;
+    private TextView mRunTime;
+    private TextView mTotalTime;
+    private TextView mPlaybackTime;
     private static String mFileName = null;
 
-    private RecordButton mRecordButton = null;
-    private MediaRecorder mRecorder = null;
-
-    private PlayButton   mPlayButton = null;
-    private MediaPlayer mPlayer = null;
 
 
 
-    private void onRecord(boolean start) {
-        if (start) {
-            startRecording();
-        } else {
-            stopRecording();
-        }
-    }
-
-    private void onPlay(boolean start) {
-        if (start) {
-            startPlaying();
-        } else {
-            stopPlaying();
-        }
-    }
-
-    private void startPlaying() {
-        mPlayer = new MediaPlayer();
-        try {
-            mPlayer.setDataSource(mFileName);
-            mPlayer.prepare();
-            mPlayer.start();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
-        }
-    }
-
-    private void stopPlaying() {
-        mPlayer.release();
-        mPlayer = null;
-    }
-
-    private void startRecording() {
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile(mFileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
-        try {
-            mRecorder.prepare();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
-        }
-
-        mRecorder.start();
-    }
-
-    private void stopRecording() {
-        mRecorder.stop();
-        mRecorder.release();
-        mRecorder = null;
-    }
-
-
-
-
-*/
-
-    public AudioNoteDialog() {
-       // mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-       // mFileName += "/audiorecordtest.3gp";
-    }
 
     public static AudioNoteDialog getInstance(){
         return new AudioNoteDialog();
@@ -170,26 +58,46 @@ public static final String TAG = "AudioNoteDialog";
         final View view = inflater.inflate(R.layout.audio_note_layout, container, false);
         getDialog().requestWindowFeature(STYLE_NO_TITLE);
 
-        btnRecord=(Button)view.findViewById(R.id.btnRecord);
-        btnRecord.setOnClickListener(new View.OnClickListener() {
+        View pickAudio = view.findViewById(R.id.pickAudio);
 
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "1");
-            }
-        });
-        btnReplay=(Button)view.findViewById(R.id.btnReplay);
-        btnReplay.setOnClickListener(new View.OnClickListener() {
+        //inizializza le variabili
 
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "2");
-            }
-        });
+        mPlayMedia = view.findViewById(R.id.play);
+        mPauseMedia = view.findViewById(R.id.pause);
+        mMediaSeekBar = (SeekBar) view.findViewById(R.id.media_seekbar);
+        mRunTime = (TextView) view.findViewById(R.id.run_time);
+        mTotalTime = (TextView) view.findViewById(R.id.total_time);
+
+        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+        mFileName += "/tempaudio.3gp";
+
+
+        //selezione del file da ascoltare
+
+        File externalFile = new File(Environment.getExternalStorageDirectory(),"tempaudio.3gp");
+
+        Uri myURI = Uri.fromFile(externalFile);
+
+
+        // AudioWife takes care of click handler for play/pause button
+        AudioWife.getInstance()
+                .init(mContext, myURI)
+                .setPlayView(mPlayMedia)
+                .setPauseView(mPauseMedia)
+                .setSeekBar(mMediaSeekBar)
+                .setRuntimeView(mRunTime)
+                .setTotalTimeView(mTotalTime);
+
+
+        // to explicitly pause
+        AudioWife.getInstance().pause();
+
+
+        // when done playing, release the resources
+        AudioWife.getInstance().release();
 
         return view;
     }
-
 
 
 
@@ -216,6 +124,8 @@ public static final String TAG = "AudioNoteDialog";
     public void onDetach() {
         super.onDetach();
     }
+
+
  /*
     @Override
     public void onPause() {

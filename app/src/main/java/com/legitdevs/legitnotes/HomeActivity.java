@@ -37,6 +37,8 @@ import android.widget.FrameLayout;
 import java.text.Normalizer;
 import java.util.ArrayList;
 
+import nl.changer.audiowife.AudioWife;
+
 import static android.support.v4.view.GravityCompat.*;
 
 public class HomeActivity extends AppCompatActivity
@@ -54,9 +56,13 @@ public class HomeActivity extends AppCompatActivity
     private ArrayList<Note> notes;
     private FloatingActionButton FABQuickNote, FABNewNote, FABNewAudioNote, FABVideo, FABLocation;
 
+    public static HomeActivity activity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        activity = this;
 
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -118,7 +124,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+                        //AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
                         fabMenu.collapse();
 
                     }

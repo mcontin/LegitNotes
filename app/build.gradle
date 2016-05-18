@@ -45,4 +45,5 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
     compile 'com.thedeanda:lorem:2.0'
     compile 'jp.wasabeef:richeditor-android:1.2.0'
+    compile 'net.the4thdimension:audio-wife:1.0.3'
 }

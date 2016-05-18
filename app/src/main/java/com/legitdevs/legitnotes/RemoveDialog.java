@@ -38,12 +38,14 @@ public class RemoveDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch(which) {
+                            //edit
                             case 0:
                                 Intent i = new Intent(getContext(), EditNoteActivity.class);
                                 i.putExtra(HomeActivity.KEY_NOTE, getArguments().getParcelable(KEY_NOTE));
                                 startActivity(i);
                                 dismiss();
                                 break;
+                            //delete
                             case 1:
                                 ConfirmRemovalDialog.getInstance((Note) getArguments().getParcelable(KEY_NOTE)).show(getFragmentManager(),"dialog");
                                 dismiss();
