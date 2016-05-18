@@ -21,7 +21,8 @@ import jp.wasabeef.richeditor.RichEditor;
 public class EditNoteActivity extends AppCompatActivity {
 
     private EditText title;
-    private RichEditor text;
+    private EditText text;
+    //private RichEditor text;
     private Note note;
     private TextView date;
     private DatabaseManager database;
@@ -34,10 +35,10 @@ public class EditNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_note);
 
         title = (EditText) findViewById(R.id.editTitle);
-        text = (RichEditor) findViewById(R.id.editText);
+        title = (EditText) findViewById(R.id.editText);
+        //text = (RichEditor) findViewById(R.id.editText);
         date = (TextView) findViewById(R.id.creationDate);
         database = new DatabaseManager(this);
-        current = new Date();
 
         Intent intent = getIntent();
         Bundle receivedBundle = intent.getExtras();
@@ -49,11 +50,11 @@ public class EditNoteActivity extends AppCompatActivity {
         }
 
         title.setText(note.getTitle());
-        text.setHtml(note.getText());
+        text.setText(note.getText());
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         media = note.getMedia();
 
-        text.setPadding(10, 10, 10, 10);
+        /*text.setPadding(10, 10, 10, 10);
         text.setPlaceholder("" + R.string.new_text);
         text.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,11 +63,7 @@ public class EditNoteActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
+        /*
         findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,10 +98,6 @@ public class EditNoteActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
         findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
             private boolean isChanged;
 
@@ -131,7 +124,7 @@ public class EditNoteActivity extends AppCompatActivity {
             public void onClick(View v) {
                 text.insertTodo();
             }
-        });
+        });*/
     }
 
     @Override
