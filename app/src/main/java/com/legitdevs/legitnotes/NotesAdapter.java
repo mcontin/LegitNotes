@@ -162,22 +162,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
 
     public Note removeItem(int position) {
         final Note note = notes.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, getItemCount());
+        notifyDataSetChanged();
         return note;
     }
 
     public void addItem(int position, Note note) {
        notes.add(position, note);
-        notifyItemInserted(position);
-        notifyItemRangeChanged(position, getItemCount());
+        notifyDataSetChanged();
     }
 
     public void moveItem(int fromPosition, int toPosition) {
         final Note note = notes.remove(fromPosition);
         notes.add(toPosition, note);
-        notifyItemMoved(fromPosition, toPosition);
-        notifyItemRangeChanged(fromPosition, toPosition, getItemCount());
+        notifyDataSetChanged();
     }
 
 }
