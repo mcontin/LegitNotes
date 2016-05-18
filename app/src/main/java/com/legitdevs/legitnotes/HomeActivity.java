@@ -13,6 +13,7 @@ import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
 
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Spannable;
@@ -139,7 +140,7 @@ public class HomeActivity extends AppCompatActivity
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new NotesAdapter(notes, this);    //adapter per la lista di note e creazione delle Card
         //layout a 2 colonne
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+        GridLayoutManager layoutManager = new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
