@@ -36,6 +36,8 @@ import android.widget.FrameLayout;
 import java.text.Normalizer;
 import java.util.ArrayList;
 
+import nl.changer.audiowife.AudioWife;
+
 import static android.support.v4.view.GravityCompat.*;
 
 public class HomeActivity extends AppCompatActivity
@@ -117,7 +119,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+                        //AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
                         fabMenu.collapse();
 
                     }
