@@ -9,6 +9,8 @@ import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
+import com.legitdevs.legitnotes.database.DatabaseManager;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -39,6 +41,8 @@ public class ConfirmRemovalDialog extends DialogFragment {
                 .setPositiveButton(R.string.remove_dialog_positive, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        DatabaseManager.getInstance(getContext()).removeNote((Note)getArguments().getParcelable(KEY_NOTE));
+                        ((HomeActivity)getActivity()).updateNotes();
                         dismiss();
                     }
                 })

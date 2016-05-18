@@ -37,13 +37,6 @@
     <string name="remove_note">Remove</string>
     <string name="remove_dialog_positive">Yes</string>
     <string name="remove_dialog_negative">No</string>
-    <string-array name="dialog_card_items">
-        <item>Edit</item>
-        <item>Remove</item>
-    </string-array>
-
-
-
 
     <!--Edit Note new note-->
     <string name="new_title">Title</string>
