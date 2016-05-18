@@ -25,7 +25,6 @@ public class EditNoteActivity extends AppCompatActivity {
     //private RichEditor text;
     private Note note;
     private TextView date;
-    private DatabaseManager database;
     private String media;
 
 
@@ -35,10 +34,9 @@ public class EditNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_note);
 
         title = (EditText) findViewById(R.id.editTitle);
-        title = (EditText) findViewById(R.id.editText);
+        text = (EditText) findViewById(R.id.editText);
         //text = (RichEditor) findViewById(R.id.editText);
         date = (TextView) findViewById(R.id.creationDate);
-        database = new DatabaseManager(this);
 
         Intent intent = getIntent();
         Bundle receivedBundle = intent.getExtras();
@@ -50,7 +48,7 @@ public class EditNoteActivity extends AppCompatActivity {
         }
 
         title.setText(note.getTitle());
-        text.setText(note.getText());
+        //text.setText(note.getText());
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         media = note.getMedia();
 
@@ -133,19 +131,19 @@ public class EditNoteActivity extends AppCompatActivity {
 
         if (id == R.id.save_note) {
 
-            DatabaseManager database = new DatabaseManager(this);
 
             //TODO setters prendendo dagli edit text
-            note.setTitle("");
-            note.setText("");
-            //...
+            note.setTitle(title.getText().toString());
+            note.setText(text.getText().toString());
+            //note.setMedia(media);
 
-            database.addNote(note);
+            DatabaseManager.getInstance(this).addNote(note);
 
             Intent intent = new Intent(this, NoteDetailActivity.class);
             intent.putExtra(NoteDetailActivity.KEY_NOTE, note);
+            if(NoteDetailActivity.activity!=null)
+                NoteDetailActivity.activity.finish();
             startActivity(intent);
-            NoteDetailActivity.activity.finish();
             finish();
         }
 
