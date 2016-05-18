@@ -8,6 +8,7 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -46,7 +47,7 @@ public class AudioNoteDialog extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.audio_note_layout, container, false);
         getDialog().requestWindowFeature(STYLE_NO_TITLE);
@@ -55,10 +56,7 @@ public class AudioNoteDialog extends DialogFragment {
         mFileName += "/audiorecordtest.3gp";
         mFileUri = Uri.parse(mFileName);
 
-        awContainer = (ViewGroup) view.findViewById(R.id.container);
-        // mPlayerContainer = Parent view to add default player UI to.
-        AudioWife.getInstance().init(getContext(), mFileUri)
-                .useDefaultUi(awContainer, inflater);
+        awContainer = (ViewGroup) view.findViewById(R.id.playerContainer);
 
         btnRecord = (Button) view.findViewById(R.id.btnRecord);
         btnRecord.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +85,10 @@ public class AudioNoteDialog extends DialogFragment {
                     mRecorder.stop();
                     mRecorder.release();
                     mRecorder = null;
+
+                    if(awContainer.getChildCount() == 0)
+                    AudioWife.getInstance().init(getContext(), mFileUri)
+                            .useDefaultUi(awContainer, inflater);
 
                     btnRecord.setText("Start recording");
                     recording = false;
@@ -124,13 +126,13 @@ public class AudioNoteDialog extends DialogFragment {
         return view;
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-        return builder.create();
-    }
+//    @NonNull
+//    @Override
+//    public Dialog onCreateDialog(Bundle savedInstanceState) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//
+//        return builder.create();
+//    }
 
     @Override
     public void onAttach(Context context) {
