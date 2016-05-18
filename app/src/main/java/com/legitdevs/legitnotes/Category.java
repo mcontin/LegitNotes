@@ -1,9 +1,6 @@
 package com.legitdevs.legitnotes;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.nfc.tech.NfcA;
-import android.support.v4.content.ContextCompat;
 
 import java.util.HashMap;
 

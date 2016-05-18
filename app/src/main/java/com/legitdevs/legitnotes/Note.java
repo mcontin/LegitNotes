@@ -44,9 +44,9 @@ public class Note implements Parcelable{
         media = "";
     }
     public Note(HashMap<String, Object> map){
-        id = UUID.fromString( (String)map.get(KEY_ID) );
+        id = UUID.fromString(map.get(KEY_ID).toString());
         title = (String) map.get(KEY_TITLE);
-        date = new Date((Long)map.get(KEY_DATE));
+        date = new Date((long)map.get(KEY_DATE));
         text = (String) map.get(KEY_TEXT);
         category = (String) map.get(KEY_CATEGORY);
         media = (String) map.get(KEY_MEDIA);
@@ -96,13 +96,14 @@ public class Note implements Parcelable{
 
         hashMap.put(KEY_ID, id);
         hashMap.put(KEY_TITLE, title);
-        hashMap.put(KEY_DATE, date);
+        hashMap.put(KEY_DATE, date.getTime());
         hashMap.put(KEY_TEXT, text);
         hashMap.put(KEY_CATEGORY, category);
         hashMap.put(KEY_MEDIA, media);
 
         return hashMap;
     }
+
 
     //PARCELIZZAZIONE = salvataggio oggetto personalizzato Note nell'Intent
 

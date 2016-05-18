@@ -12,6 +12,7 @@ import com.legitdevs.legitnotes.database.DatabaseManager;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
 
+import android.provider.MediaStore;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SearchView;
@@ -51,8 +52,6 @@ public class HomeActivity extends AppCompatActivity
     private NotesAdapter adapter;
     private ArrayList<Note> notes;
     private FloatingActionButton FABQuickNote, FABNewNote, FABNewAudioNote, FABVideo, FABLocation;
-    private DatabaseManager database;
-    private String searchFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +61,10 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        database = new DatabaseManager(this);
-
         if(savedInstanceState != null) {
             notes = savedInstanceState.getParcelableArrayList(KEY_NOTES_LIST);
         } else {
-            notes = database.getNotes();
+            notes = DatabaseManager.getInstance(this).getNotes();
 
             if (notes.size() == 0) {
                 generateRandomNotes();
@@ -166,8 +163,7 @@ public class HomeActivity extends AppCompatActivity
 
     public void updateNotes() {
         //bisogna "riprendere" il database sennò usa quello dello stato precedente
-        database = new DatabaseManager(this);
-        notes = database.getNotes();
+        notes = DatabaseManager.getInstance(this).getNotes();
         adapter.updateNotes(notes);
     }
 
@@ -180,7 +176,7 @@ public class HomeActivity extends AppCompatActivity
                     lorem.getParagraphs(1, 3));     //genera da 1 a 3 paragrafi
             notes.add(temp);
         }
-        database.saveNotes(notes);
+        DatabaseManager.getInstance(this).saveNotes(notes);
     }
 
 
@@ -237,12 +233,10 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        searchFilter=newText;
-        final ArrayList<Note> filteredNotes= filter(database.getNotes(), newText);
+        final ArrayList<Note> filteredNotes = filter(notes, newText);
         adapter.animateTo(filteredNotes);
         recyclerView.scrollToPosition(0);
         return true;
-//        return false;
     }
 
     @Override
@@ -256,8 +250,6 @@ public class HomeActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-
-
 
         return super.onOptionsItemSelected(item);
     }
