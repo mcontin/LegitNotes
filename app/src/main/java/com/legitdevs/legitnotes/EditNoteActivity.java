@@ -48,7 +48,7 @@ public class EditNoteActivity extends AppCompatActivity {
         }
 
         title.setText(note.getTitle());
-        //text.setText(note.getText());
+        text.setText(note.getText());
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         media = note.getMedia();
 
