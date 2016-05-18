@@ -44,16 +44,19 @@ public class HomeActivity extends AppCompatActivity
     private static final String TAG = "HomeActivity";
     public static final String KEY_NOTES_LIST = "notes_list";
     public final static String KEY_NOTE = "note";
+    public static final String KEY_SEARCH ="search";
 
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
     private ArrayList<Note> notes;
     private FloatingActionButton FABQuickNote, FABNewNote, FABNewAudioNote, FABVideo, FABLocation;
     private DatabaseManager database;
+    private String searchFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -204,9 +207,10 @@ public class HomeActivity extends AppCompatActivity
 
         searchView.setOnQueryTextListener(this);
 
-
         return true;
     }
+
+
 
     @Override
     public boolean onQueryTextSubmit(String query) {
@@ -225,41 +229,15 @@ public class HomeActivity extends AppCompatActivity
             final String title = note.getTitle().toLowerCase();
             if (title.contains(query)) {
                 filteredNote.add(note);
-                note.setTitle(highlight(query, note.getTitle()));
-
             }
         }
         return filteredNote;
     }
 
-    public static String highlight(String search, String originalText) {
-        // ignore case and accents
-        // the same thing should have been done for the search text
-        String normalizedText = Normalizer.normalize(originalText, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
-
-        int start = normalizedText.indexOf(search);
-        if (start < 0 || search.equals("")) {
-            // not found, nothing to to
-            return originalText;
-        } else {
-            // highlight each appearance in the original text
-            // while searching in normalized text
-            Spannable highlighted = new SpannableString(originalText);
-            while (start >= 0) {
-                int spanStart = Math.min(start, originalText.length());
-                int spanEnd = Math.min(start + search.length(), originalText.length());
-
-                highlighted.setSpan(new BackgroundColorSpan(R.color.accent), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                start = normalizedText.indexOf(search, spanEnd);
-            }
-
-            return highlighted.toString();
-        }
-    }
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        searchFilter=newText;
         final ArrayList<Note> filteredNotes= filter(database.getNotes(), newText);
         adapter.animateTo(filteredNotes);
         recyclerView.scrollToPosition(0);
@@ -314,6 +292,9 @@ public class HomeActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(KEY_NOTES_LIST, notes);
     }
+
+
+
 
 
 }

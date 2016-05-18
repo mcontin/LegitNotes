@@ -46,6 +46,8 @@ public class RemoveDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                       DatabaseManager.getInstance(getContext()).removeNote((Note)getArguments().getParcelable(KEY_NOTE));
+                        ((HomeActivity)getActivity()).updateNotes();
+
                         dismiss();
                     }
                 })
