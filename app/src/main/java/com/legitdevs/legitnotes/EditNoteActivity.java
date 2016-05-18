@@ -24,7 +24,6 @@ public class EditNoteActivity extends AppCompatActivity {
     private RichEditor text;
     private Note note;
     private TextView date;
-    private Date current;
     private DatabaseManager database;
     private String media;
 
@@ -45,14 +44,15 @@ public class EditNoteActivity extends AppCompatActivity {
 
         if (receivedBundle != null) {
             note = receivedBundle.getParcelable(NoteDetailActivity.KEY_NOTE);
-            title.setText(note.getTitle());
-            text.setHtml(note.getText());
-            date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
-            media = note.getMedia();
         } else {
             note = new Note();
-            date.setText(DateFormat.getDateTimeInstance().format(current));
         }
+
+        title.setText(note.getTitle());
+        text.setHtml(note.getText());
+        date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
+        media = note.getMedia();
+
         text.setPadding(10, 10, 10, 10);
         text.setPlaceholder("" + R.string.new_text);
         text.setOnClickListener(new View.OnClickListener() {
@@ -62,22 +62,10 @@ public class EditNoteActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                note.setTitle(title.getText().toString());
-                note.setText(text.getHtml().toString());
-                database.addNote(note);
-            }
-        });
 
-        findViewById(R.id.add_media).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                media += "";
-                note.setMedia(media);
-            }
-        });
+
+
+
 
         findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,13 +81,12 @@ public class EditNoteActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.action_subscript).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setSubscript();
+
+        findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                text.setSuperscript();
             }
         });
-
         findViewById(R.id.action_strikethrough).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,6 +100,10 @@ public class EditNoteActivity extends AppCompatActivity {
                 text.setUnderline();
             }
         });
+
+
+
+
 
         findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
             private boolean isChanged;
@@ -133,6 +124,7 @@ public class EditNoteActivity extends AppCompatActivity {
                 isChanged = !isChanged;
             }
         });
+
 
         findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
             @Override

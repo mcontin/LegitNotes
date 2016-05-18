@@ -45,7 +45,8 @@ public class RemoveDialog extends DialogFragment {
                 .setPositiveButton(R.string.remove_dialog_positive, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                      dismiss();
+                      DatabaseManager.getInstance(getContext()).removeNote((Note)getArguments().getParcelable(KEY_NOTE));
+                        dismiss();
                     }
                 })
                 .setNegativeButton(R.string.remove_dialog_negative, new DialogInterface.OnClickListener() {

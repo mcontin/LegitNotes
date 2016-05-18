@@ -25,7 +25,6 @@ public class Note implements Parcelable{
     private String text;
     private String category;
     private String media;
-    private boolean show = true; //per mostrarla o no quando saranno implementati i filtri per categoria
 
     //TODO id = UUID()
     public Note() {
@@ -103,21 +102,6 @@ public class Note implements Parcelable{
         hashMap.put(KEY_MEDIA, media);
 
         return hashMap;
-    }
-
-    public void show() {
-        show = true;
-    }
-    public void hide() {
-        show = false;
-    }
-
-    public void filter(String categoryFilter) {
-        if (categoryFilter.equals(category)) {
-            show();
-            return;
-        }
-        hide();
     }
 
     //PARCELIZZAZIONE = salvataggio oggetto personalizzato Note nell'Intent

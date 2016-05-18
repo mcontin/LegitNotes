@@ -41,6 +41,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
             if(receivedBundle != null) {
                 note = receivedBundle.getParcelable(KEY_NOTE);
             }
+            
         }
 
         TextView text = (TextView) findViewById(R.id.noteText);
