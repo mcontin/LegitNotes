@@ -44,6 +44,8 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
             
         }
 
+        getSupportActionBar().setTitle(note.getTitle());
+
         TextView text = (TextView) findViewById(R.id.noteText);
         text.setText(note.getText());
 
