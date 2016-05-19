@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
 
     private ArrayList<Note> notes;  //lista di eventi
     private Context ctx;
+    private boolean starClick = true;
 
     public NotesAdapter(ArrayList<Note> notes, Context ctx) {
         this.notes = notes;
@@ -45,7 +47,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
      * @param position   posizione di un evento nella lista
      */
     @Override
-    public void onBindViewHolder(CardViewHolder cardHolder, final int position) {
+    public void onBindViewHolder(final CardViewHolder cardHolder, final int position) {
         cardHolder.noteTitle.setText(notes.get(position).getTitle());
 
         cardHolder.noteSnippet.setText(notes.get(position).getText());
@@ -62,10 +64,26 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         cardHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                
+
                 EditDialog.getInstance(notes.get(position)).show(((HomeActivity) ctx).getSupportFragmentManager(), "dialog");
 
                 return true;
+            }
+        });
+
+
+        cardHolder.preference.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (starClick){
+                    cardHolder.preference.setImageResource(R.drawable.ic_star);
+                    starClick=false;
+                } else {
+                    cardHolder.preference.setImageResource(R.drawable.ic_star_border);
+                    starClick=true;
+                }
+
             }
         });
 
@@ -120,6 +138,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         CardView card;
         TextView noteTitle;
         TextView noteSnippet;
+        ImageView preference;
         LinearLayout attachment;
 
         CardViewHolder(View itemView) {
@@ -127,6 +146,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
             card = (CardView) itemView.findViewById(R.id.cardView);
             noteTitle = (TextView) itemView.findViewById(R.id.title);
             noteSnippet = (TextView) itemView.findViewById(R.id.text);
+            preference = (ImageView) itemView.findViewById(R.id.star);
             //attachment = (LinearLayout) itemView.findViewById(R.id.bottom_content);
         }
     }

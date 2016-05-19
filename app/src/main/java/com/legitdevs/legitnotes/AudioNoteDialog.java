@@ -131,7 +131,7 @@ public class AudioNoteDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle("porcodio");
-        builder.setView(R.id.)
+        builder.setView(R.layout.audio_note_layout);
 
         return builder.create();
     }

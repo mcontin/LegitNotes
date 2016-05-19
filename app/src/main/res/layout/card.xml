@@ -42,7 +42,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/ic_star_border"
-                    android:padding="1dp"
+                    android:padding="5dp"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
 
