@@ -44,8 +44,10 @@
     <string name="save_note">Save note</string>
     <string name="delete_note">Delete note</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--String related to toast-->
+    <string name="save_note_toast">Note saved successfully</string>
+
+
 
 
 </resources>
