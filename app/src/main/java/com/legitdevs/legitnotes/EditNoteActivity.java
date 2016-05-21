@@ -138,7 +138,7 @@ public class EditNoteActivity extends AppCompatActivity
             }
         });*/
 
-        View newView = new View()
+        View newView = new View();
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
         assert frameLayout != null;
         frameLayout.getBackground().setAlpha(0);
@@ -184,7 +184,7 @@ public class EditNoteActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        Intent i = new Intent(getApplicationContext(),AudioNoteActivity.class);
+                        Intent i = new Intent(getApplicationContext(),AudioNoteDialog.class);
                         startActivity(i);
                         fabMenu.collapse();
 
