@@ -18,6 +18,8 @@ public class EditDialog extends DialogFragment {
 
     public final static String KEY_NOTE = "note";
 
+    public final static String KEY_POSITION = "position";
+
     private String[] buttons = {"Edit", "Remove"};
 
     private Button btnEdit, btnDelete;
@@ -26,10 +28,11 @@ public class EditDialog extends DialogFragment {
         // Required empty public constructor
     }
 
-    public static EditDialog getInstance(Note note) {
+    public static EditDialog getInstance(Note note, int position) {
         EditDialog editDialog = new EditDialog();
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_NOTE, note);
+        bundle.putInt(KEY_POSITION,position);
         editDialog.setArguments(bundle);
         return editDialog;
     }
@@ -63,37 +66,18 @@ public class EditDialog extends DialogFragment {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConfirmRemovalDialog.getInstance(getArguments()).show(getFragmentManager(), "dialog");
+
+                Note note=getArguments().getParcelable(KEY_NOTE);
+                int position=getArguments().getInt(KEY_POSITION);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(KEY_NOTE,note);
+                bundle.putInt(KEY_POSITION, position);
+                ConfirmRemovalDialog.getInstance(bundle).show(getFragmentManager(), "dialog");
                         dismiss();
             }
         });
 
 
-
-
-
-
-//        setItems(buttons, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                switch (which) {
-//                    //edit
-//                    case 0:
-//                        Intent i = new Intent(getContext(), EditNoteActivity.class);
-//                        i.putExtra(HomeActivity.KEY_NOTE, getArguments().getParcelable(KEY_NOTE));
-//                        startActivity(i);
-//                        dismiss();
-//                        break;
-//                    //delete
-//                    case 1:
-//                        ConfirmRemovalDialog.getInstance((Note) getArguments().getParcelable(KEY_NOTE)).show(getFragmentManager(), "dialog");
-//                        dismiss();
-//                        break;
-//                }
-//            }
-//        });
-
-        // Create the AlertDialog object and return it
         return builder.create();
     }
 
