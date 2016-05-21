@@ -42,7 +42,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/ic_star_border"
-                    android:padding="1dp"
+                    android:padding="5dp"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
 
@@ -69,11 +69,11 @@
                     android:ellipsize="end"
                     android:text="text"
                     android:layout_weight="1"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                     android:textColor="@color/note_text"
                     android:maxLines="6"
                     android:lines="6"
-                    android:padding="5dp" />
+                    android:padding="5dp"
+                    android:textSize="18dp" />
             </LinearLayout>
 
             <!--<View-->

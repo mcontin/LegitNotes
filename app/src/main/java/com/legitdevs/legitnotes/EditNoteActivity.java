@@ -2,15 +2,21 @@ package com.legitdevs.legitnotes;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.legitdevs.legitnotes.database.DatabaseManager;
 
 import java.text.DateFormat;
@@ -31,6 +37,9 @@ public class EditNoteActivity extends AppCompatActivity
     private Note note;
     private TextView date;
     private String media;
+    private FloatingActionButton FABQuickNote, FABNewNote, FABNewAudioNote, FABVideo, FABLocation;
+    public static final String DIALOG = "start dialog";
+
 
 
     @Override
@@ -128,7 +137,73 @@ public class EditNoteActivity extends AppCompatActivity
                 text.insertTodo();
             }
         });*/
+
+        View newView = new View()
+        final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
+        assert frameLayout != null;
+        frameLayout.getBackground().setAlpha(0);
+        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu_insert);
+        assert fabMenu != null;
+        fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                frameLayout.getBackground().setAlpha(200);
+                frameLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        fabMenu.collapse();
+                        return true;
+                    }
+                });
+
+                FABQuickNote = (FloatingActionButton) findViewById(R.id.fab_quick_note);
+                FABQuickNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        QuickNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+                        fabMenu.collapse();
+
+                    }
+                });
+
+                FABNewNote = (FloatingActionButton) findViewById(R.id.fab_new_note);
+                FABNewNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent i = new Intent(getBaseContext(),EditNoteActivity.class);
+                        startActivity(i);
+                        fabMenu.collapse();
+
+                    }
+                });
+
+                FABNewAudioNote = (FloatingActionButton) findViewById(R.id.fab_new_audio_note);
+                FABNewAudioNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent i = new Intent(getApplicationContext(),AudioNoteActivity.class);
+                        startActivity(i);
+                        fabMenu.collapse();
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                frameLayout.getBackground().setAlpha(0);
+                frameLayout.setOnTouchListener(null);
+            }
+        });
     }
+
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -144,6 +219,8 @@ public class EditNoteActivity extends AppCompatActivity
                 //nota modificata, devo killare l'activity di dettaglio precedente
                 if(NoteDetailActivity.activity != null)
                     NoteDetailActivity.activity.finish();
+
+                Toast.makeText(getApplicationContext(),R.string.save_note_toast, Toast.LENGTH_LONG).show();
 
                 break;
 

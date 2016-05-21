@@ -261,7 +261,8 @@ public class AudioNoteDialog extends DialogFragment {
 
 
 
-
+//        builder.setTitle("porcodio");
+//        builder.setView(R.layout.audio_note_layout);
         return builder.create();
     }
 //
