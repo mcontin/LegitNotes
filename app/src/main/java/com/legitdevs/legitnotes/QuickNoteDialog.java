@@ -12,7 +12,9 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.legitdevs.legitnotes.database.DatabaseManager;
@@ -36,6 +38,8 @@ public class QuickNoteDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Quick Note");
         // Get the layout inflater
@@ -53,8 +57,7 @@ public class QuickNoteDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Note note = new Note(title.getText().toString(), text.getText().toString());
-                        DatabaseManager database = new DatabaseManager(getActivity().getApplicationContext());
-                        database.addNote(note);
+                        DatabaseManager.getInstance(getContext()).addNote(note);
                         ((HomeActivity) getActivity()).updateNotes();
                         //database.addNote(note);
                     }
@@ -82,4 +85,9 @@ public class QuickNoteDialog extends DialogFragment {
     }
 
 
+
+
 }
+
+
+

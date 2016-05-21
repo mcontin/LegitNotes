@@ -44,10 +44,12 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
             
         }
 
+        getSupportActionBar().setTitle(note.getTitle());
+
         TextView text = (TextView) findViewById(R.id.noteText);
         text.setText(note.getText());
 
-        attached = (ImageView) findViewById(R.id.mediaView);
+        //attached = (ImageView) findViewById(R.id.mediaView);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
@@ -67,7 +69,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        ViewHelper.setTranslationY(attached, scrollY / 4 * 3);
+       // ViewHelper.setTranslationY(attached, scrollY / 4 * 3);
 
     }
 

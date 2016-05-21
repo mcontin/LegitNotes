@@ -2,6 +2,7 @@ package com.legitdevs.legitnotes;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -22,10 +24,15 @@ import java.util.Date;
 
 import jp.wasabeef.richeditor.RichEditor;
 
-public class EditNoteActivity extends AppCompatActivity {
+public class EditNoteActivity extends AppCompatActivity
+    implements IDeletionListener{
 
+    private static final String KEY_NOTE = "note";
+    private static final String KEY_POSITION = "position";
     private EditText title;
     private EditText text;
+
+
     //private RichEditor text;
     private Note note;
     private TextView date;
@@ -55,7 +62,7 @@ public class EditNoteActivity extends AppCompatActivity {
         }
 
         title.setText(note.getTitle());
-        //text.setText(note.getText());
+        text.setText(note.getText());
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         media = note.getMedia();
 
@@ -200,27 +207,43 @@ public class EditNoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
 
-        if (id == R.id.save_note) {
+        switch(item.getItemId()){
+            case R.id.save_note:
+                note.setTitle(title.getText().toString());
+                note.setText(text.getText().toString());
+                //note.setMedia(media);
 
+                DatabaseManager.getInstance(this).addNote(note);
 
-            //TODO setters prendendo dagli edit text
-            note.setTitle(title.getText().toString());
-            note.setText(text.getText().toString());
-            //note.setMedia(media);
+                //nota modificata, devo killare l'activity di dettaglio precedente
+                if(NoteDetailActivity.activity != null)
+                    NoteDetailActivity.activity.finish();
 
-            DatabaseManager.getInstance(this).addNote(note);
+                Toast.makeText(getApplicationContext(),R.string.save_note_toast, Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(this, NoteDetailActivity.class);
-            intent.putExtra(NoteDetailActivity.KEY_NOTE, note);
-            if(NoteDetailActivity.activity!=null)
-                NoteDetailActivity.activity.finish();
-            startActivity(intent);
-            finish();
+                break;
+
+            case R.id.delete_note:
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(KEY_NOTE, note);
+                bundle.putInt(KEY_POSITION, -1); //non serve la posizione in questa activity
+                ConfirmRemovalDialog.getInstance(bundle).show(getSupportFragmentManager(),"dialog");
+
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onNoteDeleted(int position) {
+        Intent intent = new Intent(this, HomeActivity.class);
+        if(HomeActivity.activity != null)
+            HomeActivity.activity.finish();
+        startActivity(intent);
     }
 
     @Override

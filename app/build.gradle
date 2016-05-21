@@ -40,9 +40,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.couchbase.lite:couchbase-lite-android:1.2.1'
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.7.4'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.4'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
     compile 'com.thedeanda:lorem:2.0'
     compile 'jp.wasabeef:richeditor-android:1.2.0'
+    compile 'net.the4thdimension:audio-wife:1.0.3'
 }

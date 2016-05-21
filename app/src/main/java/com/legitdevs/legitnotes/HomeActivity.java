@@ -12,12 +12,15 @@ import com.legitdevs.legitnotes.database.DatabaseManager;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
 
+import android.provider.MediaStore;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.support.v7.widget.RecyclerView;
@@ -30,40 +33,44 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-
 import java.text.Normalizer;
 import java.util.ArrayList;
+
 
 import static android.support.v4.view.GravityCompat.*;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-                    SearchView.OnQueryTextListener {
+        SearchView.OnQueryTextListener,
+        IDeletionListener {
 
     public static final String DIALOG = "start dialog";
     private static final String TAG = "HomeActivity";
     public static final String KEY_NOTES_LIST = "notes_list";
     public final static String KEY_NOTE = "note";
+    public static final String KEY_SEARCH ="search";
 
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
     private ArrayList<Note> notes;
     private FloatingActionButton FABQuickNote, FABNewNote, FABNewAudioNote, FABVideo, FABLocation;
-    private DatabaseManager database;
+
+    public static HomeActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        activity = this;
+
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        database = new DatabaseManager(this);
-
         if(savedInstanceState != null) {
             notes = savedInstanceState.getParcelableArrayList(KEY_NOTES_LIST);
         } else {
-            notes = database.getNotes();
+            notes = DatabaseManager.getInstance(this).getNotes();
 
             if (notes.size() == 0) {
                 generateRandomNotes();
@@ -116,8 +123,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        Intent i = new Intent(getApplicationContext(),AudioNoteActivity.class);
-                        startActivity(i);
+                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
                         fabMenu.collapse();
 
                     }
@@ -136,7 +142,7 @@ public class HomeActivity extends AppCompatActivity
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new NotesAdapter(notes, this);    //adapter per la lista di note e creazione delle Card
         //layout a 2 colonne
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+        GridLayoutManager layoutManager = new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -163,8 +169,13 @@ public class HomeActivity extends AppCompatActivity
 
     public void updateNotes() {
         //bisogna "riprendere" il database sennò usa quello dello stato precedente
-        database = new DatabaseManager(this);
-        notes = database.getNotes();
+        notes = DatabaseManager.getInstance(this).getNotes();
+        adapter.updateNotes(notes);
+    }
+
+    @Override
+    public void onNoteDeleted(int position) {
+        adapter.removeNote(position);
         adapter.updateNotes(notes);
     }
 
@@ -177,7 +188,7 @@ public class HomeActivity extends AppCompatActivity
                     lorem.getParagraphs(1, 3));     //genera da 1 a 3 paragrafi
             notes.add(temp);
         }
-        database.saveNotes(notes);
+        DatabaseManager.getInstance(this).saveNotes(notes);
     }
 
 
@@ -204,7 +215,6 @@ public class HomeActivity extends AppCompatActivity
 
         searchView.setOnQueryTextListener(this);
 
-
         return true;
     }
 
@@ -225,46 +235,19 @@ public class HomeActivity extends AppCompatActivity
             final String title = note.getTitle().toLowerCase();
             if (title.contains(query)) {
                 filteredNote.add(note);
-                note.setTitle(highlight(query, note.getTitle()));
-
             }
         }
         return filteredNote;
     }
 
-    public static String highlight(String search, String originalText) {
-        // ignore case and accents
-        // the same thing should have been done for the search text
-        String normalizedText = Normalizer.normalize(originalText, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
-
-        int start = normalizedText.indexOf(search);
-        if (start < 0 || search.equals("")) {
-            // not found, nothing to to
-            return originalText;
-        } else {
-            // highlight each appearance in the original text
-            // while searching in normalized text
-            Spannable highlighted = new SpannableString(originalText);
-            while (start >= 0) {
-                int spanStart = Math.min(start, originalText.length());
-                int spanEnd = Math.min(start + search.length(), originalText.length());
-
-                highlighted.setSpan(new BackgroundColorSpan(R.color.accent), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                start = normalizedText.indexOf(search, spanEnd);
-            }
-
-            return highlighted.toString();
-        }
-    }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        final ArrayList<Note> filteredNotes= filter(database.getNotes(), newText);
+        Log.i(TAG, "onQueryTextChange: " + newText);
+        final ArrayList<Note> filteredNotes = filter(DatabaseManager.getInstance(this).getNotes(), newText);
         adapter.animateTo(filteredNotes);
         recyclerView.scrollToPosition(0);
         return true;
-//        return false;
     }
 
     @Override
@@ -278,8 +261,6 @@ public class HomeActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-
-
 
         return super.onOptionsItemSelected(item);
     }
@@ -314,6 +295,9 @@ public class HomeActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(KEY_NOTES_LIST, notes);
     }
+
+
+
 
 
 }

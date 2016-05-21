@@ -8,51 +8,55 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.legitdevs.legitnotes.database.DatabaseManager;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RemoveDialog extends DialogFragment {
+public class ConfirmRemovalDialog extends DialogFragment {
 
     public final static String KEY_NOTE = "note";
+    public final static String KEY_POSITION = "position";
 
-
-    public RemoveDialog() {
+    public ConfirmRemovalDialog() {
         // Required empty public constructor
     }
 
-    public static RemoveDialog getInstance(Note note){
-        RemoveDialog removeDialog=new RemoveDialog();
-        Bundle bundle=new Bundle();
-        bundle.putParcelable(KEY_NOTE, note);
-        removeDialog.setArguments(bundle);
-        return removeDialog;
+    public static ConfirmRemovalDialog getInstance(Bundle arguments){
+        ConfirmRemovalDialog confirmRemovalDialog = new ConfirmRemovalDialog();
+        confirmRemovalDialog.setArguments(arguments);
+        return confirmRemovalDialog;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(getResources().getString(R.string.remove_note))
+        final IDeletionListener listener = (IDeletionListener) getActivity();
+
+        builder.setTitle(getResources().getString(R.string.confirm))
                 .setMessage(R.string.remove_dialog_message)
                 .setPositiveButton(R.string.remove_dialog_positive, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                      DatabaseManager.getInstance(getContext()).removeNote((Note)getArguments().getParcelable(KEY_NOTE));
+
+                        DatabaseManager.getInstance(getContext()).removeNote((Note) getArguments().getParcelable(KEY_NOTE));
+
+                        //nota modificata, devo killare l'activity di dettaglio precedente
+                        if(NoteDetailActivity.activity != null)
+                            NoteDetailActivity.activity.finish();
+
+                        listener.onNoteDeleted(getArguments().getInt(KEY_POSITION));
+
                         dismiss();
                     }
                 })
                 .setNegativeButton(R.string.remove_dialog_negative, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                    dismiss();
+                        dismiss();
                     }
                 });
 

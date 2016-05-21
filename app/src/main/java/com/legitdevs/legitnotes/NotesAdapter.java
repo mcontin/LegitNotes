@@ -2,17 +2,15 @@ package com.legitdevs.legitnotes;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by mattia on 07/04/16.
@@ -22,6 +20,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
 
     private ArrayList<Note> notes;  //lista di eventi
     private Context ctx;
+    private boolean starClick = true;
 
     public NotesAdapter(ArrayList<Note> notes, Context ctx) {
         this.notes = notes;
@@ -48,15 +47,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
      * @param position   posizione di un evento nella lista
      */
     @Override
-    public void onBindViewHolder(CardViewHolder cardHolder, final int position) {
+    public void onBindViewHolder(final CardViewHolder cardHolder, final int position) {
         cardHolder.noteTitle.setText(notes.get(position).getTitle());
 
-        if(notes.get(position).getText().length() > 100) {
-            cardHolder.noteSnippet.setText(notes.get(position).getText()
-                    .substring(0, 99).concat("..."));  //visualizzo solo i primi 100 caratteri
-        } else {
-            cardHolder.noteSnippet.setText(notes.get(position).getText());
-        }
+        cardHolder.noteSnippet.setText(notes.get(position).getText());
 
         cardHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,10 +64,35 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         cardHolder.card.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                CardDialog.getInstance(notes.get(position)).show(((HomeActivity)ctx).getSupportFragmentManager(), "dialog");
+
+                EditDialog.getInstance(notes.get(position),position).show(((HomeActivity) ctx).getSupportFragmentManager(), "dialog");
+
                 return true;
             }
         });
+
+
+        cardHolder.preference.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (starClick){
+                    cardHolder.preference.setImageResource(R.drawable.ic_star);
+                    starClick=false;
+                } else {
+                    cardHolder.preference.setImageResource(R.drawable.ic_star_border);
+                    starClick=true;
+                }
+
+            }
+        });
+
+//        cardHolder.attachment.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //TODO aprire allegato/i
+//            }
+//        });
 
     }
 
@@ -101,17 +120,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         notifyItemInserted(notes.indexOf(note));
     }
 
-    public void removeNote(Note note) {
-        notes.remove(note);
+    public void removeNote(int position) {
+        notes.remove(position);
         orderBy();
 
-        notifyItemRemoved(notes.indexOf(note));
+        notifyItemRemoved(position);
     }
 
     public void orderBy() {
 
-    };
-
+    }
 
     /**
      * "Contenitore" di ogni card
@@ -120,15 +138,18 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         CardView card;
         TextView noteTitle;
         TextView noteSnippet;
+        ImageView preference;
+        LinearLayout attachment;
 
         CardViewHolder(View itemView) {
             super(itemView);
             card = (CardView) itemView.findViewById(R.id.cardView);
             noteTitle = (TextView) itemView.findViewById(R.id.title);
-            noteSnippet = (TextView) itemView.findViewById(R.id.TEXT_NORMAL);
+            noteSnippet = (TextView) itemView.findViewById(R.id.text);
+            preference = (ImageView) itemView.findViewById(R.id.star);
+            //attachment = (LinearLayout) itemView.findViewById(R.id.bottom_content);
         }
     }
-
 
     public void animateTo(ArrayList<Note> notes) {
         applyAndAnimateRemovals(notes);
@@ -166,22 +187,30 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
 
     public Note removeItem(int position) {
         final Note note = notes.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position,getItemCount());
+        notifyDataSetChanged();
         return note;
     }
 
     public void addItem(int position, Note note) {
        notes.add(position, note);
-        notifyItemInserted(position);
-        notifyItemRangeChanged(position, getItemCount());
+       notifyDataSetChanged();
     }
 
     public void moveItem(int fromPosition, int toPosition) {
         final Note note = notes.remove(fromPosition);
         notes.add(toPosition, note);
-        notifyItemMoved(fromPosition, toPosition);
-        notifyItemRangeChanged(fromPosition, toPosition, getItemCount());
+        notifyDataSetChanged();
     }
 
+    /*
+    public String getTitleFormatted(String title) {
+        //riformatta il nome dell'azienda(ZILIDIUM ==> Zilidium)
+        title = title.toLowerCase();
+        StringBuilder rackingSystemSb = new StringBuilder();
+        rackingSystemSb.append(title);
+        rackingSystemSb.setCharAt(0, Character.toUpperCase(rackingSystemSb.charAt(0)));
+        title = rackingSystemSb.toString();
+        return title;
+    }
+    */
 }

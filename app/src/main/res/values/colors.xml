@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#448bff</color>
     <color name="accent_dark">#ff2929</color>
     <color name="accent">#ff5252</color>
 
@@ -14,4 +14,7 @@
     <color name="gray">#606060</color>
     <color name="note_text">#454545</color>
     <color name="note_title">#1d1d1d</color>
+
+    <color name="default_button">#f0f0f0</color>
+    <color name="pressed_button">#dcdcdc</color>
 </resources>
