@@ -3,6 +3,8 @@ package com.legitdevs.legitnotes;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
@@ -28,6 +30,8 @@ public class Note implements Parcelable{
     //la chiave identifica se è immagine, video o audio,
     //il valore è il nome del file
     private HashMap<String, String> medias;
+
+    private String filesDir;
 
     //TODO id = UUID()
     public Note() {
@@ -90,9 +94,25 @@ public class Note implements Parcelable{
     public HashMap<String, String> getMedias() {
         return medias;
     }
-    public void setMedia(HashMap<String, String> medias) {
+    public void setMedias(HashMap<String, String> medias) {
         this.medias = medias;
     }
+
+//    public String getAudio() {
+//        //concateno la directory base che contiene i dati
+//        return filesDir                                         //directory base
+//                .concat(".audio/")                              //cartella audio
+//                .concat(medias.get(filesDir.concat(".audio"))); //nome del file
+//    }
+//
+//    public void addMedia(String fileDir) {
+//        //la nota deve conoscere la cartella in cui sono salvati tutti i media (audio, img, video ecc)
+//        if(filesDir == null || filesDir.length() == 0)
+//            filesDir = fileDir.split(".")[0];
+//
+//        //se la cartella è .audio salvo nella mappa la cartella come chiave e valore il nome del file per poterli concatenare dopo
+//        if(fileDir.endsWith("audio")) medias.put(fileDir, id.toString().concat(".3gp"));
+//    }
 
     public HashMap<String, Object> toHashMap(){
         HashMap<String, Object> hashMap = new HashMap<>();

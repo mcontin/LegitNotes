@@ -29,30 +29,32 @@ import android.widget.TextView;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.PropertyValuesHolder;
 
+import java.io.CharArrayWriter;
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 
 
 public class AudioNoteDialog extends DialogFragment {
 
-    private int currentAmplitude;
-
     public static final String TAG = "AudioNoteDialog";
 
     private CircledPulsatingButton btnRecord;
-    private Button btnPlay;
 
     private boolean recording = false;
-    private boolean playing = false;
 
     private MediaRecorder mRecorder;
-    private MediaPlayer mPlayer;
 
     private ViewGroup awContainer;
 
     private String mFileName;
     private Uri mFileUri;
+
+    private Button btnSave;
+
+    private IMediaSaver saveHandler;
 
     public static AudioNoteDialog getInstance() {
         return new AudioNoteDialog();
@@ -146,60 +148,44 @@ public class AudioNoteDialog extends DialogFragment {
         View v = inflater.inflate(R.layout.audio_note_layout, null);
         builder.setView(v);
 
-        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/audiorecordtest.3gp";
-        mFileUri = Uri.parse(mFileName);
+        saveHandler = (IMediaSaver) getActivity();
 
         awContainer = (ViewGroup) v.findViewById(R.id.playerContainer);
 
+        btnSave = (Button) v.findViewById(R.id.saveAudioBtn);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick: clicked");
 
+                saveHandler.saveMedia("audio", mFileName);
 
+                //dopo il salvataggio di una nota audio, il file temporaneo viene cancellato
+                //quindi si chiama dismiss per non salvare file vuoti
+                dismiss();
+            }
+        });
 
+        //cartella interna privata dell'app
+        File internalMemory = getContext().getFilesDir();
+        File temporaryDir = new File(internalMemory.getAbsolutePath()
+                + "/.temp");
 
-//        final FloatingActionButton btnRecord = (FloatingActionButton) v.findViewById(R.id.btnRecord);
-//        btnRecord.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (!recording) {
-//
-//                    mRecorder = new MediaRecorder();
-//                    mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-//                    mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-//                    mRecorder.setOutputFile(mFileName);
-//                    mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-//
-//                    try {
-//                        mRecorder.prepare();
-//                    } catch (IOException e) {
-//                        Log.e(TAG, "prepare() failed");
-//                    }
-//
-//                    mRecorder.start();
-//
-//                    //btnRecord.setText("Stop recording");
-//                    btnRecord.setImageResource(R.drawable.ic_stop);
-//                    recording = true;
-//                } else {
-//
-//                    mRecorder.stop();
-//                    mRecorder.release();
-//                    mRecorder = null;
-//
-//                    AudioWife.getInstance().release();
-//                    awContainer.removeAllViewsInLayout();
-//                    AudioWife.getInstance().init(getContext(), mFileUri)
-//                            .useDefaultUi(awContainer, inflater);
-//                    //btnRecord.setText("Start recording");
-//                    btnRecord.setImageResource(R.drawable.ic_keyboard_voice);
-//                    recording = false;
-//                }
-//            }
-//
-//        });
+        //se non esiste creo la cartella temporanea
+        if (!temporaryDir.exists()) {
+            if(!temporaryDir.mkdir()) {
+                //è successo qualcosa di brutto
+                AlertDialog.Builder b = new AlertDialog.Builder(getContext());
+                b.setMessage("Error with internal memory! Please restart the app.");
+                b.create().show();
+                dismiss();
+            }
+        }
 
+        mFileName = temporaryDir + "/temp.3gp";
+        mFileUri = Uri.parse(mFileName);
 
         btnRecord = (CircledPulsatingButton) v.findViewById(R.id.btnRecord);
-
         btnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,7 +198,8 @@ public class AudioNoteDialog extends DialogFragment {
                     mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                     mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
                     mRecorder.setOutputFile(mFileName);
-                    mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+                    mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
 
                     btnRecord.setMediaRecorder(mRecorder);
 
@@ -235,6 +222,8 @@ public class AudioNoteDialog extends DialogFragment {
 
                     btnRecord.setImageResource(R.drawable.ic_stop);
                     recording = true;
+
+                    btnSave.setEnabled(false);
                 } else {
 
                     mRecorder.stop();
@@ -248,6 +237,8 @@ public class AudioNoteDialog extends DialogFragment {
 
                     AudioWife.getInstance().init(getContext(), mFileUri)
                             .useDefaultUi(awContainer, inflater);
+
+                    Log.i(TAG, "onClick: " + mFileUri.toString());
                     //btnRecord.setText("Start recording");
 
 //                    int dimensions = ((ImageView) v.findViewById(R.id.btnRecord)).getWidth();
@@ -258,6 +249,8 @@ public class AudioNoteDialog extends DialogFragment {
 
                     btnRecord.setImageResource(R.drawable.ic_keyboard_voice);
                     recording = false;
+
+                    btnSave.setEnabled(true);
                 }
             }
         });

@@ -18,6 +18,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.legitdevs.legitnotes.database.DatabaseManager;
 
 import java.text.DateFormat;
+import java.util.HashMap;
 
 public class EditNoteActivity extends AppCompatActivity
     implements IDeletionListener{
@@ -31,7 +32,7 @@ public class EditNoteActivity extends AppCompatActivity
     //private RichEditor text;
     private Note note;
     private TextView date;
-    private String media;
+    private HashMap<String, String> medias;
     private FloatingActionButton FABQuickNote, FABNewNote, FABNewAudioNote, FABVideo, FABLocation;
     public static final String DIALOG = "start dialog";
 
@@ -60,7 +61,7 @@ public class EditNoteActivity extends AppCompatActivity
         title.setText(note.getTitle());
         text.setText(note.getText());
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
-        media = note.getMedia();
+        medias = note.getMedias();
 
         /*text.setPadding(10, 10, 10, 10);
         text.setPlaceholder("" + R.string.new_text);
