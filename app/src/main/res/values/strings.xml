@@ -41,8 +41,8 @@
     <!--Note editor-->
     <string name="new_title">Title</string>
     <string name="new_text">Write your note here</string>
-    <string name="save_note">Save note</string>
-    <string name="delete_note">Delete note</string>
+    <string name="save_note">Save</string>
+    <string name="delete_note">Delete</string>
 
     <!--String related to toast-->
     <string name="save_note_toast">Note saved successfully</string>

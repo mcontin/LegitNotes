@@ -1,8 +1,6 @@
 package com.legitdevs.legitnotes;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,9 +18,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.legitdevs.legitnotes.database.DatabaseManager;
 
 import java.text.DateFormat;
-import java.util.Date;
-
-import jp.wasabeef.richeditor.RichEditor;
 
 public class EditNoteActivity extends AppCompatActivity
     implements IDeletionListener{
@@ -49,6 +44,7 @@ public class EditNoteActivity extends AppCompatActivity
 
         title = (EditText) findViewById(R.id.editTitle);
         text = (EditText) findViewById(R.id.editText);
+
         //text = (RichEditor) findViewById(R.id.editText);
         date = (TextView) findViewById(R.id.creationDate);
 
@@ -198,6 +194,7 @@ public class EditNoteActivity extends AppCompatActivity
                 frameLayout.setOnTouchListener(null);
             }
         });
+
     }
 
 
@@ -209,17 +206,8 @@ public class EditNoteActivity extends AppCompatActivity
 
         switch(item.getItemId()){
             case R.id.save_note:
-                note.setTitle(title.getText().toString());
-                note.setText(text.getText().toString());
-                //note.setMedia(media);
 
-                DatabaseManager.getInstance(this).addNote(note);
-
-                //nota modificata, devo killare l'activity di dettaglio precedente
-                if(NoteDetailActivity.activity != null)
-                    NoteDetailActivity.activity.finish();
-
-                Toast.makeText(getApplicationContext(),R.string.save_note_toast, Toast.LENGTH_LONG).show();
+                saveChanges();
 
                 break;
 
@@ -251,5 +239,23 @@ public class EditNoteActivity extends AppCompatActivity
         inflater.inflate(R.menu.editor, menu);
 
         return true;
+    }
+
+    private void saveChanges(){
+        note.setTitle(title.getText().toString());
+        note.setText(text.getText().toString());
+        //note.setMedia(media);
+
+        DatabaseManager.getInstance(this).addNote(note);
+
+        //nota modificata, devo killare l'activity di dettaglio precedente
+        if(NoteDetailActivity.activity != null)
+            NoteDetailActivity.activity.finish();
+
+        finish();
+
+        Toast.makeText(getApplicationContext(),R.string.save_note_toast, Toast.LENGTH_LONG).show();
+
+
     }
 }

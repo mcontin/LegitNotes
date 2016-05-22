@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".EditNote">
+    tools:context=".EditNoteActivity">
+
 
     <LinearLayout
         android:id="@+id/noteContainer"
@@ -25,136 +26,53 @@
             android:layout_gravity="end"
             android:text="" />
 
-        <EditText
-            android:id="@+id/editTitle"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapSentences"
-            android:hint="@string/new_title"
-            android:lines="1"
-            android:singleLine="true" />
+            android:layout_height="wrap_content">
 
-        <!--<HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/editTitle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:hint="@string/new_title"
+                android:inputType="textCapSentences"
+                android:imeOptions="flagNoFullscreen"
+                android:lines="1"
+                android:singleLine="true" />
 
-                <ImageButton
-                    android:id="@+id/action_bold"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/bold" />
+        </android.support.design.widget.TextInputLayout>
 
-                <ImageButton
-                    android:id="@+id/action_italic"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/italic" />
-
-                <ImageButton
-                    android:id="@+id/action_superscript"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/superscript" />
-
-                <ImageButton
-                    android:id="@+id/action_strikethrough"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/strikethrough" />
-
-                <ImageButton
-                    android:id="@+id/action_underline"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/underline" />
-
-                <ImageButton
-                    android:id="@+id/action_txt_color"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/txt_color" />
-
-                <ImageButton
-                    android:id="@+id/action_bg_color"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/bg_color" />
-
-
-               <ImageButton
-                    android:id="@+id/action_insert_checkbox"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@android:drawable/checkbox_on_background" />
-
-
-
-
-
-
-            </LinearLayout>
-
-        </HorizontalScrollView>
-
-        <jp.wasabeef.richeditor.RichEditor
-            android:id="@+id/editText"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/creationDate"
-            android:layout_marginTop="15dp"
-            android:inputType="textMultiLine"
-            android:capitalize="sentences"
-            android:gravity="top|left"
-            android:focusable="true"
-            android:hint="@string/new_text" />-->
+            android:layout_height="wrap_content">
 
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="30dp"
+                android:gravity="top|start"
+                android:hint="@string/new_text"
+                android:imeOptions="flagNoFullscreen"
+                android:inputType="textMultiLine|textCapSentences" />
 
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/creationDate"
-            android:background="@android:color/transparent"
-            android:layout_marginTop="15dp"
-            android:inputType="textMultiLine|textCapSentences"
-            android:gravity="top|left"
-            android:hint="@string/new_text" />
+            </android.support.design.widget.TextInputLayout>
+
 
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/frame_layout_insert_media"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white_overlay">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_gravity="bottom|right">
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:id="@+id/fab_menu_insert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|bottom"
+            android:layout_gravity="center_horizontal|top"
             fab:fab_addButtonColorNormal="@color/accent"
             fab:fab_addButtonColorPressed="@color/accent_dark"
             fab:fab_addButtonPlusIconColor="@color/white"
@@ -168,8 +86,8 @@
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/accent"
                 fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_plusIconColor="@color/white"
                 fab:fab_icon="@drawable/my_icon"
+                fab:fab_plusIconColor="@color/white"
                 fab:fab_size="mini"
                 fab:fab_title="One" />
 
@@ -179,8 +97,8 @@
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/accent"
                 fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_plusIconColor="@color/white"
                 fab:fab_icon="@drawable/ic_create_white_24dp"
+                fab:fab_plusIconColor="@color/white"
                 fab:fab_size="mini"
                 fab:fab_title="New Note" />
 
@@ -190,8 +108,8 @@
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/accent"
                 fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_plusIconColor="@color/white"
                 fab:fab_icon="@drawable/ic_note_add"
+                fab:fab_plusIconColor="@color/white"
                 fab:fab_size="mini"
                 fab:fab_title="Quick Note" />
 
@@ -199,4 +117,101 @@
 
     </FrameLayout>
 
-</RelativeLayout>
+</FrameLayout>
+
+
+    <!--<HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/black">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:id="@+id/action_bold"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@null"
+                            android:contentDescription="@null"
+                            android:src="@drawable/bold" />
+
+                        <ImageButton
+                            android:id="@+id/action_italic"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@null"
+                            android:contentDescription="@null"
+                            android:src="@drawable/italic" />
+
+                        <ImageButton
+                            android:id="@+id/action_superscript"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@null"
+                            android:contentDescription="@null"
+                            android:src="@drawable/superscript" />
+
+                        <ImageButton
+                            android:id="@+id/action_strikethrough"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@null"
+                            android:contentDescription="@null"
+                            android:src="@drawable/strikethrough" />
+
+                        <ImageButton
+                            android:id="@+id/action_underline"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@null"
+                            android:contentDescription="@null"
+                            android:src="@drawable/underline" />
+
+                        <ImageButton
+                            android:id="@+id/action_txt_color"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@null"
+                            android:contentDescription="@null"
+                            android:src="@drawable/txt_color" />
+
+                        <ImageButton
+                            android:id="@+id/action_bg_color"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@null"
+                            android:contentDescription="@null"
+                            android:src="@drawable/bg_color" />
+
+
+                       <ImageButton
+                            android:id="@+id/action_insert_checkbox"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@null"
+                            android:contentDescription="@null"
+                            android:src="@android:drawable/checkbox_on_background" />
+
+
+
+
+
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
+                <jp.wasabeef.richeditor.RichEditor
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/creationDate"
+                    android:layout_marginTop="15dp"
+                    android:inputType="textMultiLine"
+                    android:capitalize="sentences"
+                    android:gravity="top|left"
+                    android:focusable="true"
+                    android:hint="@string/new_text" />-->
