@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -25,18 +26,21 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.PropertyValuesHolder;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.Executors;
 
 
 public class AudioNoteDialog extends DialogFragment {
 
     private int currentAmplitude;
-    public boolean activeThread;
 
     public static final String TAG = "AudioNoteDialog";
 
-    private ImageView btnRecord;
+    private CircledPulsatingButton btnRecord;
     private Button btnPlay;
 
     private boolean recording = false;
@@ -139,9 +143,8 @@ public class AudioNoteDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v=inflater.inflate(R.layout.audio_note_layout, null);
+        View v = inflater.inflate(R.layout.audio_note_layout, null);
         builder.setView(v);
-
 
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/audiorecordtest.3gp";
@@ -195,26 +198,23 @@ public class AudioNoteDialog extends DialogFragment {
 //        });
 
 
-
-
-
-
-
-        btnRecord = (ImageView) v.findViewById(R.id.btnRecord);
-
+        btnRecord = (CircledPulsatingButton) v.findViewById(R.id.btnRecord);
 
         btnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!recording) {
                     AudioWife.getInstance().release();
-                    //awContainer.removeAllViewsInLayout();
+                    //bisogna togliere la view altrimenti l'app crasha se si fa partire il player mentre si registra
+                    awContainer.removeAllViewsInLayout();
 
                     mRecorder = new MediaRecorder();
                     mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                     mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
                     mRecorder.setOutputFile(mFileName);
                     mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+                    btnRecord.setMediaRecorder(mRecorder);
 
                     try {
                         mRecorder.prepare();
@@ -238,11 +238,14 @@ public class AudioNoteDialog extends DialogFragment {
                 } else {
 
                     mRecorder.stop();
+                    mRecorder.reset();
                     mRecorder.release();
                     mRecorder = null;
+                    btnRecord.releaseRecorder();
 
                     AudioWife.getInstance().release();
                     awContainer.removeAllViewsInLayout();
+
                     AudioWife.getInstance().init(getContext(), mFileUri)
                             .useDefaultUi(awContainer, inflater);
                     //btnRecord.setText("Start recording");
@@ -265,42 +268,6 @@ public class AudioNoteDialog extends DialogFragment {
 //        builder.setView(R.layout.audio_note_layout);
         return builder.create();
     }
-//
-//    @Override
-//    public void run() {
-//        // TODO Auto-generated method stub
-//        try {
-//            activeThread = true;
-//            while(activeThread){
-//                Log.i(TAG, "onRun()" );
-//                Thread.sleep(50);
-//                threadHandler.sendEmptyMessage(0);
-//
-//            }
-//        } catch (InterruptedException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//
-//
-//    }
-//
-//
-//    /***
-//     * Handler receives the message from the thread, and modify the UIThread as needed
-//     * Focused on the detection of the amplitude
-//     */
-//
-//    private Handler threadHandler = new Handler() {
-//        public void handleMessage(android.os.Message msg) {
-//
-//            currentAmplitude = mRecorder.getMaxAmplitude();
-//            Log.i(TAG, "handleMessage : MaxAmplitude : "+Integer.toString(currentAmplitude) );
-//
-//
-//        }
-//
-//    };
 
     @Override
     public void onAttach(Context context) {
@@ -310,6 +277,19 @@ public class AudioNoteDialog extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
+        //bisogna spegnere il recorder altrimenti rimane attivo sia quando il dialog viene chiuso sia quando l'app va giù
+        //(non testato)
+        mRecorder.stop();
+        mRecorder.reset();
+        mRecorder.release();
+        mRecorder = null;
+        btnRecord.releaseRecorder();
+
+        AudioWife.getInstance().release();
+        awContainer.removeAllViewsInLayout();
+
+        recording = false;
     }
 
 }
