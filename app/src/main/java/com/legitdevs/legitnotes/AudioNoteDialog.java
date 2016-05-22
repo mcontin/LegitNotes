@@ -280,9 +280,11 @@ public class AudioNoteDialog extends DialogFragment {
 
         //bisogna spegnere il recorder altrimenti rimane attivo sia quando il dialog viene chiuso sia quando l'app va giù
         //(non testato)
-        mRecorder.stop();
-        mRecorder.reset();
-        mRecorder.release();
+        if(recording){
+            mRecorder.stop();
+            mRecorder.reset();
+            mRecorder.release();
+        }
         mRecorder = null;
         btnRecord.releaseRecorder();
 
@@ -290,6 +292,9 @@ public class AudioNoteDialog extends DialogFragment {
         awContainer.removeAllViewsInLayout();
 
         recording = false;
+
+
+
     }
 
 }
