@@ -61,6 +61,8 @@ public class FileManager {
                 + mNote.getId().toString()
                 + File.separatorChar
                 + type);
+        //nella cartella dell'app ci sarà una cartella per ogni nota che conterrà a sua volta una cartella per ogni tipo di allegato
+        //in caso in futuro volessimo salvare più allegati dello stesso tipo
 
         //se non esiste creo la cartella destinazione
         if (!fileDir.exists()) {
