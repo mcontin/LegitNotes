@@ -143,4 +143,6 @@
 
     </LinearLayout>
 
+    <include layout="@layout/app_insert_media_note"/>
+
 </RelativeLayout>

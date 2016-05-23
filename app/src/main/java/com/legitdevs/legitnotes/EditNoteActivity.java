@@ -138,7 +138,7 @@ public class EditNoteActivity extends AppCompatActivity
             }
         });*/
 
-        View newView = new View()
+
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
         assert frameLayout != null;
         frameLayout.getBackground().setAlpha(0);
@@ -156,12 +156,11 @@ public class EditNoteActivity extends AppCompatActivity
                     }
                 });
 
-                FABQuickNote = (FloatingActionButton) findViewById(R.id.fab_quick_note);
+                FABQuickNote = (FloatingActionButton) findViewById(R.id.new_camera_note);
                 FABQuickNote.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        QuickNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
                         fabMenu.collapse();
 
                     }
@@ -172,20 +171,40 @@ public class EditNoteActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        Intent i = new Intent(getBaseContext(),EditNoteActivity.class);
-                        startActivity(i);
+
                         fabMenu.collapse();
 
                     }
                 });
 
-                FABNewAudioNote = (FloatingActionButton) findViewById(R.id.fab_new_audio_note);
+                FABNewAudioNote = (FloatingActionButton) findViewById(R.id.new_attach_document);
                 FABNewAudioNote.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        Intent i = new Intent(getApplicationContext(),AudioNoteActivity.class);
-                        startActivity(i);
+
+                        fabMenu.collapse();
+
+                    }
+                });
+
+                FABNewNote = (FloatingActionButton) findViewById(R.id.new_audio);
+                FABNewNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                        fabMenu.collapse();
+
+                    }
+                });
+
+                FABNewNote = (FloatingActionButton) findViewById(R.id.new_video);
+                FABNewNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
                         fabMenu.collapse();
 
                     }
