@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +12,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
@@ -27,10 +30,12 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
     private Note note;
     private ObservableScrollView scrollView;
-    private ImageView attached;
+    private ImageView imageNote;
     private TextView title;
     private TextView text;
     private BottomBar bottomBar;
+    private boolean isImageFitToScreen=true;
+    private RelativeLayout mediaContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +67,10 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
         scrollView = (ObservableScrollView) findViewById(R.id.scroll);
         scrollView.setScrollViewCallbacks(this);
 
+        imageNote=(ImageView)findViewById(R.id.image_note);
+        mediaContainer=(RelativeLayout)findViewById(R.id.media_container);
+
+        mediaContainer.getBackground().setAlpha(0);
 
 
         bottomBar = BottomBar.attach(this, savedInstanceState);
@@ -72,6 +81,25 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
                     case R.id.bottomBarAudio:
                         break;
                     case R.id.bottomBarImage:
+                        mediaContainer.getBackground().setAlpha(240);
+                        imageNote.setVisibility(View.VISIBLE);
+                        imageNote.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(isImageFitToScreen) {
+                                    isImageFitToScreen=false;
+                                    getSupportActionBar().show();
+                                    bottomBar.show();
+                                }else{
+                                    isImageFitToScreen=true;
+                                    getSupportActionBar().hide();
+                                    bottomBar.hide();
+                                    imageNote.setScaleType(ImageView.ScaleType.FIT_XY);
+                                }
+
+                            }
+                        });
+
                         break;
                     case R.id.bottomBarVideo:
                         break;
