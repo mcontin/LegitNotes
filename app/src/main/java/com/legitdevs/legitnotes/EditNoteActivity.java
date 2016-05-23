@@ -1,6 +1,7 @@
 package com.legitdevs.legitnotes;
 
 import android.content.Intent;
+import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -183,6 +184,19 @@ public class EditNoteActivity extends AppCompatActivity
                     public void onClick(View v) {
 
                         AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+                        fabMenu.collapse();
+
+                    }
+                });
+
+                FABLocation=(FloatingActionButton) findViewById(R.id.fab_position);
+                FABLocation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        /*Location location = new Location("myLocation");
+                        location.getLongitude();
+                        location.getLatitude();*/
                         fabMenu.collapse();
 
                     }
