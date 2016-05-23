@@ -14,6 +14,7 @@ import com.thedeanda.lorem.LoremIpsum;
 
 import android.provider.MediaStore;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -33,16 +34,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.Normalizer;
 import java.util.ArrayList;
-
 
 import static android.support.v4.view.GravityCompat.*;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         SearchView.OnQueryTextListener,
-        IDeletionListener {
+        IDeletionListener,
+        IMediaSaver{
 
     public static final String DIALOG = "start dialog";
     private static final String TAG = "HomeActivity";
@@ -168,9 +175,11 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void updateNotes() {
-        //bisogna "riprendere" il database sennò usa quello dello stato precedente
         notes = DatabaseManager.getInstance(this).getNotes();
         adapter.updateNotes(notes);
+    }
+    public void addNote(Note note) {
+        adapter.addNote(note);
     }
 
     @Override
@@ -296,8 +305,54 @@ public class HomeActivity extends AppCompatActivity
         outState.putParcelableArrayList(KEY_NOTES_LIST, notes);
     }
 
+    @Override
+    public void saveMedia(String fileType, String tempFile) {
+        //cartella interna privata dell'app
+        File internalMemory = getFilesDir();
+        File fileDir = new File(internalMemory.getAbsolutePath()
+                + "/." + fileType);
 
+        //se non esiste creo la cartella temporanea
+        if (!fileDir.exists()) {
+            if(!fileDir.mkdir()) {
+                //è successo qualcosa di brutto
+                AlertDialog.Builder b = new AlertDialog.Builder(this);
+                b.setMessage("Error with internal memory! Please restart the app.");
+                b.create().show();
+            }
+        }
 
+        //creo la nuova nota e ci associo il file
+        Note newNote = new Note();
+//        newNote.addMedia(fileDir.toString());
+        newNote.setTitle("Audio note - " + newNote.getDate().toString());
 
+        //sposto il file da temp a cartella destinazione
+        File newFile = new File(fileDir, newNote.getId().toString());   //creo un nuovo file che si chiama come l'id della nota per facilitare dopo
+        FileChannel outputChannel = null;
+        FileChannel inputChannel = null;
+        try {
+            outputChannel = new FileOutputStream(newFile).getChannel();
+            inputChannel = new FileInputStream(tempFile).getChannel();
+            inputChannel.transferTo(0, inputChannel.size(), outputChannel); //trasferisce i dati da input a output: tempFile >> newFile
+            inputChannel.close();
+            new File(tempFile).delete();
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if (inputChannel != null) try {
+                inputChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (outputChannel != null) try {
+                outputChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
+        DatabaseManager.getInstance(this).addNote(newNote);
+        addNote(newNote);
+    }
 }

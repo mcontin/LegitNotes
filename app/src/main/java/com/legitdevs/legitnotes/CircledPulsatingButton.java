@@ -6,7 +6,10 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaRecorder;
+import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
 
@@ -14,7 +17,7 @@ public class CircledPulsatingButton extends ImageView {
 
     private static final int PRESSED_COLOR_LIGHTUP = 255 / 25;
     private static final int PRESSED_RING_ALPHA = 75;
-    private static final int DEFAULT_PRESSED_RING_WIDTH_DIP = 4;
+    private static final int DEFAULT_PRESSED_RING_WIDTH_DIP = 16;
     private static final int ANIMATION_TIME_ID = android.R.integer.config_shortAnimTime;
 
     private int centerY;
@@ -31,6 +34,27 @@ public class CircledPulsatingButton extends ImageView {
     private int defaultColor = Color.BLACK;
     private int pressedColor;
     private ObjectAnimator pressedAnimator;
+
+    private MediaRecorder mRecorder;
+
+    private Handler mProgressUpdateHandler;
+
+    private Runnable mUpdateProgress = new Runnable() {
+
+        public void run() {
+
+            if (mRecorder == null) {
+                return;
+            }
+
+            if (mProgressUpdateHandler != null) {
+                pulsateAnimation();
+
+                //per fare prove modificare il secondo valore, non scendere sotto ai 150-200
+                mProgressUpdateHandler.postDelayed(this, 250);
+            }
+        }
+    };
 
     public CircledPulsatingButton(Context context) {
         super(context);
@@ -60,6 +84,9 @@ public class CircledPulsatingButton extends ImageView {
         } else {
             hidePressedRing();
         }
+
+        mProgressUpdateHandler = new Handler();
+        mProgressUpdateHandler.postDelayed(mUpdateProgress, 200);
     }
 
     @Override
@@ -108,6 +135,43 @@ public class CircledPulsatingButton extends ImageView {
         pressedAnimator.start();
     }
 
+    public void setMediaRecorder(MediaRecorder recorder) {
+        mRecorder = recorder;
+    }
+
+    //IMPORTANTE: NON METTERE LOG QUA DENTRO
+    private void pulsateAnimation() {
+
+        if (mRecorder.getMaxAmplitude() > 2000) {
+            pressedAnimator.setFloatValues(animationProgress, pressedRingWidth);
+            pressedAnimator.start();
+            return;
+        }
+
+        if (mRecorder.getMaxAmplitude() > 1200) {
+            pressedAnimator.setFloatValues(animationProgress, pressedRingWidth / 3 * 2);
+            pressedAnimator.start();
+            return;
+        }
+
+        if (mRecorder.getMaxAmplitude() > 750) {
+            pressedAnimator.setFloatValues(animationProgress, pressedRingWidth / 3);
+            pressedAnimator.start();
+            return;
+        }
+
+        if (mRecorder.getMaxAmplitude() > 400) {
+            pressedAnimator.setFloatValues(animationProgress, pressedRingWidth / 6);
+            pressedAnimator.start();
+            return;
+        }
+
+        if (mRecorder.getMaxAmplitude() < 400) {
+            pressedAnimator.setFloatValues(animationProgress, 0);
+            pressedAnimator.start();
+        }
+    }
+
     private void init(Context context, AttributeSet attrs) {
         this.setFocusable(true);
         this.setScaleType(ScaleType.CENTER_INSIDE);
@@ -141,5 +205,9 @@ public class CircledPulsatingButton extends ImageView {
     private int getHighlightColor(int color, int amount) {
         return Color.argb(Math.min(255, Color.alpha(color)), Math.min(255, Color.red(color) + amount),
                 Math.min(255, Color.green(color) + amount), Math.min(255, Color.blue(color) + amount));
+    }
+
+    public void releaseRecorder() {
+        mRecorder = null;
     }
 }

@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.nineoldandroids.view.ViewHelper;
 
 public class NoteDetailActivity extends AppCompatActivity implements ObservableScrollViewCallbacks {
 
@@ -28,7 +27,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_notes);
+        setContentView(R.layout.activity_note_details);
 
         activity = this;    //PER CHIUDERE L'ACTIVITY DOPO AVER SALVATO LA NOTA PER NON AVERE PROBLEMI DI UP NAVIGATION
 
