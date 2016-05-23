@@ -52,6 +52,7 @@
         <activity
             android:name=".NoteDetailActivity"
             android:label="@string/title_detail_note"
+            android:theme="@style/AppTheme"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

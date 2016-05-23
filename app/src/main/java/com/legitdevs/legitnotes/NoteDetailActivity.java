@@ -25,6 +25,7 @@ import com.roughike.bottombar.OnMenuTabClickListener;
 public class NoteDetailActivity extends AppCompatActivity implements ObservableScrollViewCallbacks {
 
     public final static String KEY_NOTE = "note";
+    public final static String KEY_IMAGE = "image";
 
     public static NoteDetailActivity activity;
 
@@ -46,6 +47,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
         if(savedInstanceState != null) {
             note = savedInstanceState.getParcelable(KEY_NOTE);
+            isImageFitToScreen=savedInstanceState.getBoolean(KEY_IMAGE);
         } else {
             Intent intent = getIntent();
             Bundle receivedBundle = intent.getExtras();
@@ -74,34 +76,46 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
 
         bottomBar = BottomBar.attach(this, savedInstanceState);
+        bottomBar.noTopOffset();
+        bottomBar.noNavBarGoodness();
         bottomBar.setItemsFromMenu(R.menu.bottombar_menu, new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
                 switch (menuItemId){
-                    case R.id.bottomBarAudio:
+
+                    case R.id.bottomBarText:
+                        mediaContainer.getBackground().setAlpha(0);
+                        imageNote.setVisibility(View.GONE);
+
                         break;
+                    case R.id.bottomBarAudio:
+                        mediaContainer.getBackground().setAlpha(240);
+                        imageNote.setVisibility(View.GONE);
+                        break;
+
                     case R.id.bottomBarImage:
                         mediaContainer.getBackground().setAlpha(240);
                         imageNote.setVisibility(View.VISIBLE);
                         imageNote.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(isImageFitToScreen) {
-                                    isImageFitToScreen=false;
+                                if(!isImageFitToScreen) {
+                                    isImageFitToScreen=true;
                                     getSupportActionBar().show();
                                     bottomBar.show();
                                 }else{
-                                    isImageFitToScreen=true;
+                                    isImageFitToScreen=false;
                                     getSupportActionBar().hide();
                                     bottomBar.hide();
                                     imageNote.setScaleType(ImageView.ScaleType.FIT_XY);
                                 }
-
                             }
                         });
-
                         break;
+
                     case R.id.bottomBarVideo:
+                        mediaContainer.getBackground().setAlpha(240);
+                        imageNote.setVisibility(View.GONE);
                         break;
                 }
             }
@@ -172,6 +186,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(KEY_NOTE, note);
+        outState.putBoolean(KEY_IMAGE,isImageFitToScreen);
         bottomBar.onSaveInstanceState(outState);
     }
 
