@@ -20,6 +20,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.legitdevs.legitnotes.database.DatabaseManager;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.util.HashMap;
 
@@ -37,7 +38,7 @@ public class EditNoteActivity extends AppCompatActivity
     //private RichEditor text;
     private Note note;
     private TextView date;
-    private HashMap<String, String> medias;
+    private HashMap<String, File> medias;
     private FloatingActionButton FABQuickNote, FABNewNote, FABNewAudioNote, FABVideo, FABLocation;
     public static final String DIALOG = "start dialog";
 
@@ -68,77 +69,7 @@ public class EditNoteActivity extends AppCompatActivity
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         medias = note.getMedias();
 
-        /*text.setPadding(10, 10, 10, 10);
-        text.setPlaceholder("" + R.string.new_text);
-        text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.focusEditor();
-            }
-        });
 
-        /*
-        findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setBold();
-            }
-        });
-
-        findViewById(R.id.action_italic).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setItalic();
-            }
-        });
-
-
-        findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setSuperscript();
-            }
-        });
-        findViewById(R.id.action_strikethrough).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setStrikeThrough();
-            }
-        });
-
-        findViewById(R.id.action_underline).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setUnderline();
-            }
-        });
-
-        findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
-            private boolean isChanged;
-
-            @Override
-            public void onClick(View v) {
-                text.setTextColor(isChanged ? Color.BLACK : Color.RED);
-                isChanged = !isChanged;
-            }
-        });
-
-        findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
-            private boolean isChanged;
-
-            @Override
-            public void onClick(View v) {
-                text.setTextBackgroundColor(isChanged ? Color.TRANSPARENT : Color.YELLOW);
-                isChanged = !isChanged;
-            }
-        });
-
-
-        findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.insertTodo();
-            }
-        });*/
 
 
         //View newView = new View();
@@ -266,11 +197,7 @@ public class EditNoteActivity extends AppCompatActivity
             startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
         }
     }
-
-
-
-
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -329,3 +256,75 @@ public class EditNoteActivity extends AppCompatActivity
 
     }
 }
+
+/*text.setPadding(10, 10, 10, 10);
+        text.setPlaceholder("" + R.string.new_text);
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.focusEditor();
+            }
+        });
+
+        /*
+        findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setBold();
+            }
+        });
+
+        findViewById(R.id.action_italic).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setItalic();
+            }
+        });
+
+
+        findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                text.setSuperscript();
+            }
+        });
+        findViewById(R.id.action_strikethrough).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setStrikeThrough();
+            }
+        });
+
+        findViewById(R.id.action_underline).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setUnderline();
+            }
+        });
+
+        findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
+            private boolean isChanged;
+
+            @Override
+            public void onClick(View v) {
+                text.setTextColor(isChanged ? Color.BLACK : Color.RED);
+                isChanged = !isChanged;
+            }
+        });
+
+        findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
+            private boolean isChanged;
+
+            @Override
+            public void onClick(View v) {
+                text.setTextBackgroundColor(isChanged ? Color.TRANSPARENT : Color.YELLOW);
+                isChanged = !isChanged;
+            }
+        });
+
+
+        findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.insertTodo();
+            }
+        });*/

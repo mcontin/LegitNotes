@@ -29,7 +29,7 @@ public class Note implements Parcelable{
     private String category;
     //la chiave identifica se è immagine, video o audio,
     //il valore è il nome del file
-    private HashMap<String, String> medias;
+    private HashMap<String, File> medias;
 
     private String filesDir;
 
@@ -56,7 +56,7 @@ public class Note implements Parcelable{
         date = new Date((long)map.get(KEY_DATE));
         text = (String) map.get(KEY_TEXT);
         category = (String) map.get(KEY_CATEGORY);
-        medias = (HashMap<String, String>) map.get(KEY_MEDIA);
+        medias = (HashMap<String, File>) map.get(KEY_MEDIA);
     }
 
     public UUID getId(){
@@ -91,28 +91,16 @@ public class Note implements Parcelable{
         this.category = category;
     }
 
-    public HashMap<String, String> getMedias() {
+    public HashMap<String, File> getMedias() {
         return medias;
     }
-    public void setMedias(HashMap<String, String> medias) {
+    public void setMedias(HashMap<String, File> medias) {
         this.medias = medias;
     }
 
-//    public String getAudio() {
-//        //concateno la directory base che contiene i dati
-//        return filesDir                                         //directory base
-//                .concat(".audio/")                              //cartella audio
-//                .concat(medias.get(filesDir.concat(".audio"))); //nome del file
-//    }
-//
-//    public void addMedia(String fileDir) {
-//        //la nota deve conoscere la cartella in cui sono salvati tutti i media (audio, img, video ecc)
-//        if(filesDir == null || filesDir.length() == 0)
-//            filesDir = fileDir.split(".")[0];
-//
-//        //se la cartella è .audio salvo nella mappa la cartella come chiave e valore il nome del file per poterli concatenare dopo
-//        if(fileDir.endsWith("audio")) medias.put(fileDir, id.toString().concat(".3gp"));
-//    }
+    public void addMedia(String type, File file) {
+        medias.put(type, file);
+    }
 
     public HashMap<String, Object> toHashMap(){
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -157,7 +145,7 @@ public class Note implements Parcelable{
         category = in.readString();
 
         Bundle bundle = in.readBundle();
-        medias = (HashMap<String, String>) bundle.getSerializable(KEY_MEDIA);
+        medias = (HashMap<String, File>) bundle.getSerializable(KEY_MEDIA);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
