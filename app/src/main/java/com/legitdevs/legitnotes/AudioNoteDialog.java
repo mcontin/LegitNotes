@@ -3,38 +3,22 @@ package com.legitdevs.legitnotes;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.PropertyValuesHolder;
 
-import java.io.CharArrayWriter;
+import com.legitdevs.legitnotes.filemanager.FileManager;
+
 import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.concurrent.Executors;
 
 
 public class AudioNoteDialog extends DialogFragment {
@@ -49,8 +33,8 @@ public class AudioNoteDialog extends DialogFragment {
 
     private ViewGroup awContainer;
 
-    private String mFileName;
-    private Uri mFileUri;
+    private File mDestFile;
+    private Uri mDestFileUri;
 
     private Button btnSave;
 
@@ -59,86 +43,6 @@ public class AudioNoteDialog extends DialogFragment {
     public static AudioNoteDialog getInstance() {
         return new AudioNoteDialog();
     }
-
-//    @Override
-//    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        final View view = inflater.inflate(R.layout.audio_note_layout, container, false);
-//        getDialog().requestWindowFeature(STYLE_NO_TITLE);
-//
-//        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-//        mFileName += "/audiorecordtest.3gp";
-//        mFileUri = Uri.parse(mFileName);
-//
-//        awContainer = (ViewGroup) view.findViewById(R.id.playerContainer);
-//
-//        btnRecord = (Button) view.findViewById(R.id.btnRecord);
-//        btnRecord.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (!recording) {
-//
-//                    mRecorder = new MediaRecorder();
-//                    mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-//                    mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-//                    mRecorder.setOutputFile(mFileName);
-//                    mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-//
-//                    try {
-//                        mRecorder.prepare();
-//                    } catch (IOException e) {
-//                        Log.e(TAG, "prepare() failed");
-//                    }
-//
-//                    mRecorder.start();
-//
-//                    btnRecord.setText("Stop recording");
-//                    recording = true;
-//                } else {
-//
-//                    mRecorder.stop();
-//                    mRecorder.release();
-//                    mRecorder = null;
-//
-//                    AudioWife.getInstance().release();
-//                    awContainer.removeAllViewsInLayout();
-//                    AudioWife.getInstance().init(getContext(), mFileUri)
-//                                .useDefaultUi(awContainer, inflater);
-//                    btnRecord.setText("Start recording");
-//                    recording = false;
-//                }
-//            }
-//        });
-//
-////        btnPlay = (Button) view.findViewById(R.id.btnPlay);
-////        btnPlay.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View v) {
-////                if (!playing) {
-////
-////                    mPlayer = new MediaPlayer();
-////                    try {
-////                        mPlayer.setDataSource(mFileName);
-////                        mPlayer.prepare();
-////                        mPlayer.start();
-////                    } catch (IOException e) {
-////                        Log.e(TAG, "prepare() failed");
-////                    }
-////
-////                    btnPlay.setText("Stop playing");
-////                    playing = true;
-////                } else {
-////                    mPlayer.release();
-////                    mPlayer = null;
-////
-////                    btnPlay.setText("Start playing");
-////                    playing = false;
-////                }
-////            }
-////        });
-//
-//        return view;
-//    }
 
     @NonNull
     @Override
@@ -158,10 +62,8 @@ public class AudioNoteDialog extends DialogFragment {
             public void onClick(View v) {
                 Log.i(TAG, "onClick: clicked");
 
-                saveHandler.saveMedia("audio", mFileName);
+                saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
 
-                //dopo il salvataggio di una nota audio, il file temporaneo viene cancellato
-                //quindi si chiama dismiss per non salvare file vuoti
                 dismiss();
             }
         });
@@ -182,8 +84,8 @@ public class AudioNoteDialog extends DialogFragment {
             }
         }
 
-        mFileName = temporaryDir + "/temp.3gp";
-        mFileUri = Uri.parse(mFileName);
+        mDestFile = new File(temporaryDir + "/temp.3gp");
+        mDestFileUri = Uri.parse(mDestFile.toString());
 
         btnRecord = (CircledPulsatingButton) v.findViewById(R.id.btnRecord);
         btnRecord.setOnClickListener(new View.OnClickListener() {
@@ -197,7 +99,7 @@ public class AudioNoteDialog extends DialogFragment {
                     mRecorder = new MediaRecorder();
                     mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                     mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                    mRecorder.setOutputFile(mFileName);
+                    mRecorder.setOutputFile(mDestFile.toString());
 
                     mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
 
@@ -235,10 +137,11 @@ public class AudioNoteDialog extends DialogFragment {
                     AudioWife.getInstance().release();
                     awContainer.removeAllViewsInLayout();
 
-                    AudioWife.getInstance().init(getContext(), mFileUri)
+                    AudioWife.getInstance()
+                            .init(getContext(), mDestFileUri)
                             .useDefaultUi(awContainer, inflater);
 
-                    Log.i(TAG, "onClick: " + mFileUri.toString());
+                    Log.i(TAG, "onClick: " + mDestFileUri.toString());
                     //btnRecord.setText("Start recording");
 
 //                    int dimensions = ((ImageView) v.findViewById(R.id.btnRecord)).getWidth();
