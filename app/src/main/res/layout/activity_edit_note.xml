@@ -82,7 +82,7 @@
             android:layout_gravity="bottom|right">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_new_picture"
+                android:id="@+id/fab_from_gallery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/accent"
@@ -90,10 +90,10 @@
                 fab:fab_icon="@drawable/ic_menu_gallery"
                 fab:fab_plusIconColor="@color/white"
                 fab:fab_size="mini"
-                fab:fab_title="Pictures" />
+                fab:fab_title="From gallery" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/new_camera_note"
+                android:id="@+id/fab_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/accent"
@@ -101,9 +101,10 @@
                 fab:fab_icon="@drawable/ic_menu_camera"
                 fab:fab_plusIconColor="@color/white"
                 fab:fab_size="mini"
-                fab:fab_title="Photos" />
+                fab:fab_title="Photo" />
+
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/new_audio"
+                android:id="@+id/fab_audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/accent"
@@ -111,9 +112,10 @@
                 fab:fab_icon="@drawable/ic_mic_white_24dp"
                 fab:fab_plusIconColor="@color/white"
                 fab:fab_size="mini"
-                fab:fab_title="Register" />
+                fab:fab_title="Record" />
+
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/new_video"
+                android:id="@+id/fab_video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/accent"
@@ -122,6 +124,7 @@
                 fab:fab_plusIconColor="@color/white"
                 fab:fab_size="mini"
                 fab:fab_title="Video"/>
+
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
     </FrameLayout>

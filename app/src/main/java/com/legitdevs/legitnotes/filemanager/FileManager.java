@@ -29,9 +29,8 @@ public class FileManager {
      * @return
      */
     public static FileManager init(Context context) {
-        mContext = context;
-        if(instance == null)
-            instance = new FileManager();
+        if(mContext == null) mContext = context;
+        if(instance == null) instance = new FileManager();
         return instance;
     }
 
@@ -47,7 +46,7 @@ public class FileManager {
 
     /**
      * Salvataggio di un file
-     * @param type  tipo del file, usato per creare la sotto directory
+     * @param type  tipo del file, usato per creare la sotto directory e nome del file
      * @param tempFile  file da salvare
      */
     public void save(String type, File tempFile) {
@@ -74,8 +73,11 @@ public class FileManager {
             }
         }
 
+        //filename: audio.3gp, video.mp4, image.jpg
+        String finalFilename = type + tempFile.getName().split("\\.")[1];
+
         //sposto il file da temp a cartella destinazione
-        File newFile = new File(fileDir, tempFile.getName());   //creo un nuovo file che si chiama come l'id della nota per facilitare dopo
+        File newFile = new File(fileDir, finalFilename);   //creo un nuovo file che si chiama come l'id della nota per facilitare dopo
         FileChannel outputChannel = null;
         FileChannel inputChannel = null;
         try {

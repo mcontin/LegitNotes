@@ -84,7 +84,7 @@ public class AudioNoteDialog extends DialogFragment {
             }
         }
 
-        mDestFile = new File(temporaryDir + "/temp.3gp");
+        mDestFile = new File(temporaryDir + "/audio.3gp");
         mDestFileUri = Uri.parse(mDestFile.toString());
 
         btnRecord = (CircledPulsatingButton) v.findViewById(R.id.btnRecord);

@@ -1,9 +1,12 @@
 package com.legitdevs.legitnotes;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Path;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,36 +16,35 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.legitdevs.legitnotes.database.DatabaseManager;
+import com.legitdevs.legitnotes.filemanager.FileManager;
 
 import java.io.File;
 import java.text.DateFormat;
 import java.util.HashMap;
 
 public class EditNoteActivity extends AppCompatActivity
-    implements IDeletionListener{
+    implements IDeletionListener, IMediaSaver{
 
+    private static final String DIALOG = "start dialog";
     private static final String KEY_NOTE = "note";
     private static final String KEY_POSITION = "position";
-    private EditText title;
-    private EditText text;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int REQUEST_VIDEO_CAPTURE = 2;
-
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_VIDEO_CAPTURE = 2;
 
     //private RichEditor text;
     private Note note;
     private TextView date;
     private HashMap<String, File> medias;
-    private FloatingActionButton FABQuickNote, FABNewNote, FABNewAudioNote, FABVideo, FABLocation;
-    public static final String DIALOG = "start dialog";
-
-
+    private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
+    private EditText title;
+    private EditText text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,6 @@ public class EditNoteActivity extends AppCompatActivity
 
         title = (EditText) findViewById(R.id.editTitle);
         text = (EditText) findViewById(R.id.editText);
-
         //text = (RichEditor) findViewById(R.id.editText);
         date = (TextView) findViewById(R.id.creationDate);
 
@@ -60,7 +61,8 @@ public class EditNoteActivity extends AppCompatActivity
 
         if (receivedBundle != null) {
             note = receivedBundle.getParcelable(NoteDetailActivity.KEY_NOTE);
-        } else {
+        }
+        if (note == null){
             note = new Note();
         }
 
@@ -68,11 +70,6 @@ public class EditNoteActivity extends AppCompatActivity
         text.setText(note.getText());
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         medias = note.getMedias();
-
-
-
-
-        //View newView = new View();
 
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
         assert frameLayout != null;
@@ -91,22 +88,11 @@ public class EditNoteActivity extends AppCompatActivity
                     }
                 });
 
-                FABQuickNote = (FloatingActionButton) findViewById(R.id.new_audio);
-                FABQuickNote.setOnClickListener(new View.OnClickListener() {
+                fabGallery = (FloatingActionButton) findViewById(R.id.fab_from_gallery);
+                fabGallery.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //insert funcion that calls the registaration
-                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
-                        fabMenu.collapse();
-
-                    }
-                });
-
-                FABNewNote = (FloatingActionButton) findViewById(R.id.fab_new_picture);
-                FABNewNote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //call gallery and save the image that was taken
+                        //call the system's gallery
                         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
                         getIntent.setType("image/*");
 
@@ -114,43 +100,41 @@ public class EditNoteActivity extends AppCompatActivity
                         pickIntent.setType("image/*");
 
                         Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
                         startActivityForResult(chooserIntent, 1);
 
-
-
-
                         fabMenu.collapse();
-
                     }
                 });
 
-
-                FABNewNote = (FloatingActionButton) findViewById(R.id.new_camera_note);
-                FABNewNote.setOnClickListener(new View.OnClickListener() {
+                fabPhoto = (FloatingActionButton) findViewById(R.id.fab_photo);
+                fabPhoto.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // connect with the camera and try to insert the photo just pluged in(obviusily try to ask if you want to retry the photo or not
+                        //take a picture
                         dispatchTakePictureIntent();
                         fabMenu.collapse();
-
                     }
                 });
 
-                FABNewNote = (FloatingActionButton) findViewById(R.id.new_video);
-                FABNewNote.setOnClickListener(new View.OnClickListener() {
+                fabAudio = (FloatingActionButton) findViewById(R.id.fab_audio);
+                fabAudio.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        //insert the video
-
-                        dispatchTakeVideoIntent();
-
-
-
+                        //record audio
+                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
                         fabMenu.collapse();
+                    }
+                });
 
+                fabVideo = (FloatingActionButton) findViewById(R.id.fab_video);
+                fabVideo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //record a video
+                        dispatchTakeVideoIntent();
+                        fabMenu.collapse();
                     }
                 });
 
@@ -161,10 +145,10 @@ public class EditNoteActivity extends AppCompatActivity
                 frameLayout.getBackground().setAlpha(0);
                 frameLayout.setOnTouchListener(null);
             }
+
         });
 
     }
-
 
     // open camera
     private void dispatchTakePictureIntent() {
@@ -174,22 +158,6 @@ public class EditNoteActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
-            Uri videoUri = data.getData();
-           // mVideoView.setVideoURI(videoUri);
-        }else  if (
-                requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-         //   mImageView.setImageBitmap(imageBitmap);
-        }
-
-
-    }
-
     //open video
     private void dispatchTakeVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -197,15 +165,43 @@ public class EditNoteActivity extends AppCompatActivity
             startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
         }
     }
-    
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+            Uri videoUri = data.getData();
+            File videoFile = new File(getRealPathFromURI(videoUri));
+
+            FileManager.init(this)
+                    .with(note)
+                    .save(FileManager.TYPE_VIDEO, videoFile);
+
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap picThumbnail = (Bitmap) extras.get("data");
+        }
+
+    }
+
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        CursorLoader loader = new CursorLoader(getApplicationContext(), contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+        return result;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()){
             case R.id.save_note:
-
                 saveChanges();
-
                 break;
 
             case R.id.delete_note:
@@ -213,8 +209,8 @@ public class EditNoteActivity extends AppCompatActivity
                 bundle.putParcelable(KEY_NOTE, note);
                 bundle.putInt(KEY_POSITION, -1); //non serve la posizione in questa activity
                 ConfirmRemovalDialog.getInstance(bundle).show(getSupportFragmentManager(),"dialog");
-
                 break;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -252,7 +248,10 @@ public class EditNoteActivity extends AppCompatActivity
         finish();
 
         Toast.makeText(getApplicationContext(),R.string.save_note_toast, Toast.LENGTH_LONG).show();
+    }
 
+    @Override
+    public void saveMedia(String fileType, File fileName) {
 
     }
 }
