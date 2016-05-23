@@ -64,22 +64,22 @@
 
     <FrameLayout
         android:id="@+id/frame_layout_insert_media"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_overlay"
         android:layout_gravity="bottom|right">
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:id="@+id/fab_menu_insert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             fab:fab_addButtonColorNormal="@color/accent"
             fab:fab_addButtonColorPressed="@color/accent_dark"
             fab:fab_addButtonPlusIconColor="@color/white"
             fab:fab_addButtonStrokeVisible="false"
             fab:fab_labelStyle="@style/menu_labels_style"
-            fab:fab_labelsPosition="left">
+            fab:fab_labelsPosition="left"
+            android:layout_gravity="bottom|right">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_new_audio_note"
