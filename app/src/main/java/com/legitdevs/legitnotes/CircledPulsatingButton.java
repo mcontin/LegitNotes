@@ -20,6 +20,8 @@ public class CircledPulsatingButton extends ImageView {
     private static final int DEFAULT_PRESSED_RING_WIDTH_DIP = 16;
     private static final int ANIMATION_TIME_ID = android.R.integer.config_shortAnimTime;
 
+    public static final String TAG = "Pulsating Button";
+
     private int centerY;
     private int centerX;
     private int outerRadius;
@@ -36,6 +38,8 @@ public class CircledPulsatingButton extends ImageView {
     private ObjectAnimator pressedAnimator;
 
     private MediaRecorder mRecorder;
+    private int maxAmplitude = 1;
+    private int currentAmp;
 
     private Handler mProgressUpdateHandler;
 
@@ -51,7 +55,7 @@ public class CircledPulsatingButton extends ImageView {
                 pulsateAnimation();
 
                 //per fare prove modificare il secondo valore, non scendere sotto ai 150-200
-                mProgressUpdateHandler.postDelayed(this, 250);
+                mProgressUpdateHandler.postDelayed(this, 200);
             }
         }
     };
@@ -141,35 +145,26 @@ public class CircledPulsatingButton extends ImageView {
 
     //IMPORTANTE: NON METTERE LOG QUA DENTRO
     private void pulsateAnimation() {
+        currentAmp = mRecorder.getMaxAmplitude();
 
-        if (mRecorder.getMaxAmplitude() > 2000) {
-            pressedAnimator.setFloatValues(animationProgress, pressedRingWidth);
+        if (currentAmp > maxAmplitude){
+            maxAmplitude = currentAmp;
+        }
+
+        if(currentAmp<maxAmplitude/2){
+            pressedAnimator.setFloatValues(animationProgress, (pressedRingWidth * ((currentAmp*3)/2)) / maxAmplitude);
             pressedAnimator.start();
             return;
-        }
-
-        if (mRecorder.getMaxAmplitude() > 1200) {
-            pressedAnimator.setFloatValues(animationProgress, pressedRingWidth / 3 * 2);
+        } else if (currentAmp<maxAmplitude/3) {
+            pressedAnimator.setFloatValues(animationProgress, (pressedRingWidth * (currentAmp*2)) / maxAmplitude);
             pressedAnimator.start();
             return;
-        }
-
-        if (mRecorder.getMaxAmplitude() > 750) {
-            pressedAnimator.setFloatValues(animationProgress, pressedRingWidth / 3);
-            pressedAnimator.start();
-            return;
-        }
-
-        if (mRecorder.getMaxAmplitude() > 400) {
-            pressedAnimator.setFloatValues(animationProgress, pressedRingWidth / 6);
-            pressedAnimator.start();
-            return;
-        }
-
-        if (mRecorder.getMaxAmplitude() < 400) {
-            pressedAnimator.setFloatValues(animationProgress, 0);
+        } else {
+            pressedAnimator.setFloatValues(animationProgress, (pressedRingWidth * currentAmp) / maxAmplitude);
             pressedAnimator.start();
         }
+
+
     }
 
     private void init(Context context, AttributeSet attrs) {
