@@ -62,6 +62,9 @@ public class HomeActivity extends AppCompatActivity
     private ArrayList<Note> notes;
     private FloatingActionButton FABQuickNote, FABNewNote, FABNewAudioNote, FABVideo, FABLocation;
 
+    private SearchView searchView;
+    private MenuItem searchMenuItem;
+
     public static HomeActivity activity;
 
     @Override
@@ -218,8 +221,8 @@ public class HomeActivity extends AppCompatActivity
         inflater.inflate(R.menu.home, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
+        searchMenuItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setOnQueryTextListener(this);

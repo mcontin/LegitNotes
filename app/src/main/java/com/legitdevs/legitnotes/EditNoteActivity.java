@@ -63,7 +63,132 @@ public class EditNoteActivity extends AppCompatActivity
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         medias = note.getMedias();
 
-        /*text.setPadding(10, 10, 10, 10);
+
+
+        //View newView = new View();
+        final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
+        assert frameLayout != null;
+        frameLayout.getBackground().setAlpha(0);
+        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu_insert);
+        assert fabMenu != null;
+        fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                frameLayout.getBackground().setAlpha(200);
+                frameLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        fabMenu.collapse();
+                        return true;
+                    }
+                });
+
+                FABQuickNote = (FloatingActionButton) findViewById(R.id.fab_quick_note);
+                FABQuickNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        QuickNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+                        fabMenu.collapse();
+
+                    }
+                });
+
+                FABNewNote = (FloatingActionButton) findViewById(R.id.fab_new_note);
+                FABNewNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent i = new Intent(getBaseContext(),EditNoteActivity.class);
+                        startActivity(i);
+                        fabMenu.collapse();
+
+                    }
+                });
+
+                FABNewAudioNote = (FloatingActionButton) findViewById(R.id.fab_new_audio_note);
+                FABNewAudioNote.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+                        fabMenu.collapse();
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                frameLayout.getBackground().setAlpha(0);
+                frameLayout.setOnTouchListener(null);
+            }
+        });
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()){
+            case R.id.save_note:
+
+                saveChanges();
+
+                break;
+
+            case R.id.delete_note:
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(KEY_NOTE, note);
+                bundle.putInt(KEY_POSITION, -1); //non serve la posizione in questa activity
+                ConfirmRemovalDialog.getInstance(bundle).show(getSupportFragmentManager(),"dialog");
+
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onNoteDeleted(int position) {
+        Intent intent = new Intent(this, HomeActivity.class);
+        if(HomeActivity.activity != null)
+            HomeActivity.activity.finish();
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.editor, menu);
+
+        return true;
+    }
+
+    private void saveChanges(){
+        note.setTitle(title.getText().toString());
+        note.setText(text.getText().toString());
+        //note.setMedia(media);
+
+        DatabaseManager.getInstance(this).addNote(note);
+
+        //nota modificata, devo killare l'activity di dettaglio precedente
+        if(NoteDetailActivity.activity != null)
+            NoteDetailActivity.activity.finish();
+
+        finish();
+
+        Toast.makeText(getApplicationContext(),R.string.save_note_toast, Toast.LENGTH_LONG).show();
+
+
+    }
+}
+
+/*text.setPadding(10, 10, 10, 10);
         text.setPlaceholder("" + R.string.new_text);
         text.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,129 +259,3 @@ public class EditNoteActivity extends AppCompatActivity
                 text.insertTodo();
             }
         });*/
-
-        //View newView = new View();
-        final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
-        assert frameLayout != null;
-        frameLayout.getBackground().setAlpha(0);
-        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu_insert);
-        assert fabMenu != null;
-        fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
-            @Override
-            public void onMenuExpanded() {
-                frameLayout.getBackground().setAlpha(200);
-                frameLayout.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        fabMenu.collapse();
-                        return true;
-                    }
-                });
-
-                FABQuickNote = (FloatingActionButton) findViewById(R.id.fab_quick_note);
-                FABQuickNote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        QuickNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
-                        fabMenu.collapse();
-
-                    }
-                });
-
-                FABNewNote = (FloatingActionButton) findViewById(R.id.fab_new_note);
-                FABNewNote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent i = new Intent(getBaseContext(),EditNoteActivity.class);
-                        startActivity(i);
-                        fabMenu.collapse();
-
-                    }
-                });
-
-                FABNewAudioNote = (FloatingActionButton) findViewById(R.id.fab_new_audio_note);
-                FABNewAudioNote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
-                        fabMenu.collapse();
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onMenuCollapsed() {
-                frameLayout.getBackground().setAlpha(0);
-                frameLayout.setOnTouchListener(null);
-            }
-        });
-
-    }
-
-
-
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch(item.getItemId()){
-            case R.id.save_note:
-
-                saveChanges();
-
-                break;
-
-            case R.id.delete_note:
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(KEY_NOTE, note);
-                bundle.putInt(KEY_POSITION, -1); //non serve la posizione in questa activity
-                ConfirmRemovalDialog.getInstance(bundle).show(getSupportFragmentManager(),"dialog");
-
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onNoteDeleted(int position) {
-        Intent intent = new Intent(this, HomeActivity.class);
-        if(HomeActivity.activity != null)
-            HomeActivity.activity.finish();
-        startActivity(intent);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.editor, menu);
-
-        return true;
-    }
-
-    private void saveChanges(){
-        note.setTitle(title.getText().toString());
-        note.setText(text.getText().toString());
-        //note.setMedia(media);
-
-        DatabaseManager.getInstance(this).addNote(note);
-
-        //nota modificata, devo killare l'activity di dettaglio precedente
-        if(NoteDetailActivity.activity != null)
-            NoteDetailActivity.activity.finish();
-
-        finish();
-
-        Toast.makeText(getApplicationContext(),R.string.save_note_toast, Toast.LENGTH_LONG).show();
-
-
-    }
-}
