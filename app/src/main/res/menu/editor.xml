@@ -4,14 +4,16 @@
     >
     <item
         android:id="@+id/save_note"
-        android:icon="@drawable/ic_save_white_24dp"
+
         android:orderInCategory="100"
         android:title="@string/save_note"
         app:showAsAction="always" />
     <item
         android:id="@+id/delete_note"
-        android:icon="@drawable/ic_delete_white_24dp"
         android:orderInCategory="1"
         android:title="@string/delete_note"
         app:showAsAction="always" />
 </menu>
+
+    <!--android:icon="@drawable/ic_save_white_24dp"-->
+    <!--android:icon="@drawable/ic_delete_white_24dp"-->

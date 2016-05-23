@@ -66,6 +66,7 @@ public class EditDialog extends DialogFragment {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ConfirmRemovalDialog.getInstance(getArguments()).show(getFragmentManager(), "dialog");
 
                 Note note=getArguments().getParcelable(KEY_NOTE);
                 int position=getArguments().getInt(KEY_POSITION);

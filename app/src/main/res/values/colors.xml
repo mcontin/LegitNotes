@@ -17,4 +17,6 @@
 
     <color name="default_button">#f0f0f0</color>
     <color name="pressed_button">#dcdcdc</color>
+
+    <color name="simple_background">#feffef</color>
 </resources>

@@ -58,8 +58,7 @@ public class QuickNoteDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         Note note = new Note(title.getText().toString(), text.getText().toString());
                         DatabaseManager.getInstance(getContext()).addNote(note);
-                        ((HomeActivity) getActivity()).updateNotes();
-                        //database.addNote(note);
+                        ((HomeActivity) getActivity()).addNote(note);
                     }
                 })
                 .setNegativeButton(R.string.dialog_note_discard, new DialogInterface.OnClickListener() {

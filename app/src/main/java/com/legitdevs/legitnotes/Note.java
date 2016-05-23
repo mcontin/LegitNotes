@@ -1,7 +1,10 @@
 package com.legitdevs.legitnotes;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
@@ -24,7 +27,11 @@ public class Note implements Parcelable{
     private Date date;
     private String text;
     private String category;
-    private String media;
+    //la chiave identifica se è immagine, video o audio,
+    //il valore è il nome del file
+    private HashMap<String, String> medias;
+
+    private String filesDir;
 
     //TODO id = UUID()
     public Note() {
@@ -33,7 +40,7 @@ public class Note implements Parcelable{
         date = new Date();  //today
         text = "";
         category = "";
-        media = "";
+        medias = new HashMap<>();
     }
     public Note(String title, String text) {
         id = UUID.randomUUID();
@@ -41,7 +48,7 @@ public class Note implements Parcelable{
         date = new Date();  //today
         this.text = text;
         category = "";
-        media = "";
+        medias = new HashMap<>();
     }
     public Note(HashMap<String, Object> map){
         id = UUID.fromString(map.get(KEY_ID).toString());
@@ -49,7 +56,7 @@ public class Note implements Parcelable{
         date = new Date((long)map.get(KEY_DATE));
         text = (String) map.get(KEY_TEXT);
         category = (String) map.get(KEY_CATEGORY);
-        media = (String) map.get(KEY_MEDIA);
+        medias = (HashMap<String, String>) map.get(KEY_MEDIA);
     }
 
     public UUID getId(){
@@ -84,12 +91,28 @@ public class Note implements Parcelable{
         this.category = category;
     }
 
-    public String getMedia() {
-        return media;
+    public HashMap<String, String> getMedias() {
+        return medias;
     }
-    public void setMedia(String media) {
-        this.media = media;
+    public void setMedias(HashMap<String, String> medias) {
+        this.medias = medias;
     }
+
+//    public String getAudio() {
+//        //concateno la directory base che contiene i dati
+//        return filesDir                                         //directory base
+//                .concat(".audio/")                              //cartella audio
+//                .concat(medias.get(filesDir.concat(".audio"))); //nome del file
+//    }
+//
+//    public void addMedia(String fileDir) {
+//        //la nota deve conoscere la cartella in cui sono salvati tutti i media (audio, img, video ecc)
+//        if(filesDir == null || filesDir.length() == 0)
+//            filesDir = fileDir.split(".")[0];
+//
+//        //se la cartella è .audio salvo nella mappa la cartella come chiave e valore il nome del file per poterli concatenare dopo
+//        if(fileDir.endsWith("audio")) medias.put(fileDir, id.toString().concat(".3gp"));
+//    }
 
     public HashMap<String, Object> toHashMap(){
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -99,7 +122,7 @@ public class Note implements Parcelable{
         hashMap.put(KEY_DATE, date.getTime());
         hashMap.put(KEY_TEXT, text);
         hashMap.put(KEY_CATEGORY, category);
-        hashMap.put(KEY_MEDIA, media);
+        hashMap.put(KEY_MEDIA, medias);
 
         return hashMap;
     }
@@ -120,7 +143,10 @@ public class Note implements Parcelable{
         dest.writeLong(date.getTime());
         dest.writeString(text);
         dest.writeString(category);
-        dest.writeString(media);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(KEY_MEDIA, medias);
+        dest.writeBundle(bundle);
     }
     //creo un oggetto Note con la Parcel in arrivo
     public Note(Parcel in){
@@ -129,7 +155,9 @@ public class Note implements Parcelable{
         date = new Date(in.readLong());
         text = in.readString();
         category = in.readString();
-        media = in.readString();
+
+        Bundle bundle = in.readBundle();
+        medias = (HashMap<String, String>) bundle.getSerializable(KEY_MEDIA);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

@@ -1,8 +1,6 @@
 package com.legitdevs.legitnotes;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,9 +18,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.legitdevs.legitnotes.database.DatabaseManager;
 
 import java.text.DateFormat;
-import java.util.Date;
-
-import jp.wasabeef.richeditor.RichEditor;
+import java.util.HashMap;
 
 public class EditNoteActivity extends AppCompatActivity
     implements IDeletionListener{
@@ -36,7 +32,7 @@ public class EditNoteActivity extends AppCompatActivity
     //private RichEditor text;
     private Note note;
     private TextView date;
-    private String media;
+    private HashMap<String, String> medias;
     private FloatingActionButton FABQuickNote, FABNewNote, FABNewAudioNote, FABVideo, FABLocation;
     public static final String DIALOG = "start dialog";
 
@@ -49,6 +45,7 @@ public class EditNoteActivity extends AppCompatActivity
 
         title = (EditText) findViewById(R.id.editTitle);
         text = (EditText) findViewById(R.id.editText);
+
         //text = (RichEditor) findViewById(R.id.editText);
         date = (TextView) findViewById(R.id.creationDate);
 
@@ -64,7 +61,7 @@ public class EditNoteActivity extends AppCompatActivity
         title.setText(note.getTitle());
         text.setText(note.getText());
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
-        media = note.getMedia();
+        medias = note.getMedias();
 
         /*text.setPadding(10, 10, 10, 10);
         text.setPlaceholder("" + R.string.new_text);
@@ -138,7 +135,11 @@ public class EditNoteActivity extends AppCompatActivity
             }
         });*/
 
+<<<<<<< HEAD
 
+=======
+        //View newView = new View();
+>>>>>>> master
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
         assert frameLayout != null;
         frameLayout.getBackground().setAlpha(0);
@@ -182,6 +183,7 @@ public class EditNoteActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
+<<<<<<< HEAD
 
                         fabMenu.collapse();
 
@@ -205,6 +207,9 @@ public class EditNoteActivity extends AppCompatActivity
                     public void onClick(View v) {
 
 
+=======
+                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+>>>>>>> master
                         fabMenu.collapse();
 
                     }
@@ -218,6 +223,7 @@ public class EditNoteActivity extends AppCompatActivity
                 frameLayout.setOnTouchListener(null);
             }
         });
+
     }
 
 
@@ -229,17 +235,8 @@ public class EditNoteActivity extends AppCompatActivity
 
         switch(item.getItemId()){
             case R.id.save_note:
-                note.setTitle(title.getText().toString());
-                note.setText(text.getText().toString());
-                //note.setMedia(media);
 
-                DatabaseManager.getInstance(this).addNote(note);
-
-                //nota modificata, devo killare l'activity di dettaglio precedente
-                if(NoteDetailActivity.activity != null)
-                    NoteDetailActivity.activity.finish();
-
-                Toast.makeText(getApplicationContext(),R.string.save_note_toast, Toast.LENGTH_LONG).show();
+                saveChanges();
 
                 break;
 
@@ -271,5 +268,23 @@ public class EditNoteActivity extends AppCompatActivity
         inflater.inflate(R.menu.editor, menu);
 
         return true;
+    }
+
+    private void saveChanges(){
+        note.setTitle(title.getText().toString());
+        note.setText(text.getText().toString());
+        //note.setMedia(media);
+
+        DatabaseManager.getInstance(this).addNote(note);
+
+        //nota modificata, devo killare l'activity di dettaglio precedente
+        if(NoteDetailActivity.activity != null)
+            NoteDetailActivity.activity.finish();
+
+        finish();
+
+        Toast.makeText(getApplicationContext(),R.string.save_note_toast, Toast.LENGTH_LONG).show();
+
+
     }
 }
