@@ -316,6 +316,10 @@ public class HomeActivity extends AppCompatActivity
                 .with(newNote)
                 .save(fileType, tempFile);
 
+        File test = FileManager.init(this)
+                .with(newNote)
+                .get(FileManager.TYPE_AUDIO);
+
         DatabaseManager.getInstance(this).addNote(newNote);
         addNote(newNote);
     }

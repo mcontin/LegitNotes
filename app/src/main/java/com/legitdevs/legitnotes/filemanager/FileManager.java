@@ -51,7 +51,7 @@ public class FileManager {
      * @param tempFile  file da salvare
      */
     public void save(String type, File tempFile) {
-        if(!type.equals(TYPE_IMAGE) || !type.equals(TYPE_AUDIO) || !type.equals(TYPE_VIDEO))
+        if(!type.equals(TYPE_IMAGE) && !type.equals(TYPE_AUDIO) && !type.equals(TYPE_VIDEO))
             return;
 
         //cartella interna privata dell'app
@@ -66,7 +66,7 @@ public class FileManager {
 
         //se non esiste creo la cartella destinazione
         if (!fileDir.exists()) {
-            if(!fileDir.mkdir()) {
+            if(!fileDir.mkdirs()) {
                 //è successo qualcosa di brutto
                 AlertDialog.Builder b = new AlertDialog.Builder(mContext);
                 b.setMessage("Error with internal memory! Please restart the app.");

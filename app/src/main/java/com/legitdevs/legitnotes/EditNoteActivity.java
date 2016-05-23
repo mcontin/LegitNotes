@@ -17,6 +17,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.legitdevs.legitnotes.database.DatabaseManager;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.util.HashMap;
 
@@ -32,7 +33,7 @@ public class EditNoteActivity extends AppCompatActivity
     //private RichEditor text;
     private Note note;
     private TextView date;
-    private HashMap<String, String> medias;
+    private HashMap<String, File> medias;
     private FloatingActionButton FABQuickNote, FABNewNote, FABNewAudioNote, FABVideo, FABLocation;
     public static final String DIALOG = "start dialog";
 
