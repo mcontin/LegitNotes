@@ -1,27 +1,20 @@
 package com.legitdevs.legitnotes;
 
-import android.content.ContentResolver;
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.CursorLoader;
-import android.support.v7.app.AlertDialog;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Build;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,10 +36,13 @@ import java.text.DateFormat;
 import java.util.HashMap;
 
 
+import android.support.v7.app.AlertDialog;
+import android.os.Build;
+import android.util.Log;
+
+
 public class EditNoteActivity extends AppCompatActivity
-        implements IDeletionListener, IMediaSaver,
-        LocationListener
-{
+        implements IDeletionListener, IMediaSaver, LocationListener {
 
     private static final String TAG = "EditNoteActivity";
     private static final String DIALOG = "start dialog";
@@ -56,7 +52,6 @@ public class EditNoteActivity extends AppCompatActivity
     private static final int REQUEST_IMAGE_GALLERY = 2;
     private static final int REQUEST_VIDEO_CAPTURE = 3;
 
-    //private RichEditor text;
     private Note note;
     private TextView date;
     private HashMap<String, String> medias;
@@ -67,6 +62,7 @@ public class EditNoteActivity extends AppCompatActivity
     private Bitmap photoBitmap;
     private EditText title;
     private EditText text;
+    //private CustomEditorText text;
     private LocationManager locationManager;
 
     @Override
@@ -77,7 +73,7 @@ public class EditNoteActivity extends AppCompatActivity
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         title = (EditText) findViewById(R.id.editTitle);
         text = (EditText) findViewById(R.id.editText);
-        //text = (RichEditor) findViewById(R.id.editText);
+        //CustomEditText text = (CustomEditText) findViewById(R.id.editText);
         date = (TextView) findViewById(R.id.creationDate);
 
         Intent intent = getIntent();
@@ -91,83 +87,10 @@ public class EditNoteActivity extends AppCompatActivity
         }
 
         title.setText(note.getTitle());
-        text.setText(note.getText());
+        text.setText(Html.fromHtml(note.getText()));
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         //medias = note.getMedias();
 
-        /*text.setPadding(10, 10, 10, 10);
-        text.setPlaceholder("" + R.string.new_text);
-        text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.focusEditor();
-            }
-        });
-
-        /*
-        findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setBold();
-            }
-        });
-
-        findViewById(R.id.action_italic).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setItalic();
-            }
-        });
-
-
-        findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setSuperscript();
-            }
-        });
-        findViewById(R.id.action_strikethrough).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setStrikeThrough();
-            }
-        });
-
-        findViewById(R.id.action_underline).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setUnderline();
-            }
-        });
-
-        findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
-            private boolean isChanged;
-
-            @Override
-            public void onClick(View v) {
-                text.setTextColor(isChanged ? Color.BLACK : Color.RED);
-                isChanged = !isChanged;
-            }
-        });
-
-        findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
-            private boolean isChanged;
-
-            @Override
-            public void onClick(View v) {
-                text.setTextBackgroundColor(isChanged ? Color.TRANSPARENT : Color.YELLOW);
-                isChanged = !isChanged;
-            }
-        });
-
-
-        findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.insertTodo();
-            }
-        });*/
-
-        //View newView = new View();
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
         assert frameLayout != null;
         frameLayout.getBackground().setAlpha(0);
@@ -239,7 +162,7 @@ public class EditNoteActivity extends AppCompatActivity
                 fabLocation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        //get last known location
                         setUserLocation();
                         fabMenu.collapse();
 
@@ -260,7 +183,7 @@ public class EditNoteActivity extends AppCompatActivity
     @Override
     public void onLocationChanged(Location location) throws SecurityException {
 
-        //setto la posizione dell'utente ogni volta che apre il fragment per consentire alle card di scrivere la distanza
+        //setto la posizione dell'utente ogni volta che creo una nota
         note.setPosition(location);
         locationManager.removeUpdates(this);
     }
@@ -423,7 +346,7 @@ public class EditNoteActivity extends AppCompatActivity
 
     private void saveChanges() {
         note.setTitle(title.getText().toString());
-        note.setText(text.getText().toString());
+        //note.setText(text.getText().toHtml());
         //note.setMedia(media);
 
         DatabaseManager.getInstance(this).addNote(note);
@@ -442,3 +365,76 @@ public class EditNoteActivity extends AppCompatActivity
 
     }
 }
+
+/*
+text.setPadding(10, 10, 10, 10);
+        text.setPlaceholder("" + R.string.new_text);
+        text.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+        text.focusEditor();
+        }
+        });
+
+        findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+        text.setBold();
+        }
+        });
+
+        findViewById(R.id.action_italic).setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+        text.setItalic();
+        }
+        });
+
+
+        findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
+@Override public void onClick(View v) {
+        text.setSuperscript();
+        }
+        });
+        findViewById(R.id.action_strikethrough).setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+        text.setStrikeThrough();
+        }
+        });
+
+        findViewById(R.id.action_underline).setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+        text.setUnderline();
+        }
+        });
+
+        findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
+private boolean isChanged;
+
+@Override
+public void onClick(View v) {
+        text.setTextColor(isChanged ? Color.BLACK : Color.RED);
+        isChanged = !isChanged;
+        }
+        });
+
+        findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
+private boolean isChanged;
+
+@Override
+public void onClick(View v) {
+        text.setTextBackgroundColor(isChanged ? Color.TRANSPARENT : Color.YELLOW);
+        isChanged = !isChanged;
+        }
+        });
+
+
+        findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+        text.insertTodo();
+        }
+        });
+        */
