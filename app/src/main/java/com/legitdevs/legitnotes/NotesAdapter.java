@@ -146,7 +146,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
             card = (CardView) itemView.findViewById(R.id.cardView);
             noteTitle = (TextView) itemView.findViewById(R.id.title);
             noteSnippet = (TextView) itemView.findViewById(R.id.text);
-            preference = (ImageView) itemView.findViewById(R.id.star);
             //attachment = (LinearLayout) itemView.findViewById(R.id.bottom_content);
         }
     }

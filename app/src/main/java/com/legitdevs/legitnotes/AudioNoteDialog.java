@@ -40,7 +40,6 @@ public class AudioNoteDialog extends DialogFragment {
     private File mDestFile;
     private Uri mDestFileUri;
 
-
     private IMediaSaver saveHandler;
     private EditText txtAudioNoteTitle;
 
