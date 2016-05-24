@@ -115,10 +115,10 @@ public class FileManager {
      * @return
      */
     public File get(String type) {
-        if(type.equals(TYPE_AUDIO)
-                || type.equals(TYPE_IMAGE)
-                || type.equals(TYPE_VIDEO))
-            return new File(mNote.getMedias().get(type));
+        if(type.equals(TYPE_AUDIO) || type.equals(TYPE_IMAGE) || type.equals(TYPE_VIDEO)) {
+            if(mNote.getMedias().get(type) != null)
+                return new File(mNote.getMedias().get(type));
+        }
 
         return null;
     }

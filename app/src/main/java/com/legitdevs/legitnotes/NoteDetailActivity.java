@@ -23,6 +23,7 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarBadge;
+import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.io.File;
@@ -40,7 +41,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     private TextView title;
     private TextView text;
     private BottomBar bottomBar;
-    private boolean isImageFitToScreen=true;
+    private boolean isImageFitToScreen = true;
     private RelativeLayout mediaContainer;
     private BottomBarBadge bottomBarBadge;
 
@@ -51,17 +52,17 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
         activity = this;    //PER CHIUDERE L'ACTIVITY DOPO AVER SALVATO LA NOTA PER NON AVERE PROBLEMI DI UP NAVIGATION
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             note = savedInstanceState.getParcelable(KEY_NOTE);
-            isImageFitToScreen=savedInstanceState.getBoolean(KEY_IMAGE);
+            isImageFitToScreen = savedInstanceState.getBoolean(KEY_IMAGE);
         } else {
             Intent intent = getIntent();
             Bundle receivedBundle = intent.getExtras();
 
-            if(receivedBundle != null) {
+            if (receivedBundle != null) {
                 note = receivedBundle.getParcelable(KEY_NOTE);
             }
-            
+
         }
 
         getSupportActionBar().setTitle(note.getTitle());
@@ -75,91 +76,124 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
         scrollView = (ObservableScrollView) findViewById(R.id.scroll);
         scrollView.setScrollViewCallbacks(this);
 
-        imageNote=(ImageView)findViewById(R.id.image_note);
-        mediaContainer=(RelativeLayout)findViewById(R.id.media_container);
+        imageNote = (ImageView) findViewById(R.id.image_note);
+        mediaContainer = (RelativeLayout) findViewById(R.id.media_container);
 
         mediaContainer.getBackground().setAlpha(0);
-
-
-        bottomBar = BottomBar.attach(this, savedInstanceState);
-        bottomBar.noTopOffset();
-        bottomBar.noNavBarGoodness();
-        bottomBar.setItemsFromMenu(R.menu.bottombar_menu, new OnMenuTabClickListener() {
-            @Override
-            public void onMenuTabSelected(@IdRes int menuItemId) {
-                switch (menuItemId){
-
-                    case R.id.bottomBarText:
-                        mediaContainer.getBackground().setAlpha(0);
-                        imageNote.setVisibility(View.GONE);
-
-                        break;
-                    case R.id.bottomBarAudio:
-                        mediaContainer.getBackground().setAlpha(240);
-                        imageNote.setVisibility(View.GONE);
-                        break;
-
-                    case R.id.bottomBarImage:
-                        mediaContainer.getBackground().setAlpha(240);
-                        imageNote.setVisibility(View.VISIBLE);
-                        imageNote.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if(!isImageFitToScreen) {
-                                    isImageFitToScreen=true;
-                                    getSupportActionBar().show();
-                                    bottomBar.show();
-                                }else{
-                                    isImageFitToScreen=false;
-                                    getSupportActionBar().hide();
-                                    bottomBar.hide();
-                                    imageNote.setScaleType(ImageView.ScaleType.FIT_XY);
-                                }
-                            }
-                        });
-                        break;
-
-                    case R.id.bottomBarVideo:
-                        mediaContainer.getBackground().setAlpha(240);
-                        imageNote.setVisibility(View.GONE);
-                        break;
-                }
-            }
-
-            @Override
-            public void onMenuTabReSelected(@IdRes int menuItemId) {
-                switch (menuItemId){
-                    case R.id.bottomBarAudio:
-                        break;
-                    case R.id.bottomBarImage:
-                        break;
-                    case R.id.bottomBarVideo:
-                        break;
-                }
-            }
-        });
 
         File audio = FileManager.init(this)
                 .with(note)
                 .get(FileManager.TYPE_AUDIO);
 
-        if (audio != null){
+        File image = FileManager.init(this)
+                .with(note)
+                .get(FileManager.TYPE_IMAGE);
 
-            bottomBarBadge = bottomBar.makeBadgeForTabAt(1,R.color.colorPrimaryDark,1);
-            bottomBarBadge.setAutoShowAfterUnSelection(true);
+        File video = FileManager.init(this)
+                .with(note)
+                .get(FileManager.TYPE_VIDEO);
+
+
+        BottomBarTab[] tabs = new BottomBarTab[4];
+
+        tabs[0] = new BottomBarTab(R.drawable.ic_reorder_white_24dp, R.string.bottom_bar_text_title);
+
+        int index = 1;
+
+        if (audio != null) {
+            tabs[index] = new BottomBarTab(R.drawable.ic_keyboard_voice, R.string.bottom_bar_audio_title);
+            index++;
+        }
+        if (image != null) {
+            tabs[index] = new BottomBarTab(R.drawable.ic_image_white_24dp, R.string.bottom_bar_image_title);
+            index++;
+        }
+        if (video != null) {
+            tabs[index] = new BottomBarTab(R.drawable.ic_local_movies_white_24dp, R.string.bottom_bar_video_title);
+            index++;
+        }
+
+        BottomBarTab[] defintiveTabs = new BottomBarTab[index];
+
+        System.arraycopy(tabs, 0, defintiveTabs, 0, index);
+
+
+        if (audio != null || image != null || video != null) {
+
+            bottomBar = BottomBar.attach(this, savedInstanceState);
+            bottomBar.noTopOffset();
+            bottomBar.noNavBarGoodness();
+            bottomBar.setItems(defintiveTabs);
         }
 
 
-        bottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorAccent));
-        bottomBar.mapColorForTab(1, ContextCompat.getColor(this, R.color.colorAccent));
-        bottomBar.mapColorForTab(2, ContextCompat.getColor(this, R.color.colorAccent));
-        bottomBar.mapColorForTab(3, ContextCompat.getColor(this, R.color.colorAccent));
+//        bottomBar = BottomBar.attach(this, savedInstanceState);
+//        bottomBar.noTopOffset();
+//        bottomBar.noNavBarGoodness();
+//        bottomBar.setItemsFromMenu(R.menu.bottombar_menu, new OnMenuTabClickListener() {
+//            @Override
+//            public void onMenuTabSelected(@IdRes int menuItemId) {
+//                switch (menuItemId) {
+//
+//                    case R.id.bottomBarText:
+//                        mediaContainer.getBackground().setAlpha(0);
+//                        imageNote.setVisibility(View.GONE);
+//
+//                        break;
+//                    case R.id.bottomBarAudio:
+//                        mediaContainer.getBackground().setAlpha(240);
+//                        imageNote.setVisibility(View.GONE);
+//                        break;
+//
+//                    case R.id.bottomBarImage:
+//                        mediaContainer.getBackground().setAlpha(240);
+//                        imageNote.setVisibility(View.VISIBLE);
+//                        imageNote.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                if (!isImageFitToScreen) {
+//                                    isImageFitToScreen = true;
+//                                    bottomBar.show();
+//                                } else {
+//                                    isImageFitToScreen = false;
+//                                    bottomBar.hide();
+//                                    imageNote.setScaleType(ImageView.ScaleType.FIT_XY);
+//                                }
+//                            }
+//                        });
+//                        break;
+//
+//                    case R.id.bottomBarVideo:
+//                        mediaContainer.getBackground().setAlpha(240);
+//                        imageNote.setVisibility(View.GONE);
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onMenuTabReSelected(@IdRes int menuItemId) {
+//                switch (menuItemId) {
+//                    case R.id.bottomBarAudio:
+//                        break;
+//                    case R.id.bottomBarImage:
+//                        break;
+//                    case R.id.bottomBarVideo:
+//                        break;
+//                }
+//            }
+//        });
+
+
+//        bottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorAccent));
+//        bottomBar.mapColorForTab(1, ContextCompat.getColor(this, R.color.colorAccent));
+//        bottomBar.mapColorForTab(2, ContextCompat.getColor(this, R.color.colorAccent));
+//        bottomBar.mapColorForTab(3, ContextCompat.getColor(this, R.color.colorAccent));
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.goToEdit:
 
                 Intent i = new Intent(getApplicationContext(), EditNoteActivity.class);
@@ -185,7 +219,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-       // ViewHelper.setTranslationY(attached, scrollY / 4 * 3);
+        // ViewHelper.setTranslationY(attached, scrollY / 4 * 3);
 
     }
 
@@ -193,6 +227,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     public void onDownMotionEvent() {
 
     }
+
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
 
@@ -202,7 +237,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(KEY_NOTE, note);
-        outState.putBoolean(KEY_IMAGE,isImageFitToScreen);
+        outState.putBoolean(KEY_IMAGE, isImageFitToScreen);
         bottomBar.onSaveInstanceState(outState);
     }
 
@@ -211,7 +246,6 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
         super.onDestroy();
         note = null;
     }
-
 
 
 }
