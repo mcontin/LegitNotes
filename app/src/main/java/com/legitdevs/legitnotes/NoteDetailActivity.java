@@ -3,41 +3,29 @@ package com.legitdevs.legitnotes;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.IdRes;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.VideoView;
 import android.widget.MediaController;
-
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.BottomBarBadge;
 import com.roughike.bottombar.BottomBarTab;
-import com.roughike.bottombar.OnMenuTabClickListener;
 import com.roughike.bottombar.OnTabClickListener;
 
-import android.util.Log;
 
 import java.io.File;
+import java.text.DateFormat;
 
-public class NoteDetailActivity extends AppCompatActivity implements ObservableScrollViewCallbacks {
+public class NoteDetailActivity extends AppCompatActivity {
 
     public final static String KEY_NOTE = "note";
     public final static String KEY_IMAGE = "image";
@@ -45,10 +33,9 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     public static NoteDetailActivity activity;
 
     private Note note;
-    private ObservableScrollView scrollView;
+    private ScrollView scrollView;
+    private TextView text, date;
     private ImageView imageNote;
-    private TextView title;
-    private TextView text;
     private BottomBar bottomBar;
     private boolean isImageFitToScreen = true;
     private RelativeLayout mediaContainer;
@@ -114,14 +101,16 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
         getSupportActionBar().setTitle(note.getTitle());
 
-        TextView text = (TextView) findViewById(R.id.noteText);
+        text = (TextView) findViewById(R.id.noteText);
         text.setText(note.getText());
+
+        date = (TextView) findViewById(R.id.note_date);
+        date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
 
         //attached = (ImageView) findViewById(R.id.mediaView);
 
 
-        scrollView = (ObservableScrollView) findViewById(R.id.scroll);
-        scrollView.setScrollViewCallbacks(this);
+        scrollView = (ScrollView) findViewById(R.id.scroll);
 
         imageNote = (ImageView) findViewById(R.id.image_note);
         audioPlayer=(ViewGroup)findViewById(R.id.audio_container);
@@ -203,7 +192,6 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
                         mediaContainer.getBackground().setAlpha(180);
                         AudioWife.getInstance().release();
                         audioPlayer.removeAllViewsInLayout();
-
                     }
                 }
 
@@ -212,71 +200,11 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
                 }
             });
-
         }
 
 
-//        bottomBar = BottomBar.attach(this, savedInstanceState);
-//        bottomBar.noTopOffset();
-//        bottomBar.noNavBarGoodness();
-//        bottomBar.setItemsFromMenu(R.menu.bottombar_menu, new OnMenuTabClickListener() {
-//            @Override
-//            public void onMenuTabSelected(@IdRes int menuItemId) {
-//                switch (menuItemId) {
-//
-//                    case R.id.bottomBarText:
-//                        mediaContainer.getBackground().setAlpha(0);
-//                        imageNote.setVisibility(View.GONE);
-//
-//                        break;
-//                    case R.id.bottomBarAudio:
-//                        mediaContainer.getBackground().setAlpha(240);
-//                        imageNote.setVisibility(View.GONE);
-//                        break;
-//
-//                    case R.id.bottomBarImage:
-//                        mediaContainer.getBackground().setAlpha(240);
-//                        imageNote.setVisibility(View.VISIBLE);
-//                        imageNote.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                if (!isImageFitToScreen) {
-//                                    isImageFitToScreen = true;
-//                                    bottomBar.show();
-//                                } else {
-//                                    isImageFitToScreen = false;
-//                                    bottomBar.hide();
-//                                    imageNote.setScaleType(ImageView.ScaleType.FIT_XY);
-//                                }
-//                            }
-//                        });
-//                        break;
-//
-//                    case R.id.bottomBarVideo:
-//                        mediaContainer.getBackground().setAlpha(240);
-//                        imageNote.setVisibility(View.GONE);
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onMenuTabReSelected(@IdRes int menuItemId) {
-//                switch (menuItemId) {
-//                    case R.id.bottomBarAudio:
-//                        break;
-//                    case R.id.bottomBarImage:
-//                        break;
-//                    case R.id.bottomBarVideo:
-//                        break;
-//                }
-//            }
-//        });
 
 
-//        bottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorAccent));
-//        bottomBar.mapColorForTab(1, ContextCompat.getColor(this, R.color.colorAccent));
-//        bottomBar.mapColorForTab(2, ContextCompat.getColor(this, R.color.colorAccent));
-//        bottomBar.mapColorForTab(3, ContextCompat.getColor(this, R.color.colorAccent));
     }
 
     @Override
@@ -306,28 +234,15 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
         return true;
     }
 
-    @Override
-    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        // ViewHelper.setTranslationY(attached, scrollY / 4 * 3);
 
-    }
-
-    @Override
-    public void onDownMotionEvent() {
-
-    }
-
-    @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(KEY_NOTE, note);
         outState.putBoolean(KEY_IMAGE, isImageFitToScreen);
-        bottomBar.onSaveInstanceState(outState);
+        if (bottomBar!=null)
+            bottomBar.onSaveInstanceState(outState);
     }
 
     @Override
