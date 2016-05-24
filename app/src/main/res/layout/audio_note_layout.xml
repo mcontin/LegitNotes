@@ -16,6 +16,16 @@
     android:paddingBottom="10dp"
     android:paddingEnd="10dp">
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtAudioNoteTitle"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="2"
+        android:hint="Title"
+        android:background="@android:color/transparent"
+        android:visibility="invisible" />
+
     <com.legitdevs.legitnotes.CircledPulsatingButton
         android:id="@+id/btnRecord"
         android:layout_width="135dip"
@@ -39,15 +49,6 @@
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content" />-->
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtAudioNoteTitle"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="2"
-        android:hint="Title"
-        android:background="@android:color/transparent"
-        android:visibility="gone" />
 
         <FrameLayout
             android:id="@+id/playerContainer"
@@ -58,11 +59,11 @@
             android:layout_marginTop="10dp" />
 
 
-    <Button
-        android:id="@+id/saveAudioBtn"
-        android:text="Save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="false"/>
+    <!--<Button-->
+        <!--android:id="@+id/saveAudioBtn"-->
+        <!--android:text="Save"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:enabled="false"/>-->
 
 </LinearLayout>

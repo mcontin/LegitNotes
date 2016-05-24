@@ -10,11 +10,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -39,11 +40,11 @@ public class AudioNoteDialog extends DialogFragment {
     private File mDestFile;
     private Uri mDestFileUri;
 
-    private Button btnSave;
 
     private IMediaSaver saveHandler;
     private EditText txtAudioNoteTitle;
 
+    private AlertDialog dialog;
 
     public static AudioNoteDialog getInstance() {
         return new AudioNoteDialog();
@@ -57,10 +58,15 @@ public class AudioNoteDialog extends DialogFragment {
         View v = inflater.inflate(R.layout.audio_note_layout, null);
         builder.setView(v);
 
-
         builder.setPositiveButton(R.string.audio_dialog_positive, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 /* User clicked OK so do some stuff */
+                Log.i(TAG, "onClick: clicked");
+
+                saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
+
+                dismiss();
+
                 Toast.makeText(getContext(), "Note Saved", Toast.LENGTH_SHORT).show();
             }
         })
@@ -74,18 +80,6 @@ public class AudioNoteDialog extends DialogFragment {
         saveHandler = (IMediaSaver) getActivity();
 
         awContainer = (ViewGroup) v.findViewById(R.id.playerContainer);
-
-        btnSave = (Button) v.findViewById(R.id.saveAudioBtn);
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onClick: clicked");
-
-                saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
-
-                dismiss();
-            }
-        });
 
         //cartella interna privata dell'app
         File internalMemory = getContext().getFilesDir();
@@ -133,23 +127,10 @@ public class AudioNoteDialog extends DialogFragment {
                     }
 
                     mRecorder.start();
-
-                    //btnRecord.setText("Stop recording");
-
-//                    int dimensions = ((ImageView) v.findViewById(R.id.btnRecord)).getWidth();
-//                    int width = (dimensions*3)/2;
-//                    int height = (dimensions*3)/2;
-//
-//                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
-//                    btnRecord.setLayoutParams(parms);
-
                     btnRecord.setImageResource(R.drawable.ic_stop);
                     recording = true;
-
                     txtAudioNoteTitle.setVisibility(View.INVISIBLE);
-
-                    btnSave.setEnabled(false);
-                    //builder.getButton(AlertDialog.BUTTON1).setEnabled(false);
+                    ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
                 } else {
 
@@ -167,28 +148,43 @@ public class AudioNoteDialog extends DialogFragment {
                             .useDefaultUi(awContainer, inflater);
 
                     Log.i(TAG, "onClick: " + mDestFileUri.toString());
-                    //btnRecord.setText("Start recording");
-
-//                    int dimensions = ((ImageView) v.findViewById(R.id.btnRecord)).getWidth();
-//                    int width = (dimensions*2)/3;
-//                    int height = (dimensions*2)/3;
-//                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
-//                    btnRecord.setLayoutParams(parms);
 
                     btnRecord.setImageResource(R.drawable.ic_keyboard_voice);
                     recording = false;
                     txtAudioNoteTitle.setVisibility(View.VISIBLE);
 
-                    btnSave.setEnabled(true);
+                    txtAudioNoteTitle.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                            if (txtAudioNoteTitle.getText().toString().trim().length() > 0){
+                                ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                            } else {
+                                ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                            }
+
+                        }
+                    });
+
+
                 }
             }
         });
 
+        dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
+            @Override
+            public void onShow(DialogInterface dialog) {
+                ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+            }
+        });
 
-//        builder.setTitle("porcodio");
-//        builder.setView(R.layout.audio_note_layout);
-        return builder.create();
+        return dialog;
     }
 
     @Override
@@ -214,8 +210,6 @@ public class AudioNoteDialog extends DialogFragment {
         awContainer.removeAllViewsInLayout();
 
         recording = false;
-
-
 
     }
 
