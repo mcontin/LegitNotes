@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,6 +54,8 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     private boolean isImageFitToScreen = true;
     private RelativeLayout mediaContainer;
     private int audioIndex=100, imageIndex=100, videoIndex=100;
+    private ViewGroup audioPlayer;
+    private File audio, image, video;
 
     private VideoView myVideoView;
     private MediaController mediaControls;
@@ -94,18 +97,19 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
         scrollView.setScrollViewCallbacks(this);
 
         imageNote = (ImageView) findViewById(R.id.image_note);
+        audioPlayer=(ViewGroup)findViewById(R.id.audio_container);
         mediaContainer = (RelativeLayout) findViewById(R.id.media_container);
         mediaContainer.getBackground().setAlpha(0);
 
-        File audio = FileManager.init(this)
+        audio = FileManager.init(this)
                 .with(note)
                 .get(FileManager.TYPE_AUDIO);
 
-        File image = FileManager.init(this)
+        image = FileManager.init(this)
                 .with(note)
                 .get(FileManager.TYPE_IMAGE);
 
-        File video = FileManager.init(this)
+        video = FileManager.init(this)
                 .with(note)
                 .get(FileManager.TYPE_VIDEO);
 
@@ -153,17 +157,25 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
                 public void onTabSelected(int position) {
                     if(position==0){
                         mediaContainer.getBackground().setAlpha(0);
+                        AudioWife.getInstance().release();
+                        audioPlayer.removeAllViewsInLayout();
                     }
                     if (position==audioIndex){
-                        Log.d("prova","position "+position+" audioIndex "+audioIndex);
-                        mediaContainer.getBackground().setAlpha(240);
+                        mediaContainer.getBackground().setAlpha(180);
+                        AudioWife.getInstance()
+                                .init(getApplicationContext(), Uri.parse(audio.getAbsolutePath()))
+                                .useDefaultUi(audioPlayer, getLayoutInflater());
                     }
                     if (position==imageIndex){
-                        mediaContainer.getBackground().setAlpha(240);
+                        mediaContainer.getBackground().setAlpha(180);
+                        AudioWife.getInstance().release();
+                        audioPlayer.removeAllViewsInLayout();
 
                     }
                     if (position==videoIndex){
-                        mediaContainer.getBackground().setAlpha(240);
+                        mediaContainer.getBackground().setAlpha(180);
+                        AudioWife.getInstance().release();
+                        audioPlayer.removeAllViewsInLayout();
 
                         //set the media controller buttons
                         if (mediaControls == null) {
