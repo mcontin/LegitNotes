@@ -42,6 +42,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
     public final static String KEY_NOTE = "note";
     public final static String KEY_IMAGE = "image";
+    private static final String TAG = "NoteDetailActivity";
 
     public static NoteDetailActivity activity;
 
@@ -184,6 +185,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
                         //initialize the VideoView
                         myVideoView = (VideoView) findViewById(R.id.video_note);
+                        myVideoView.setVisibility(View.VISIBLE);
 
                         // create a progress bar while the video file is loading
                         progressDialog = new ProgressDialog(NoteDetailActivity.this);
@@ -197,9 +199,12 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
                         progressDialog.show();
 
                         try {
+                            Log.i(TAG, "Trying");
                             //set the media controller in the VideoView
                             myVideoView.setMediaController(mediaControls);
                             //set the uri of the video to be played
+                            //myVideoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.developers));
+                            //myVideoView.setVideoPath("http://www.ebookfrenzy.com/android_book/movie.mp4");
                             myVideoView.setVideoURI(Uri.parse(FileManager.init(getApplicationContext()).with(note).get(FileManager.TYPE_VIDEO).getPath()));
                         } catch (Exception e) {
                             Log.e("Error", e.getMessage());
