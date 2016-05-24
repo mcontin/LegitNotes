@@ -77,34 +77,34 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
         }
 
-        //set the media controller buttons
-        if (mediaControls == null) {
-            mediaControls = new MediaController(NoteDetailActivity.this);
-        }
-
-        //initialize the VideoView
-        myVideoView = (VideoView) findViewById(R.id.video_view);
-
-        // create a progress bar while the video file is loading
-        progressDialog = new ProgressDialog(NoteDetailActivity.this);
-        // set a title for the progress bar
-        progressDialog.setTitle("JavaCodeGeeks Android Video View Example");
-        // set a message for the progress bar
-        progressDialog.setMessage("Loading...");
-        //set the progress bar not cancelable on users' touch
-        progressDialog.setCancelable(false);
-        // show the progress bar
-        progressDialog.show();
-
-        try {
-            //set the media controller in the VideoView
-            myVideoView.setMediaController(mediaControls);
-            //set the uri of the video to be played
-            myVideoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.Developers));
-        } catch (Exception e) {
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
-        }
+//        //set the media controller buttons
+//        if (mediaControls == null) {
+//            mediaControls = new MediaController(NoteDetailActivity.this);
+//        }
+//
+//        //initialize the VideoView
+//        myVideoView = (VideoView) findViewById(R.id.video_note);
+//
+//        // create a progress bar while the video file is loading
+//        progressDialog = new ProgressDialog(NoteDetailActivity.this);
+//        // set a title for the progress bar
+//        progressDialog.setTitle("Loading Video");
+//        // set a message for the progress bar
+//        progressDialog.setMessage("Loading...");
+//        //set the progress bar not cancelable on users' touch
+//        progressDialog.setCancelable(false);
+//        // show the progress bar
+//        progressDialog.show();
+//
+//        try {
+//            //set the media controller in the VideoView
+//            myVideoView.setMediaController(mediaControls);
+//            //set the uri of the video to be played
+//            myVideoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.developers));
+//        } catch (Exception e) {
+//            Log.e("Error", e.getMessage());
+//            e.printStackTrace();
+//        }
 
 
 
