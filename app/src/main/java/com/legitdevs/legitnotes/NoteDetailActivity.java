@@ -23,6 +23,7 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarBadge;
+import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.io.File;
@@ -79,7 +80,6 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
         mediaContainer=(RelativeLayout)findViewById(R.id.media_container);
 
         mediaContainer.getBackground().setAlpha(0);
-
 
         bottomBar = BottomBar.attach(this, savedInstanceState);
         bottomBar.noTopOffset();
