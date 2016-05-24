@@ -3,6 +3,8 @@ package com.legitdevs.legitnotes.filemanager;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import com.legitdevs.legitnotes.Note;
+import com.legitdevs.legitnotes.database.DatabaseManager;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -102,6 +104,9 @@ public class FileManager {
         }
 
         mNote.addMedia(type, newFile);
+
+        DatabaseManager.getInstance(mContext)
+                .addNote(mNote);
     }
 
     /**

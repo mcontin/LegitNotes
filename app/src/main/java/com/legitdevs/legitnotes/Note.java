@@ -29,7 +29,7 @@ public class Note implements Parcelable{
     private String category;
     //la chiave identifica se è immagine, video o audio,
     //il valore è il nome del file
-    private HashMap<String, File> medias;
+    private HashMap<String, Object> medias;
 
     private String filesDir;
 
@@ -56,7 +56,7 @@ public class Note implements Parcelable{
         date = new Date((long)map.get(KEY_DATE));
         text = (String) map.get(KEY_TEXT);
         category = (String) map.get(KEY_CATEGORY);
-        medias = (HashMap<String, File>) map.get(KEY_MEDIA);
+        medias = (HashMap<String, Object>) map.get(KEY_MEDIA);
     }
 
     public UUID getId(){
@@ -91,14 +91,14 @@ public class Note implements Parcelable{
         this.category = category;
     }
 
-    public HashMap<String, File> getMedias() {
+    public HashMap<String, Object> getMedias() {
         return medias;
     }
-    public void setMedias(HashMap<String, File> medias) {
+    public void setMedias(HashMap<String, Object> medias) {
         this.medias = medias;
     }
 
-    public void addMedia(String type, File file) {
+    public void addMedia(String type, Object file) {
         medias.put(type, file);
     }
 
@@ -145,7 +145,7 @@ public class Note implements Parcelable{
         category = in.readString();
 
         Bundle bundle = in.readBundle();
-        medias = (HashMap<String, File>) bundle.getSerializable(KEY_MEDIA);
+        medias = (HashMap<String, Object>) bundle.getSerializable(KEY_MEDIA);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
