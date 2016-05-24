@@ -1,14 +1,17 @@
 package com.legitdevs.legitnotes;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Path;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,7 +19,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,25 +28,32 @@ import com.legitdevs.legitnotes.database.DatabaseManager;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.HashMap;
 
 public class EditNoteActivity extends AppCompatActivity
     implements IDeletionListener, IMediaSaver{
 
+    private static final String TAG = "EditNoteActivity";
     private static final String DIALOG = "start dialog";
     private static final String KEY_NOTE = "note";
     private static final String KEY_POSITION = "position";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int REQUEST_VIDEO_CAPTURE = 2;
+    private static final int REQUEST_IMAGE_GALLERY = 2;
+    private static final int REQUEST_VIDEO_CAPTURE = 3;
 
     //private RichEditor text;
     private Note note;
     private TextView date;
-    private HashMap<String, File> medias;
+    private HashMap<String, String> medias;
     private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
     private EditText title;
     private EditText text;
+
+    private File photoFile;
+    private Uri photoUri;
+    private Bitmap photoBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +111,7 @@ public class EditNoteActivity extends AppCompatActivity
                         Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
                         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
-                        startActivityForResult(chooserIntent, 1);
+                        startActivityForResult(chooserIntent, REQUEST_IMAGE_GALLERY);
 
                         fabMenu.collapse();
                     }
@@ -150,11 +159,53 @@ public class EditNoteActivity extends AppCompatActivity
 
     }
 
-    // open camera
+    private File createImageFile() throws IOException {
+        File internalMemory = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+//        File fileDir = new File(internalMemory.getAbsolutePath()
+//                + File.separatorChar
+//                + note.getId().toString()
+//                + File.separatorChar
+//                + FileManager.TYPE_IMAGE);
+//
+//        //se non esiste creo la cartella destinazione
+//        if (!fileDir.exists()) {
+//            if(!fileDir.mkdirs()) {
+//                //è successo qualcosa di molto brutto
+//                AlertDialog.Builder b = new AlertDialog.Builder(getApplicationContext());
+//                b.setMessage("Error with internal memory! Please restart the app.");
+//                b.create().show();
+//            }
+//        }
+
+        File image = File.createTempFile(
+                "image",        /* prefix */
+                ".jpg",         /* suffix */
+                internalMemory  /* directory */
+        );
+
+        return image;
+    }
+
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            // Create the File where the photo should go
+            photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                // Error occurred while creating the File
+                e.printStackTrace();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                photoUri = Uri.fromFile(photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        photoUri);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
         }
     }
 
@@ -179,8 +230,13 @@ public class EditNoteActivity extends AppCompatActivity
                     .save(FileManager.TYPE_VIDEO, videoFile);
 
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap picThumbnail = (Bitmap) extras.get("data");
+
+            FileManager.init(this)
+                    .with(note)
+                    .save(FileManager.TYPE_IMAGE, photoFile);
+
+            Toast.makeText(this, "Picture saved!", Toast.LENGTH_SHORT).show();
+
         }
 
     }

@@ -20,8 +20,12 @@ import android.widget.TextView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.legitdevs.legitnotes.filemanager.FileManager;
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.BottomBarBadge;
 import com.roughike.bottombar.OnMenuTabClickListener;
+
+import java.io.File;
 
 public class NoteDetailActivity extends AppCompatActivity implements ObservableScrollViewCallbacks {
 
@@ -38,6 +42,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     private BottomBar bottomBar;
     private boolean isImageFitToScreen=true;
     private RelativeLayout mediaContainer;
+    private BottomBarBadge bottomBarBadge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +138,16 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
                 }
             }
         });
+
+        File audio = FileManager.init(this)
+                .with(note)
+                .get(FileManager.TYPE_AUDIO);
+
+        if (audio != null){
+
+            bottomBarBadge = bottomBar.makeBadgeForTabAt(1,R.color.colorPrimaryDark,1);
+            bottomBarBadge.setAutoShowAfterUnSelection(true);
+        }
 
 
         bottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorAccent));
