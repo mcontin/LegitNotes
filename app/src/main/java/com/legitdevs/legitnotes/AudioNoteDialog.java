@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,11 +41,11 @@ public class AudioNoteDialog extends DialogFragment {
     private File mDestFile;
     private Uri mDestFileUri;
 
-    private Button btnSave;
 
     private IMediaSaver saveHandler;
     private EditText txtAudioNoteTitle;
 
+    private AlertDialog dialog;
 
     public static AudioNoteDialog getInstance() {
         return new AudioNoteDialog();
@@ -57,10 +59,17 @@ public class AudioNoteDialog extends DialogFragment {
         View v = inflater.inflate(R.layout.audio_note_layout, null);
         builder.setView(v);
 
+        //builder.show();
 
         builder.setPositiveButton(R.string.audio_dialog_positive, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 /* User clicked OK so do some stuff */
+                Log.i(TAG, "onClick: clicked");
+
+                saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
+
+                dismiss();
+
                 Toast.makeText(getContext(), "Note Saved", Toast.LENGTH_SHORT).show();
             }
         })
@@ -71,21 +80,25 @@ public class AudioNoteDialog extends DialogFragment {
                     }
                 });
 
+
+
+        //builder.create().getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
+
         saveHandler = (IMediaSaver) getActivity();
 
         awContainer = (ViewGroup) v.findViewById(R.id.playerContainer);
 
-        btnSave = (Button) v.findViewById(R.id.saveAudioBtn);
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "onClick: clicked");
-
-                saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
-
-                dismiss();
-            }
-        });
+//        btnSave = (Button) v.findViewById(R.id.saveAudioBtn);
+//        btnSave.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i(TAG, "onClick: clicked");
+//
+//                saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
+//
+//                dismiss();
+//            }
+//        });
 
         //cartella interna privata dell'app
         File internalMemory = getContext().getFilesDir();
@@ -148,8 +161,8 @@ public class AudioNoteDialog extends DialogFragment {
 
                     txtAudioNoteTitle.setVisibility(View.INVISIBLE);
 
-                    btnSave.setEnabled(false);
-                    //builder.getButton(AlertDialog.BUTTON1).setEnabled(false);
+                    //btnSave.setEnabled(false);
+                    ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
                 } else {
 
@@ -179,16 +192,48 @@ public class AudioNoteDialog extends DialogFragment {
                     recording = false;
                     txtAudioNoteTitle.setVisibility(View.VISIBLE);
 
-                    btnSave.setEnabled(true);
+
+
+                    txtAudioNoteTitle.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                            if (txtAudioNoteTitle.getText().toString().trim().length() > 0){
+                                ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                            } else {
+                                ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                            }
+
+                        }
+                    });
+
+
                 }
             }
         });
 
+        dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
+            @Override
+            public void onShow(DialogInterface dialog) {
+                ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+            }
+        });
 
 //        builder.setTitle("porcodio");
 //        builder.setView(R.layout.audio_note_layout);
-        return builder.create();
+        return dialog;
     }
 
     @Override
