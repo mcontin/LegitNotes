@@ -41,7 +41,6 @@ public class HomeActivity extends AppCompatActivity
         IDeletionListener,
         IMediaSaver{
 
-
     private static final String DIALOG_QUICK = "quick";
     private static final String DIALOG_CONFIRM = "confirm";
     private static final String DIALOG_AUDIO = "audio";
