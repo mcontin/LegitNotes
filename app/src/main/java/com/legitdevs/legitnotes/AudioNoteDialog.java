@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -59,8 +58,6 @@ public class AudioNoteDialog extends DialogFragment {
         View v = inflater.inflate(R.layout.audio_note_layout, null);
         builder.setView(v);
 
-        //builder.show();
-
         builder.setPositiveButton(R.string.audio_dialog_positive, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 /* User clicked OK so do some stuff */
@@ -80,25 +77,9 @@ public class AudioNoteDialog extends DialogFragment {
                     }
                 });
 
-
-
-        //builder.create().getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
-
         saveHandler = (IMediaSaver) getActivity();
 
         awContainer = (ViewGroup) v.findViewById(R.id.playerContainer);
-
-//        btnSave = (Button) v.findViewById(R.id.saveAudioBtn);
-//        btnSave.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.i(TAG, "onClick: clicked");
-//
-//                saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
-//
-//                dismiss();
-//            }
-//        });
 
         //cartella interna privata dell'app
         File internalMemory = getContext().getFilesDir();
@@ -146,22 +127,9 @@ public class AudioNoteDialog extends DialogFragment {
                     }
 
                     mRecorder.start();
-
-                    //btnRecord.setText("Stop recording");
-
-//                    int dimensions = ((ImageView) v.findViewById(R.id.btnRecord)).getWidth();
-//                    int width = (dimensions*3)/2;
-//                    int height = (dimensions*3)/2;
-//
-//                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
-//                    btnRecord.setLayoutParams(parms);
-
                     btnRecord.setImageResource(R.drawable.ic_stop);
                     recording = true;
-
                     txtAudioNoteTitle.setVisibility(View.INVISIBLE);
-
-                    //btnSave.setEnabled(false);
                     ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
                 } else {
@@ -180,31 +148,16 @@ public class AudioNoteDialog extends DialogFragment {
                             .useDefaultUi(awContainer, inflater);
 
                     Log.i(TAG, "onClick: " + mDestFileUri.toString());
-                    //btnRecord.setText("Start recording");
-
-//                    int dimensions = ((ImageView) v.findViewById(R.id.btnRecord)).getWidth();
-//                    int width = (dimensions*2)/3;
-//                    int height = (dimensions*2)/3;
-//                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
-//                    btnRecord.setLayoutParams(parms);
 
                     btnRecord.setImageResource(R.drawable.ic_keyboard_voice);
                     recording = false;
                     txtAudioNoteTitle.setVisibility(View.VISIBLE);
 
-
-
                     txtAudioNoteTitle.addTextChangedListener(new TextWatcher() {
                         @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                        }
-
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                         @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                        }
-
+                        public void onTextChanged(CharSequence s, int start, int before, int count) { }
                         @Override
                         public void afterTextChanged(Editable s) {
 
@@ -231,8 +184,6 @@ public class AudioNoteDialog extends DialogFragment {
             }
         });
 
-//        builder.setTitle("porcodio");
-//        builder.setView(R.layout.audio_note_layout);
         return dialog;
     }
 
@@ -259,8 +210,6 @@ public class AudioNoteDialog extends DialogFragment {
         awContainer.removeAllViewsInLayout();
 
         recording = false;
-
-
 
     }
 
