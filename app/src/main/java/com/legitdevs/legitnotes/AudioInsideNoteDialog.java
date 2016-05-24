@@ -25,9 +25,9 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class AudioNoteDialog extends DialogFragment {
+public class AudioInsideNoteDialog extends DialogFragment {
 
-    public static final String TAG = "AudioNoteDialog";
+    public static final String TAG = "AudioInsideNoteDialog";
 
     private CircledPulsatingButton btnRecord;
 
@@ -42,12 +42,11 @@ public class AudioNoteDialog extends DialogFragment {
 
 
     private IMediaSaver saveHandler;
-    private EditText txtAudioNoteTitle;
 
     private AlertDialog dialog;
 
-    public static AudioNoteDialog getInstance() {
-        return new AudioNoteDialog();
+    public static AudioInsideNoteDialog getInstance() {
+        return new AudioInsideNoteDialog();
     }
 
     @NonNull
@@ -55,7 +54,7 @@ public class AudioNoteDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v = inflater.inflate(R.layout.audio_note_layout, null);
+        View v = inflater.inflate(R.layout.audio_inside_note_layout, null);
         builder.setView(v);
 
         builder.setPositiveButton(R.string.audio_dialog_positive, new DialogInterface.OnClickListener() {
@@ -63,11 +62,7 @@ public class AudioNoteDialog extends DialogFragment {
                 /* User clicked OK so do some stuff */
                 Log.i(TAG, "onClick: clicked");
 
-                Note note = new Note(txtAudioNoteTitle.getText().toString(), "");
-                FileManager.init(getContext())
-                        .with(note)
-                        .save(FileManager.TYPE_AUDIO, mDestFile);
-                ((HomeActivity)getActivity()).addNote(note);
+                saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
 
                 dismiss();
 
@@ -101,9 +96,9 @@ public class AudioNoteDialog extends DialogFragment {
             }
         }
 
+        mDestFile = new File(temporaryDir, "temp.3gp");
         mDestFile = new File(temporaryDir + "/audio.3gp");
         mDestFileUri = Uri.parse(mDestFile.toString());
-        txtAudioNoteTitle = (EditText) v.findViewById(R.id.txtAudioNoteTitle);
 
         btnRecord = (CircledPulsatingButton) v.findViewById(R.id.btnRecord);
         btnRecord.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +127,6 @@ public class AudioNoteDialog extends DialogFragment {
                     mRecorder.start();
                     btnRecord.setImageResource(R.drawable.ic_stop);
                     recording = true;
-                    txtAudioNoteTitle.setVisibility(View.INVISIBLE);
                     ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
                 } else {
@@ -154,24 +148,8 @@ public class AudioNoteDialog extends DialogFragment {
 
                     btnRecord.setImageResource(R.drawable.ic_keyboard_voice);
                     recording = false;
-                    txtAudioNoteTitle.setVisibility(View.VISIBLE);
 
-                    txtAudioNoteTitle.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) { }
-                        @Override
-                        public void afterTextChanged(Editable s) {
-
-                            if (txtAudioNoteTitle.getText().toString().trim().length() > 0){
-                                ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-                            } else {
-                                ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-                            }
-
-                        }
-                    });
+                    ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
 
 
                 }
