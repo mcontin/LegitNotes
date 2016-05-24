@@ -37,6 +37,8 @@
     <string name="confirm">Confirm</string>
     <string name="remove_dialog_positive">Yes</string>
     <string name="remove_dialog_negative">No</string>
+    <string name="audio_dialog_positive">Save</string>
+    <string name="audio_dialog_negative">Cancel</string>
 
     <!--Note editor-->
     <string name="new_title">Title</string>

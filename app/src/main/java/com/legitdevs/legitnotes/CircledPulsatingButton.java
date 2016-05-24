@@ -18,7 +18,7 @@ public class CircledPulsatingButton extends ImageView {
     private static final int PRESSED_COLOR_LIGHTUP = 255 / 25;
     private static final int PRESSED_RING_ALPHA = 75;
     private static final int DEFAULT_PRESSED_RING_WIDTH_DIP = 16;
-    private static final int ANIMATION_TIME_ID = android.R.integer.config_shortAnimTime;
+    private static final int ANIMATION_TIME_ID = R.integer.config_superShortAnimTime;
 
     public static final String TAG = "Pulsating Button";
 
@@ -147,22 +147,22 @@ public class CircledPulsatingButton extends ImageView {
     private void pulsateAnimation() {
         currentAmp = mRecorder.getMaxAmplitude();
 
-        if (currentAmp > maxAmplitude){
-            maxAmplitude = currentAmp;
-        }
+        maxAmplitude = (currentAmp > maxAmplitude) ? currentAmp : maxAmplitude;
 
         if(currentAmp<maxAmplitude/2){
             pressedAnimator.setFloatValues(animationProgress, (pressedRingWidth * ((currentAmp*3)/2)) / maxAmplitude);
             pressedAnimator.start();
             return;
-        } else if (currentAmp<maxAmplitude/3) {
+        }
+        if (currentAmp<maxAmplitude/3) {
             pressedAnimator.setFloatValues(animationProgress, (pressedRingWidth * (currentAmp*2)) / maxAmplitude);
             pressedAnimator.start();
             return;
-        } else {
-            pressedAnimator.setFloatValues(animationProgress, (pressedRingWidth * currentAmp) / maxAmplitude);
-            pressedAnimator.start();
         }
+
+        pressedAnimator.setFloatValues(animationProgress, (pressedRingWidth * currentAmp) / maxAmplitude);
+        pressedAnimator.start();
+
 
 
     }
