@@ -51,7 +51,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     private BottomBar bottomBar;
     private boolean isImageFitToScreen = true;
     private RelativeLayout mediaContainer;
-    private int audioIndex, imageIndex, videoIndex;
+    private int audioIndex=100, imageIndex=100, videoIndex=100;
 
     private VideoView myVideoView;
     private MediaController mediaControls;
@@ -122,6 +122,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
         imageNote = (ImageView) findViewById(R.id.image_note);
         mediaContainer = (RelativeLayout) findViewById(R.id.media_container);
+        mediaContainer.getBackground().setAlpha(0);
 
         File audio = FileManager.init(this)
                 .with(note)
@@ -177,6 +178,21 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
             bottomBar.setOnTabClickListener(new OnTabClickListener() {
                 @Override
                 public void onTabSelected(int position) {
+                    if(position==0){
+                        mediaContainer.getBackground().setAlpha(0);
+                    }
+                    if (position==audioIndex){
+                        Log.d("prova","position "+position+" audioIndex "+audioIndex);
+                        mediaContainer.getBackground().setAlpha(240);
+                    }
+                    if (position==imageIndex){
+                        mediaContainer.getBackground().setAlpha(240);
+
+                    }
+                    if (position==videoIndex){
+                        mediaContainer.getBackground().setAlpha(240);
+
+                    }
                 }
 
                 @Override
