@@ -125,6 +125,17 @@
                 fab:fab_size="mini"
                 fab:fab_title="Video"/>
 
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/accent"
+                fab:fab_colorPressed="@color/accent_dark"
+                fab:fab_icon="@drawable/ic_my_location_24dp"
+                fab:fab_plusIconColor="@color/white"
+                fab:fab_size="mini"
+                fab:fab_title="Position" />
+
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
     </FrameLayout>
@@ -221,9 +232,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/creationDate"
-                    android:layout_marginTop="15dp"
-                    android:inputType="textMultiLine"
+                    android:layout_marginTop="30dp"
+                    android:inputType="textMultiLine|textCapSentences"
                     android:capitalize="sentences"
-                    android:gravity="top|left"
+                    android:gravity="top|start"
                     android:focusable="true"
-                    android:hint="@string/new_text" />-->
+                    android:hint="@string/new_text"
+                    android:imeOptions="flagNoFullscreen"
+                    android:background="@android:color/transparent"/>-->
