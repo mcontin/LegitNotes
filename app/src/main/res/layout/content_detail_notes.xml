@@ -14,10 +14,8 @@
 
 
         <RelativeLayout
-            android:id="@+id/text_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffffff"
             android:paddingBottom="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
@@ -36,6 +34,7 @@
     </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
 
     <RelativeLayout
+        android:id="@+id/media_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/background_dark">

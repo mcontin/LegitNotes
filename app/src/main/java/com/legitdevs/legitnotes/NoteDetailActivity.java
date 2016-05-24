@@ -123,7 +123,11 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
             bottomBar = BottomBar.attach(this, savedInstanceState);
             bottomBar.noTopOffset();
             bottomBar.noNavBarGoodness();
+            bottomBar.setMaxFixedTabs(index-1);
             bottomBar.setItems(defintiveTabs);
+            for(int i = 0; i<index;i++){
+                bottomBar.mapColorForTab(i, ContextCompat.getColor(this, R.color.colorAccent));
+            }
         }
 
 
