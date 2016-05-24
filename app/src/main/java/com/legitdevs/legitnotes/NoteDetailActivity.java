@@ -206,6 +206,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
                             //myVideoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.developers));
                             //myVideoView.setVideoPath("http://www.ebookfrenzy.com/android_book/movie.mp4");
                             myVideoView.setVideoURI(Uri.parse(FileManager.init(getApplicationContext()).with(note).get(FileManager.TYPE_VIDEO).getPath()));
+
                         } catch (Exception e) {
                             Log.e("Error", e.getMessage());
                             e.printStackTrace();
@@ -214,6 +215,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
                         //we also set an setOnPreparedListener in order to know when the video file is ready for playback
                         myVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
+                            @Override
                             public void onPrepared(MediaPlayer mediaPlayer) {
                                 // close the progress bar and play the video
                                 progressDialog.dismiss();
