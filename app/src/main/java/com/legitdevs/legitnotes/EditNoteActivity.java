@@ -439,6 +439,8 @@ public class EditNoteActivity extends AppCompatActivity
 
     @Override
     public void saveMedia(String fileType, File fileName) {
-
+        FileManager.init(this)
+                .with(note)
+                .save(fileType, fileName);
     }
 }
