@@ -200,7 +200,12 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
                             //set the media controller in the VideoView
                             myVideoView.setMediaController(mediaControls);
                             //set the uri of the video to be played
-                            myVideoView.setVideoURI(Uri.parse(FileManager.init(getApplicationContext()).with(note).get(FileManager.TYPE_VIDEO).getPath()));
+                            String videoPath = FileManager.init(getApplicationContext())
+                                    .with(note)
+                                    .get(FileManager.TYPE_VIDEO)
+                                    .toString();
+
+                            myVideoView.setVideoPath(videoPath);
                         } catch (Exception e) {
                             Log.e("Error", e.getMessage());
                             e.printStackTrace();
@@ -209,6 +214,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
                         //we also set an setOnPreparedListener in order to know when the video file is ready for playback
                         myVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
+                            @Override
                             public void onPrepared(MediaPlayer mediaPlayer) {
                                 // close the progress bar and play the video
                                 progressDialog.dismiss();
