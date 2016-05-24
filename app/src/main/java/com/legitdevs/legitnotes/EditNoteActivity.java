@@ -43,7 +43,7 @@ import java.util.HashMap;
 
 
 public class EditNoteActivity extends AppCompatActivity
-        implements IDeletionListener,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, IMediaSaver{
+        implements IDeletionListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, IMediaSaver {
 
     private static final String TAG = "EditNoteActivity";
     private static final String DIALOG = "start dialog";
@@ -83,7 +83,7 @@ public class EditNoteActivity extends AppCompatActivity
         if (receivedBundle != null) {
             note = receivedBundle.getParcelable(NoteDetailActivity.KEY_NOTE);
         }
-        if (note == null){
+        if (note == null) {
             note = new Note();
         }
 
@@ -247,6 +247,8 @@ public class EditNoteActivity extends AppCompatActivity
 
                         if (mLastLocation != null)
                             Log.d("BLA", "" + mLastLocation.getLatitude() + " " + mLastLocation.getLongitude());
+                        else
+                            Log.d("BLA", "Non funziona");
                         fabMenu.collapse();
 
                     }
@@ -346,7 +348,7 @@ public class EditNoteActivity extends AppCompatActivity
     }
 
     private String getRealPathFromURI(Uri contentUri) {
-        String[] proj = { MediaStore.Images.Media.DATA };
+        String[] proj = {MediaStore.Images.Media.DATA};
         CursorLoader loader = new CursorLoader(getApplicationContext(), contentUri, proj, null, null, null);
         Cursor cursor = loader.loadInBackground();
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -368,7 +370,7 @@ public class EditNoteActivity extends AppCompatActivity
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(KEY_NOTE, note);
                 bundle.putInt(KEY_POSITION, -1); //non serve la posizione in questa activity
-                ConfirmRemovalDialog.getInstance(bundle).show(getSupportFragmentManager(),"dialog");
+                ConfirmRemovalDialog.getInstance(bundle).show(getSupportFragmentManager(), "dialog");
                 break;
 
             default:
@@ -407,7 +409,7 @@ public class EditNoteActivity extends AppCompatActivity
 
         finish();
 
-        Toast.makeText(getApplicationContext(),R.string.save_note_toast, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), R.string.save_note_toast, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -429,7 +431,7 @@ public class EditNoteActivity extends AppCompatActivity
     @Override
     public void onConnected(Bundle bundle) {
 
-        if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
