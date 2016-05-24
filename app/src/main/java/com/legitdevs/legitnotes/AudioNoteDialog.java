@@ -3,6 +3,7 @@ package com.legitdevs.legitnotes;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.legitdevs.legitnotes.filemanager.FileManager;
 
@@ -39,6 +42,8 @@ public class AudioNoteDialog extends DialogFragment {
     private Button btnSave;
 
     private IMediaSaver saveHandler;
+    private EditText txtAudioNoteTitle;
+
 
     public static AudioNoteDialog getInstance() {
         return new AudioNoteDialog();
@@ -51,6 +56,20 @@ public class AudioNoteDialog extends DialogFragment {
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.audio_note_layout, null);
         builder.setView(v);
+
+
+        builder.setPositiveButton(R.string.audio_dialog_positive, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                /* User clicked OK so do some stuff */
+                Toast.makeText(getContext(), "Note Saved", Toast.LENGTH_SHORT).show();
+            }
+        })
+                .setNegativeButton(R.string.audio_dialog_negative, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                /* User clicked cancel so do some stuff */
+                        Toast.makeText(getContext(), "Note Dismissed", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         saveHandler = (IMediaSaver) getActivity();
 
@@ -84,8 +103,10 @@ public class AudioNoteDialog extends DialogFragment {
             }
         }
 
+        mDestFile = new File(temporaryDir, "temp.3gp");
         mDestFile = new File(temporaryDir + "/audio.3gp");
         mDestFileUri = Uri.parse(mDestFile.toString());
+        txtAudioNoteTitle = (EditText) v.findViewById(R.id.txtAudioNoteTitle);
 
         btnRecord = (CircledPulsatingButton) v.findViewById(R.id.btnRecord);
         btnRecord.setOnClickListener(new View.OnClickListener() {
@@ -125,7 +146,11 @@ public class AudioNoteDialog extends DialogFragment {
                     btnRecord.setImageResource(R.drawable.ic_stop);
                     recording = true;
 
+                    txtAudioNoteTitle.setVisibility(View.INVISIBLE);
+
                     btnSave.setEnabled(false);
+                    //builder.getButton(AlertDialog.BUTTON1).setEnabled(false);
+
                 } else {
 
                     mRecorder.stop();
@@ -152,6 +177,7 @@ public class AudioNoteDialog extends DialogFragment {
 
                     btnRecord.setImageResource(R.drawable.ic_keyboard_voice);
                     recording = false;
+                    txtAudioNoteTitle.setVisibility(View.VISIBLE);
 
                     btnSave.setEnabled(true);
                 }
