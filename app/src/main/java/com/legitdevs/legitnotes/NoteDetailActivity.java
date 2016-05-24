@@ -3,6 +3,7 @@ package com.legitdevs.legitnotes;
 import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarBadge;
 import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnMenuTabClickListener;
+import com.roughike.bottombar.OnTabClickListener;
 
 import java.io.File;
 
@@ -43,7 +45,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     private BottomBar bottomBar;
     private boolean isImageFitToScreen = true;
     private RelativeLayout mediaContainer;
-    private BottomBarBadge bottomBarBadge;
+    private int audioIndex, imageIndex, videoIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,14 +104,17 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
         if (audio != null) {
             tabs[index] = new BottomBarTab(R.drawable.ic_keyboard_voice, R.string.bottom_bar_audio_title);
+            audioIndex=index;
             index++;
         }
         if (image != null) {
             tabs[index] = new BottomBarTab(R.drawable.ic_image_white_24dp, R.string.bottom_bar_image_title);
+            imageIndex=index;
             index++;
         }
         if (video != null) {
             tabs[index] = new BottomBarTab(R.drawable.ic_local_movies_white_24dp, R.string.bottom_bar_video_title);
+            videoIndex=index;
             index++;
         }
 
@@ -128,6 +133,18 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
             for(int i = 0; i<index;i++){
                 bottomBar.mapColorForTab(i, ContextCompat.getColor(this, R.color.colorAccent));
             }
+
+            bottomBar.setOnTabClickListener(new OnTabClickListener() {
+                @Override
+                public void onTabSelected(int position) {
+                }
+
+                @Override
+                public void onTabReSelected(int position) {
+
+                }
+            });
+
         }
 
 
