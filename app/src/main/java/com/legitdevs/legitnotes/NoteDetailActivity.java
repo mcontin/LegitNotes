@@ -139,7 +139,9 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
             }
         });
 
-        File audio = FileManager.init(this).with(note).get(FileManager.TYPE_AUDIO);
+        File audio = FileManager.init(this)
+                .with(note)
+                .get(FileManager.TYPE_AUDIO);
 
         if (audio != null){
 

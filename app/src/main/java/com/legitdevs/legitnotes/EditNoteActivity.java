@@ -46,7 +46,7 @@ public class EditNoteActivity extends AppCompatActivity
     //private RichEditor text;
     private Note note;
     private TextView date;
-    private HashMap<String, File> medias;
+    private HashMap<String, String> medias;
     private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
     private EditText title;
     private EditText text;
