@@ -190,7 +190,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onNoteDeleted(int position) {
-//        adapter.removeNote(position);
+        adapter.removeNote(position);
 //        adapter.updateNotes(notes);
     }
 
