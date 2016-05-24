@@ -49,6 +49,12 @@
     <!--String related to toast-->
     <string name="save_note_toast">Note saved successfully</string>
 
+    <!--String related to bottonbar-->
+
+    <string name="bottom_bar_text_title">Text</string>
+    <string name="bottom_bar_audio_title">Audio</string>
+    <string name="bottom_bar_image_title">Image</string>
+    <string name="bottom_bar_video_title">Video</string>
 
 
 

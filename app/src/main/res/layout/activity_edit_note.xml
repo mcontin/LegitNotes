@@ -64,55 +64,66 @@
 
     <FrameLayout
         android:id="@+id/frame_layout_insert_media"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_overlay"
         android:layout_gravity="bottom|right">
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:id="@+id/fab_menu_insert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             fab:fab_addButtonColorNormal="@color/accent"
             fab:fab_addButtonColorPressed="@color/accent_dark"
             fab:fab_addButtonPlusIconColor="@color/white"
             fab:fab_addButtonStrokeVisible="false"
             fab:fab_labelStyle="@style/menu_labels_style"
-            fab:fab_labelsPosition="left">
+            fab:fab_labelsPosition="left"
+            android:layout_gravity="bottom|right">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_new_audio_note"
+                android:id="@+id/fab_from_gallery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/accent"
                 fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_icon="@drawable/my_icon"
+                fab:fab_icon="@drawable/ic_menu_gallery"
                 fab:fab_plusIconColor="@color/white"
                 fab:fab_size="mini"
-                fab:fab_title="One" />
+                fab:fab_title="From gallery" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_new_note"
+                android:id="@+id/fab_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/accent"
                 fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_icon="@drawable/ic_create_white_24dp"
+                fab:fab_icon="@drawable/ic_menu_camera"
                 fab:fab_plusIconColor="@color/white"
                 fab:fab_size="mini"
-                fab:fab_title="New Note" />
+                fab:fab_title="Photo" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_quick_note"
+                android:id="@+id/fab_audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/accent"
                 fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_icon="@drawable/ic_note_add"
+                fab:fab_icon="@drawable/ic_mic_white_24dp"
                 fab:fab_plusIconColor="@color/white"
                 fab:fab_size="mini"
-                fab:fab_title="Quick Note" />
+                fab:fab_title="Record" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/accent"
+                fab:fab_colorPressed="@color/accent_dark"
+                fab:fab_icon="@drawable/ic_videocam_black_24dp"
+                fab:fab_plusIconColor="@color/white"
+                fab:fab_size="mini"
+                fab:fab_title="Video"/>
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
