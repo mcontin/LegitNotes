@@ -76,7 +76,7 @@ public class FileManager {
         }
 
         //filename: audio.3gp, video.mp4, image.jpg
-        String finalFilename = type + tempFile.getName().split("\\.")[1];
+        String finalFilename = type + "." + tempFile.getName().split("\\.")[1];
 
         //sposto il file da temp a cartella destinazione
         File newFile = new File(fileDir, finalFilename);   //creo un nuovo file che si chiama come l'id della nota per facilitare dopo

@@ -2,26 +2,20 @@ package com.legitdevs.legitnotes;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-
 import com.legitdevs.legitnotes.database.DatabaseManager;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
-
-import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
@@ -35,13 +29,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-
+import android.widget.Toast;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.text.Normalizer;
 import java.util.ArrayList;
 
 import static android.support.v4.view.GravityCompat.*;
@@ -52,10 +41,19 @@ public class HomeActivity extends AppCompatActivity
         IDeletionListener,
         IMediaSaver{
 
-    public static final String DIALOG = "start dialog";
+
+    private static final String DIALOG_QUICK = "quick";
+    private static final String DIALOG_CONFIRM = "confirm";
+    private static final String DIALOG_AUDIO = "audio";
     private static final String TAG = "HomeActivity";
+
+    private static final int REQUEST_PERMISSION_LOCATION = 1;
+    private static final int REQUEST_PERMISSION_WRITE_STORAGE = 2;
+    private static final int REQUEST_PERMISSION_MICROPHONE = 3;
+    private static final int REQUEST_ALL = 4;
+
     public static final String KEY_NOTES_LIST = "notes_list";
-    public final static String KEY_NOTE = "note";
+    public static final String KEY_NOTE = "note";
     public static final String KEY_SEARCH ="search";
 
     private RecyclerView recyclerView;
@@ -77,6 +75,11 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+        ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestAllPermissions();
+        }
 
         if(savedInstanceState != null) {
             notes = savedInstanceState.getParcelableArrayList(KEY_NOTES_LIST);
@@ -111,7 +114,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        QuickNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+                        QuickNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG_QUICK);
                         fabMenu.collapse();
 
                     }
@@ -134,7 +137,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG_AUDIO);
                         fabMenu.collapse();
 
                     }
@@ -301,6 +304,40 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(START);
         return true;
+    }
+
+    public void requestAllPermissions() {
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                REQUEST_ALL);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_ALL: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Toast.makeText(this, "Grazie capo", Toast.LENGTH_LONG).show();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    Toast.makeText(this, "Divertiti, non funzionerà niente", Toast.LENGTH_LONG).show();
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                break;
+            }
+
+        }
     }
 
     @Override
