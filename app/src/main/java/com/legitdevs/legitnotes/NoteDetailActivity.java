@@ -1,6 +1,8 @@
 package com.legitdevs.legitnotes;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -17,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
+import android.widget.MediaController;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -27,6 +31,8 @@ import com.roughike.bottombar.BottomBarBadge;
 import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import com.roughike.bottombar.OnTabClickListener;
+
+import android.util.Log;
 
 import java.io.File;
 
@@ -46,6 +52,13 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     private boolean isImageFitToScreen = true;
     private RelativeLayout mediaContainer;
     private int audioIndex, imageIndex, videoIndex;
+
+    private VideoView myVideoView;
+    private MediaController mediaControls;
+    private int position = 0;
+    private ProgressDialog progressDialog;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +80,37 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
         }
 
+        //set the media controller buttons
+        if (mediaControls == null) {
+            mediaControls = new MediaController(NoteDetailActivity.this);
+        }
+
+        //initialize the VideoView
+        //myVideoView = (VideoView) findViewById(R.id.video_view);
+
+        // create a progress bar while the video file is loading
+        progressDialog = new ProgressDialog(NoteDetailActivity.this);
+        // set a title for the progress bar
+        progressDialog.setTitle("JavaCodeGeeks Android Video View Example");
+        // set a message for the progress bar
+        progressDialog.setMessage("Loading...");
+        //set the progress bar not cancelable on users' touch
+        progressDialog.setCancelable(false);
+        // show the progress bar
+        progressDialog.show();
+
+        try {
+            //set the media controller in the VideoView
+            myVideoView.setMediaController(mediaControls);
+            //set the uri of the video to be played
+            myVideoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.Developers));
+        } catch (Exception e) {
+            Log.e("Error", e.getMessage());
+            e.printStackTrace();
+        }
+
+
+
         getSupportActionBar().setTitle(note.getTitle());
 
         TextView text = (TextView) findViewById(R.id.noteText);
@@ -80,8 +124,6 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
         imageNote = (ImageView) findViewById(R.id.image_note);
         mediaContainer = (RelativeLayout) findViewById(R.id.media_container);
-
-        mediaContainer.getBackground().setAlpha(0);
 
         File audio = FileManager.init(this)
                 .with(note)
