@@ -232,9 +232,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/creationDate"
-                    android:layout_marginTop="15dp"
-                    android:inputType="textMultiLine"
+                    android:layout_marginTop="30dp"
+                    android:inputType="textMultiLine|textCapSentences"
                     android:capitalize="sentences"
-                    android:gravity="top|left"
+                    android:gravity="top|start"
                     android:focusable="true"
-                    android:hint="@string/new_text" />-->
+                    android:hint="@string/new_text"
+                    android:imeOptions="flagNoFullscreen"
+                    android:background="@android:color/transparent"/>-->

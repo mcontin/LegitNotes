@@ -1,6 +1,8 @@
 package com.legitdevs.legitnotes;
 
 import android.content.ContentResolver;
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,7 +11,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AlertDialog;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +30,9 @@ import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.legitdevs.legitnotes.database.DatabaseManager;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 
@@ -33,7 +41,9 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.util.HashMap;
 
+
 public class EditNoteActivity extends AppCompatActivity
+        implements IDeletionListener,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     implements IDeletionListener, IMediaSaver{
 
     private static final String TAG = "EditNoteActivity";
@@ -49,8 +59,9 @@ public class EditNoteActivity extends AppCompatActivity
     private TextView date;
     private HashMap<String, File> medias;
     private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
-    private EditText title;
-    private EditText text;
+    public static final String DIALOG = "start dialog";
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
 
     private File photoFile;
     private Uri photoUri;
@@ -81,6 +92,87 @@ public class EditNoteActivity extends AppCompatActivity
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         medias = note.getMedias();
 
+        /*text.setPadding(10, 10, 10, 10);
+        text.setPlaceholder("" + R.string.new_text);
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.focusEditor();
+            }
+        });
+
+        /*
+        findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setBold();
+            }
+        });
+
+        findViewById(R.id.action_italic).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setItalic();
+            }
+        });
+
+
+        findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                text.setSuperscript();
+            }
+        });
+        findViewById(R.id.action_strikethrough).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setStrikeThrough();
+            }
+        });
+
+        findViewById(R.id.action_underline).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setUnderline();
+            }
+        });
+
+        findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
+            private boolean isChanged;
+
+            @Override
+            public void onClick(View v) {
+                text.setTextColor(isChanged ? Color.BLACK : Color.RED);
+                isChanged = !isChanged;
+            }
+        });
+
+        findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
+            private boolean isChanged;
+
+            @Override
+            public void onClick(View v) {
+                text.setTextBackgroundColor(isChanged ? Color.TRANSPARENT : Color.YELLOW);
+                isChanged = !isChanged;
+            }
+        });
+
+
+        findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.insertTodo();
+            }
+        });*/
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+
+        //View newView = new View();
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
         assert frameLayout != null;
         frameLayout.getBackground().setAlpha(0);
@@ -148,14 +240,13 @@ public class EditNoteActivity extends AppCompatActivity
                     }
                 });
 
-                FABLocation=(FloatingActionButton) findViewById(R.id.fab_position);
+                FABLocation = (FloatingActionButton) findViewById(R.id.fab_position);
                 FABLocation.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        /*Location location = new Location("myLocation");
-                        location.getLongitude();
-                        location.getLatitude();*/
+                        if (mLastLocation != null)
+                            Log.d("BLA", "" + mLastLocation.getLatitude() + " " + mLastLocation.getLongitude());
                         fabMenu.collapse();
 
                     }
@@ -170,7 +261,6 @@ public class EditNoteActivity extends AppCompatActivity
             }
 
         });
-
     }
 
     private File createImageFile() throws IOException {
@@ -269,7 +359,7 @@ public class EditNoteActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.save_note:
                 saveChanges();
                 break;
@@ -291,7 +381,7 @@ public class EditNoteActivity extends AppCompatActivity
     @Override
     public void onNoteDeleted(int position) {
         Intent intent = new Intent(this, HomeActivity.class);
-        if(HomeActivity.activity != null)
+        if (HomeActivity.activity != null)
             HomeActivity.activity.finish();
         startActivity(intent);
     }
@@ -304,7 +394,7 @@ public class EditNoteActivity extends AppCompatActivity
         return true;
     }
 
-    private void saveChanges(){
+    private void saveChanges() {
         note.setTitle(title.getText().toString());
         note.setText(text.getText().toString());
         //note.setMedia(media);
@@ -312,7 +402,7 @@ public class EditNoteActivity extends AppCompatActivity
         DatabaseManager.getInstance(this).addNote(note);
 
         //nota modificata, devo killare l'activity di dettaglio precedente
-        if(NoteDetailActivity.activity != null)
+        if (NoteDetailActivity.activity != null)
             NoteDetailActivity.activity.finish();
 
         finish();
@@ -322,6 +412,38 @@ public class EditNoteActivity extends AppCompatActivity
 
     @Override
     public void saveMedia(String fileType, File fileName) {
+
+    }
+
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    @Override
+    public void onConnected(Bundle bundle) {
+
+        if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if (mLastLocation != null)
+            Log.d("BLA", "" + mLastLocation.getLatitude() + " " + mLastLocation.getLongitude());
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
 }
