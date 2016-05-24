@@ -1,28 +1,43 @@
 package com.legitdevs.legitnotes;
 
 import android.content.Intent;
+import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnMenuTabClickListener;
 
 public class NoteDetailActivity extends AppCompatActivity implements ObservableScrollViewCallbacks {
 
     public final static String KEY_NOTE = "note";
+    public final static String KEY_IMAGE = "image";
 
     public static NoteDetailActivity activity;
 
     private Note note;
     private ObservableScrollView scrollView;
-    private ImageView attached;
+    private ImageView imageNote;
     private TextView title;
     private TextView text;
+    private BottomBar bottomBar;
+    private boolean isImageFitToScreen=true;
+    private RelativeLayout mediaContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +48,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
         if(savedInstanceState != null) {
             note = savedInstanceState.getParcelable(KEY_NOTE);
+            isImageFitToScreen=savedInstanceState.getBoolean(KEY_IMAGE);
         } else {
             Intent intent = getIntent();
             Bundle receivedBundle = intent.getExtras();
@@ -50,20 +66,106 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
         //attached = (ImageView) findViewById(R.id.mediaView);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(getApplicationContext(), EditNoteActivity.class);
-                    i.putExtra(NoteDetailActivity.KEY_NOTE, note);
-                    startActivity(i);
-                }
-            });
-        }
 
         scrollView = (ObservableScrollView) findViewById(R.id.scroll);
         scrollView.setScrollViewCallbacks(this);
+
+        imageNote=(ImageView)findViewById(R.id.image_note);
+        mediaContainer=(RelativeLayout)findViewById(R.id.media_container);
+
+        mediaContainer.getBackground().setAlpha(0);
+
+
+        bottomBar = BottomBar.attach(this, savedInstanceState);
+        bottomBar.noTopOffset();
+        bottomBar.noNavBarGoodness();
+        bottomBar.setItemsFromMenu(R.menu.bottombar_menu, new OnMenuTabClickListener() {
+            @Override
+            public void onMenuTabSelected(@IdRes int menuItemId) {
+                switch (menuItemId){
+
+                    case R.id.bottomBarText:
+                        mediaContainer.getBackground().setAlpha(0);
+                        imageNote.setVisibility(View.GONE);
+
+                        break;
+                    case R.id.bottomBarAudio:
+                        mediaContainer.getBackground().setAlpha(240);
+                        imageNote.setVisibility(View.GONE);
+                        break;
+
+                    case R.id.bottomBarImage:
+                        mediaContainer.getBackground().setAlpha(240);
+                        imageNote.setVisibility(View.VISIBLE);
+                        imageNote.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(!isImageFitToScreen) {
+                                    isImageFitToScreen=true;
+                                    getSupportActionBar().show();
+                                    bottomBar.show();
+                                }else{
+                                    isImageFitToScreen=false;
+                                    getSupportActionBar().hide();
+                                    bottomBar.hide();
+                                    imageNote.setScaleType(ImageView.ScaleType.FIT_XY);
+                                }
+                            }
+                        });
+                        break;
+
+                    case R.id.bottomBarVideo:
+                        mediaContainer.getBackground().setAlpha(240);
+                        imageNote.setVisibility(View.GONE);
+                        break;
+                }
+            }
+
+            @Override
+            public void onMenuTabReSelected(@IdRes int menuItemId) {
+                switch (menuItemId){
+                    case R.id.bottomBarAudio:
+                        break;
+                    case R.id.bottomBarImage:
+                        break;
+                    case R.id.bottomBarVideo:
+                        break;
+                }
+            }
+        });
+
+
+        bottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorAccent));
+        bottomBar.mapColorForTab(1, ContextCompat.getColor(this, R.color.colorAccent));
+        bottomBar.mapColorForTab(2, ContextCompat.getColor(this, R.color.colorAccent));
+        bottomBar.mapColorForTab(3, ContextCompat.getColor(this, R.color.colorAccent));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()){
+            case R.id.goToEdit:
+
+                Intent i = new Intent(getApplicationContext(), EditNoteActivity.class);
+                i.putExtra(NoteDetailActivity.KEY_NOTE, note);
+                startActivity(i);
+
+                break;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.detail_menu, menu);
+
+        return true;
     }
 
     @Override
@@ -85,6 +187,8 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(KEY_NOTE, note);
+        outState.putBoolean(KEY_IMAGE,isImageFitToScreen);
+        bottomBar.onSaveInstanceState(outState);
     }
 
     @Override
@@ -92,4 +196,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
         super.onDestroy();
         note = null;
     }
+
+
+
 }
