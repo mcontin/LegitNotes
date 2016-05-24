@@ -72,20 +72,20 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         });
 
 
-        cardHolder.preference.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (starClick){
-                    cardHolder.preference.setImageResource(R.drawable.ic_star);
-                    starClick=false;
-                } else {
-                    cardHolder.preference.setImageResource(R.drawable.ic_star_border);
-                    starClick=true;
-                }
-
-            }
-        });
+//        cardHolder.preference.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if (starClick){
+//                    cardHolder.preference.setImageResource(R.drawable.ic_star);
+//                    starClick=false;
+//                } else {
+//                    cardHolder.preference.setImageResource(R.drawable.ic_star_border);
+//                    starClick=true;
+//                }
+//
+//            }
+//        });
 
 //        cardHolder.attachment.setOnClickListener(new View.OnClickListener() {
 //            @Override
