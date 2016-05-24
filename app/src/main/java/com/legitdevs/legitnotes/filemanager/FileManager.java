@@ -117,7 +117,8 @@ public class FileManager {
     public File get(String type) {
         if(type.equals(TYPE_AUDIO)
                 || type.equals(TYPE_IMAGE)
-                || type.equals(TYPE_VIDEO)) return mNote.getMedias().get(type);
+                || type.equals(TYPE_VIDEO))
+            return new File(mNote.getMedias().get(type));
 
         return null;
     }
