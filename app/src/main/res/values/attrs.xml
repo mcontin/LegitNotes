@@ -4,4 +4,6 @@
         <attr name="cpb_color" format="color" />
         <attr name="cpb_pressedRingWidth" format="dimension" />
     </declare-styleable>
+
+    <integer name="config_superShortAnimTime">100</integer>
 </resources>
