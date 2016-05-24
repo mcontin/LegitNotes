@@ -2,6 +2,7 @@ package com.legitdevs.legitnotes;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
@@ -58,7 +59,7 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
     private VideoView myVideoView;
     private MediaController mediaControls;
-    private int position = 0;
+    private int videoPosition = 0;
     private ProgressDialog progressDialog;
 
 
@@ -83,34 +84,6 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
 
         }
 
-//        //set the media controller buttons
-//        if (mediaControls == null) {
-//            mediaControls = new MediaController(NoteDetailActivity.this);
-//        }
-//
-//        //initialize the VideoView
-//        myVideoView = (VideoView) findViewById(R.id.video_note);
-//
-//        // create a progress bar while the video file is loading
-//        progressDialog = new ProgressDialog(NoteDetailActivity.this);
-//        // set a title for the progress bar
-//        progressDialog.setTitle("Loading Video");
-//        // set a message for the progress bar
-//        progressDialog.setMessage("Loading...");
-//        //set the progress bar not cancelable on users' touch
-//        progressDialog.setCancelable(false);
-//        // show the progress bar
-//        progressDialog.show();
-//
-//        try {
-//            //set the media controller in the VideoView
-//            myVideoView.setMediaController(mediaControls);
-//            //set the uri of the video to be played
-//            myVideoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.developers));
-//        } catch (Exception e) {
-//            Log.e("Error", e.getMessage());
-//            e.printStackTrace();
-//        }
 
         getSupportActionBar().setTitle(note.getTitle());
 
@@ -203,6 +176,54 @@ public class NoteDetailActivity extends AppCompatActivity implements ObservableS
                         mediaContainer.getBackground().setAlpha(180);
                         AudioWife.getInstance().release();
                         audioPlayer.removeAllViewsInLayout();
+
+                        //set the media controller buttons
+                        if (mediaControls == null) {
+                            mediaControls = new MediaController(NoteDetailActivity.this);
+                        }
+
+                        //initialize the VideoView
+                        myVideoView = (VideoView) findViewById(R.id.video_note);
+
+                        // create a progress bar while the video file is loading
+                        progressDialog = new ProgressDialog(NoteDetailActivity.this);
+                        // set a title for the progress bar
+                        progressDialog.setTitle("Loading Video");
+                        // set a message for the progress bar
+                        progressDialog.setMessage("Loading...");
+                        //set the progress bar not cancelable on users' touch
+                        progressDialog.setCancelable(false);
+                        // show the progress bar
+                        progressDialog.show();
+
+                        try {
+                            //set the media controller in the VideoView
+                            myVideoView.setMediaController(mediaControls);
+                            //set the uri of the video to be played
+                            myVideoView.setVideoURI(Uri.parse(FileManager.init(getApplicationContext()).with(note).get(FileManager.TYPE_VIDEO).getPath()));
+                        } catch (Exception e) {
+                            Log.e("Error", e.getMessage());
+                            e.printStackTrace();
+                        }
+                        myVideoView.requestFocus();
+                        //we also set an setOnPreparedListener in order to know when the video file is ready for playback
+                        myVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                                // close the progress bar and play the video
+                                progressDialog.dismiss();
+                                //if we have a position on savedInstanceState, the video playback should start from here
+                                myVideoView.seekTo(videoPosition);
+                                if (videoPosition == 0) {
+                                    myVideoView.start();
+                                } else {
+                                    //if we come from a resumed activity, video playback will be paused
+                                    myVideoView.pause();
+                                }
+                            }
+
+                        });
+
 
                     }
                 }
