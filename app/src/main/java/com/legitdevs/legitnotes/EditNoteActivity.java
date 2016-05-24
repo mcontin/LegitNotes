@@ -3,12 +3,16 @@ package com.legitdevs.legitnotes;
 import android.content.ContentResolver;
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AlertDialog;
 import android.content.pm.PackageManager;
@@ -30,9 +34,6 @@ import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.legitdevs.legitnotes.database.DatabaseManager;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 
@@ -43,7 +44,9 @@ import java.util.HashMap;
 
 
 public class EditNoteActivity extends AppCompatActivity
-        implements IDeletionListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, IMediaSaver {
+        implements IDeletionListener, IMediaSaver,
+        LocationListener
+{
 
     private static final String TAG = "EditNoteActivity";
     private static final String DIALOG = "start dialog";
@@ -58,20 +61,20 @@ public class EditNoteActivity extends AppCompatActivity
     private TextView date;
     private HashMap<String, String> medias;
     private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
-    private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
 
     private File photoFile;
     private Uri photoUri;
     private Bitmap photoBitmap;
     private EditText title;
     private EditText text;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
 
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         title = (EditText) findViewById(R.id.editTitle);
         text = (EditText) findViewById(R.id.editText);
         //text = (RichEditor) findViewById(R.id.editText);
@@ -164,14 +167,6 @@ public class EditNoteActivity extends AppCompatActivity
             }
         });*/
 
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-
         //View newView = new View();
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
         assert frameLayout != null;
@@ -245,10 +240,7 @@ public class EditNoteActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        if (mLastLocation != null)
-                            Log.d("BLA", "" + mLastLocation.getLatitude() + " " + mLastLocation.getLongitude());
-                        else
-                            Log.d("BLA", "Non funziona");
+                        setUserLocation();
                         fabMenu.collapse();
 
                     }
@@ -263,6 +255,39 @@ public class EditNoteActivity extends AppCompatActivity
             }
 
         });
+    }
+
+    @Override
+    public void onLocationChanged(Location location) throws SecurityException {
+
+        //setto la posizione dell'utente ogni volta che apre il fragment per consentire alle card di scrivere la distanza
+        note.setPosition(location);
+        locationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    public void setUserLocation() {
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        try {
+            locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private File createImageFile() throws IOException {
@@ -414,38 +439,6 @@ public class EditNoteActivity extends AppCompatActivity
 
     @Override
     public void saveMedia(String fileType, File fileName) {
-
-    }
-
-    protected void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-    }
-
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    @Override
-    public void onConnected(Bundle bundle) {
-
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-        if (mLastLocation != null)
-            Log.d("BLA", "" + mLastLocation.getLatitude() + " " + mLastLocation.getLongitude());
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
 }

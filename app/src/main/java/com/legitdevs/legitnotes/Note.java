@@ -1,5 +1,6 @@
 package com.legitdevs.legitnotes;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -27,6 +28,7 @@ public class Note implements Parcelable{
     private Date date;
     private String text;
     private String category;
+    private Location position;
     //la chiave identifica se è immagine, video o audio,
     //il valore è il nome del file
     private HashMap<String, String> medias;
@@ -100,6 +102,14 @@ public class Note implements Parcelable{
 
     public void addMedia(String type, File file) {
         medias.put(type, file.getPath());
+    }
+
+    public Location getPosition() {
+        return position;
+    }
+
+    public void setPosition(Location position) {
+        this.position = position;
     }
 
     public HashMap<String, Object> toHashMap(){
