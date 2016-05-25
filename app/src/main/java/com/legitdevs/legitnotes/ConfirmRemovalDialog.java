@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 
 import com.legitdevs.legitnotes.database.DatabaseManager;
 
@@ -29,7 +30,6 @@ public class ConfirmRemovalDialog extends DialogFragment {
         return confirmRemovalDialog;
     }
 
-    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -42,7 +42,9 @@ public class ConfirmRemovalDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        DatabaseManager.getInstance(getContext()).removeNote((Note) getArguments().getParcelable(KEY_NOTE));
+                        DatabaseManager
+                                .getInstance(getContext())
+                                .removeNote((Note) getArguments().getParcelable(KEY_NOTE));
 
                         //nota modificata, devo killare l'activity di dettaglio precedente
                         if(NoteDetailActivity.activity != null)
