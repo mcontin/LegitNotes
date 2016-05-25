@@ -22,7 +22,7 @@
         android:layout_height="135dip"
         custom:cpb_color="@color/colorAccent"
         custom:cpb_pressedRingWidth="40dip"
-        android:src="@drawable/ic_keyboard_voice"
+        android:src="@drawable/ic_keyboard_voice_white_24dp"
         android:layout_weight="2" />
 
     <!--<android.support.design.widget.FloatingActionButton-->
@@ -30,7 +30,7 @@
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->
     <!--android:scaleType="center"-->
-    <!--android:src="@drawable/ic_keyboard_voice" />-->
+    <!--android:src="@drawable/ic_keyboard_voice_white_24dp" />-->
 
 
     <!--<Button-->

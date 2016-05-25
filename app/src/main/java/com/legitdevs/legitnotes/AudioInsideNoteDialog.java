@@ -146,7 +146,7 @@ public class AudioInsideNoteDialog extends DialogFragment {
 
                     Log.i(TAG, "onClick: " + mDestFileUri.toString());
 
-                    btnRecord.setImageResource(R.drawable.ic_keyboard_voice);
+                    btnRecord.setImageResource(R.drawable.ic_keyboard_voice_white_24dp);
                     recording = false;
 
                     ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);

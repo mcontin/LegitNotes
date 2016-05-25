@@ -113,7 +113,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         int index = 1;
 
         if (audio != null) {
-            tabs[index] = new BottomBarTab(R.drawable.ic_keyboard_voice, R.string.bottom_bar_audio_title);
+            tabs[index] = new BottomBarTab(R.drawable.ic_keyboard_voice_white_24dp, R.string.bottom_bar_audio_title);
             audioIndex=index;
             index++;
         }
@@ -153,19 +153,19 @@ public class NoteDetailActivity extends AppCompatActivity {
                         audioPlayer.removeAllViewsInLayout();
                     }
                     if (position==audioIndex){
-                        mediaContainer.getBackground().setAlpha(180);
+                        mediaContainer.getBackground().setAlpha(200);
                         AudioWife.getInstance()
                                 .init(getApplicationContext(), Uri.parse(audio.getAbsolutePath()))
                                 .useDefaultUi(audioPlayer, getLayoutInflater());
                     }
                     if (position==imageIndex){
-                        mediaContainer.getBackground().setAlpha(180);
+                        mediaContainer.getBackground().setAlpha(200);
                         AudioWife.getInstance().release();
                         audioPlayer.removeAllViewsInLayout();
 
                     }
                     if (position==videoIndex){
-                        mediaContainer.getBackground().setAlpha(180);
+                        mediaContainer.getBackground().setAlpha(200);
                         AudioWife.getInstance().release();
                         audioPlayer.removeAllViewsInLayout();
                         //set the media controller buttons

@@ -28,8 +28,8 @@
                 android:maxLines="1"
                 android:padding="5dp"
                 android:text="title"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textSize="23sp" />
+                android:textSize="23sp"
+                android:textColor="@color/colorPrimary" />
 
             <LinearLayout
                 android:id="@+id/center_content"
@@ -50,6 +50,43 @@
                     android:text="text"
                     android:textColor="@color/note_text"
                     android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/attachments"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/center_content">
+
+
+                <ImageView
+                    android:id="@+id/text_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_reorder_gray_24dp"/>
+
+                <ImageView
+                    android:id="@+id/audio_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_keyboard_voice_gray_24dp" />
+
+                <ImageView
+                    android:id="@+id/image_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_image_gray_24dp" />
+
+                <ImageView
+                    android:id="@+id/video_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_local_movies_gray_24dp" />
             </LinearLayout>
 
         </RelativeLayout>

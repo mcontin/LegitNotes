@@ -10,17 +10,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.legitdevs.legitnotes.filemanager.FileManager;
+
+import java.io.File;
 import java.util.ArrayList;
 
 /**
  * Created by mattia on 07/04/16.
  */
 
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHolder>{
+public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHolder> {
 
     private ArrayList<Note> notes;  //lista di eventi
     private Context ctx;
-    private boolean starClick = true;
 
     public NotesAdapter(ArrayList<Note> notes, Context ctx) {
         this.notes = notes;
@@ -65,34 +68,32 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
             @Override
             public boolean onLongClick(View v) {
 
-                EditDialog.getInstance(notes.get(position),position).show(((HomeActivity) ctx).getSupportFragmentManager(), "dialog");
+                EditDialog.getInstance(notes.get(position), position).show(((HomeActivity) ctx).getSupportFragmentManager(), "dialog");
 
                 return true;
             }
         });
 
+        if (!notes.get(position).getText().equals(""))
+            cardHolder.textIcon.setImageResource(R.drawable.ic_reorder_blue_24dp);
+        else
+            cardHolder.textIcon.setImageResource(R.drawable.ic_reorder_gray_24dp);
 
-//        cardHolder.preference.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                if (starClick){
-//                    cardHolder.preference.setImageResource(R.drawable.ic_star);
-//                    starClick=false;
-//                } else {
-//                    cardHolder.preference.setImageResource(R.drawable.ic_star_border);
-//                    starClick=true;
-//                }
-//
-//            }
-//        });
+        if (notes.get(position).getMedias().get(FileManager.TYPE_AUDIO) != null)
+            cardHolder.audioIcon.setImageResource(R.drawable.ic_keyboard_voice_blue_24dp);
+        else
+            cardHolder.audioIcon.setImageResource(R.drawable.ic_keyboard_voice_gray_24dp);
 
-//        cardHolder.attachment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //TODO aprire allegato/i
-//            }
-//        });
+        if (notes.get(position).getMedias().get(FileManager.TYPE_IMAGE) != null)
+            cardHolder.imageIcon.setImageResource(R.drawable.ic_image_blue_24dp);
+        else
+            cardHolder.imageIcon.setImageResource(R.drawable.ic_image_gray_24dp);
+
+        if (notes.get(position).getMedias().get(FileManager.TYPE_VIDEO) != null)
+            cardHolder.videoIcon.setImageResource(R.drawable.ic_local_movies_blue_24dp);
+        else
+            cardHolder.videoIcon.setImageResource(R.drawable.ic_local_movies_gray_24dp);
+
 
     }
 
@@ -136,17 +137,18 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
      */
     public static class CardViewHolder extends RecyclerView.ViewHolder {
         CardView card;
-        TextView noteTitle;
-        TextView noteSnippet;
-        ImageView preference;
-        LinearLayout attachment;
+        TextView noteTitle, noteSnippet;
+        ImageView textIcon, audioIcon, imageIcon, videoIcon;
 
         CardViewHolder(View itemView) {
             super(itemView);
             card = (CardView) itemView.findViewById(R.id.cardView);
             noteTitle = (TextView) itemView.findViewById(R.id.title);
             noteSnippet = (TextView) itemView.findViewById(R.id.text);
-            //attachment = (LinearLayout) itemView.findViewById(R.id.bottom_content);
+            textIcon = (ImageView) itemView.findViewById(R.id.text_icon);
+            audioIcon = (ImageView) itemView.findViewById(R.id.audio_icon);
+            imageIcon = (ImageView) itemView.findViewById(R.id.image_icon);
+            videoIcon = (ImageView) itemView.findViewById(R.id.video_icon);
         }
     }
 
@@ -191,8 +193,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
     }
 
     public void addItem(int position, Note note) {
-       notes.add(position, note);
-       notifyDataSetChanged();
+        notes.add(position, note);
+        notifyDataSetChanged();
     }
 
     public void moveItem(int fromPosition, int toPosition) {
@@ -201,15 +203,4 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         notifyDataSetChanged();
     }
 
-    /*
-    public String getTitleFormatted(String title) {
-        //riformatta il nome dell'azienda(ZILIDIUM ==> Zilidium)
-        title = title.toLowerCase();
-        StringBuilder rackingSystemSb = new StringBuilder();
-        rackingSystemSb.append(title);
-        rackingSystemSb.setCharAt(0, Character.toUpperCase(rackingSystemSb.charAt(0)));
-        title = rackingSystemSb.toString();
-        return title;
-    }
-    */
 }
