@@ -19,6 +19,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.VideoView;
 import android.widget.MediaController;
+
+import com.bumptech.glide.Glide;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarTab;
@@ -149,32 +151,46 @@ public class NoteDetailActivity extends AppCompatActivity {
                 public void onTabSelected(int position) {
                     if(position==0){
                         mediaContainer.getBackground().setAlpha(0);
-                        AudioWife.getInstance().release();
-                        audioPlayer.removeAllViewsInLayout();
+                        clearLayout();
+
                     }
                     if (position==audioIndex){
                         mediaContainer.getBackground().setAlpha(200);
+                        clearLayout();
+
                         AudioWife.getInstance()
                                 .init(getApplicationContext(), Uri.parse(audio.getAbsolutePath()))
                                 .useDefaultUi(audioPlayer, getLayoutInflater());
+
                     }
                     if (position==imageIndex){
                         mediaContainer.getBackground().setAlpha(200);
-                        AudioWife.getInstance().release();
-                        audioPlayer.removeAllViewsInLayout();
+                        clearLayout();
 
+                        if(imageNote == null)
+                            imageNote = (ImageView) findViewById(R.id.image_note);
+                        imageNote.setVisibility(View.VISIBLE);
+
+                        Glide
+                                .with(getApplicationContext())
+                                .load(FileManager
+                                        .init(getApplicationContext())
+                                        .with(note)
+                                        .get(FileManager.TYPE_IMAGE))
+                                .into(imageNote);
                     }
                     if (position==videoIndex){
                         mediaContainer.getBackground().setAlpha(200);
-                        AudioWife.getInstance().release();
-                        audioPlayer.removeAllViewsInLayout();
+                        clearLayout();
+
                         //set the media controller buttons
                         if (mediaControls == null) {
                             mediaControls = new MediaController(NoteDetailActivity.this);
                         }
 
                         //initialize the VideoView
-                        myVideoView = (VideoView) findViewById(R.id.video_note);
+                        if(myVideoView == null)
+                            myVideoView = (VideoView) findViewById(R.id.video_note);
                         myVideoView.setVisibility(View.VISIBLE);
 
                         // create a progress bar while the video file is loading
@@ -195,7 +211,9 @@ public class NoteDetailActivity extends AppCompatActivity {
                             //set the uri of the video to be played
                             //myVideoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.developers));
                             //myVideoView.setVideoPath("http://www.ebookfrenzy.com/android_book/movie.mp4");
-                            myVideoView.setVideoURI(Uri.parse(FileManager.init(getApplicationContext()).with(note).get(FileManager.TYPE_VIDEO).getPath()));
+                            if(!myVideoView.canPause()) {
+                                myVideoView.setVideoURI(Uri.parse(FileManager.init(getApplicationContext()).with(note).get(FileManager.TYPE_VIDEO).getPath()));
+                            }
 
                         } catch (Exception e) {
                             Log.e("Error", e.getMessage());
@@ -212,7 +230,7 @@ public class NoteDetailActivity extends AppCompatActivity {
                                 //if we have a position on savedInstanceState, the video playback should start from here
                                 myVideoView.seekTo(videoPosition);
                                 if (videoPosition == 0) {
-                                    myVideoView.start();
+//                                    myVideoView.start();
                                 } else {
                                     //if we come from a resumed activity, video playback will be paused
                                     myVideoView.pause();
@@ -231,9 +249,20 @@ public class NoteDetailActivity extends AppCompatActivity {
             });
         }
 
+    }
 
+    private void clearLayout() {
+        AudioWife.getInstance().release();
+        audioPlayer.removeAllViewsInLayout();
+        if(myVideoView != null) myVideoView.setVisibility(View.INVISIBLE);
+        if(imageNote != null) imageNote.setVisibility(View.INVISIBLE);
+    }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(imageNote != null) imageNote.setImageResource(android.R.color.transparent);
+        if(bottomBar != null) bottomBar.selectTabAtPosition(0, false);
     }
 
     @Override

@@ -86,7 +86,7 @@ public class HomeActivity extends AppCompatActivity
             notes = DatabaseManager.getInstance(this).getNotes();
 
             if (notes.size() == 0) {
-                generateRandomNotes();
+                //generateRandomNotes();
             }
         }
 

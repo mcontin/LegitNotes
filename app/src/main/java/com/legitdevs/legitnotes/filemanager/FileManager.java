@@ -80,6 +80,7 @@ public class FileManager {
 
         //sposto il file da temp a cartella destinazione
         File newFile = new File(fileDir, finalFilename);   //creo un nuovo file che si chiama come l'id della nota per facilitare dopo
+        boolean deleted = newFile.delete();
         FileChannel outputChannel = null;
         FileChannel inputChannel = null;
         try {

@@ -315,15 +315,12 @@ public class EditNoteActivity extends AppCompatActivity
             Uri videoUri = data.getData();
             File videoFile = new File(getRealPathFromURI(videoUri));
 
-            FileManager.init(this)
-                    .with(note)
-                    .save(FileManager.TYPE_VIDEO, videoFile);
+            saveMedia(FileManager.TYPE_VIDEO, videoFile);
 
+            Toast.makeText(this, "Video saved!", Toast.LENGTH_SHORT).show();
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
-            FileManager.init(this)
-                    .with(note)
-                    .save(FileManager.TYPE_IMAGE, photoFile);
+            saveMedia(FileManager.TYPE_IMAGE, photoFile);
 
             Toast.makeText(this, "Picture saved!", Toast.LENGTH_SHORT).show();
 
@@ -411,6 +408,8 @@ public class EditNoteActivity extends AppCompatActivity
                 .save(fileType, fileName);
     }
 }
+
+
 
 /*text.setPadding(10, 10, 10, 10);
         text.setPlaceholder("" + R.string.new_text);

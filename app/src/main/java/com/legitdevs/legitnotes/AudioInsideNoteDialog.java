@@ -64,11 +64,6 @@ public class AudioInsideNoteDialog extends DialogFragment {
         View v = inflater.inflate(R.layout.audio_inside_note_layout, null);
         builder.setView(v);
 
-
-
-
-
-
         btnRecord = (CircledPulsatingButton) v.findViewById(R.id.btnRecord);
         btnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +121,7 @@ public class AudioInsideNoteDialog extends DialogFragment {
             }
         });
 
-        //saveHandler = (IMediaSaver) getActivity();
+        saveHandler = (IMediaSaver) getActivity();
 
         awContainer = (ViewGroup) v.findViewById(R.id.playerContainer);
 
@@ -157,9 +152,9 @@ public class AudioInsideNoteDialog extends DialogFragment {
                 /* User clicked OK so do some stuff */
                 Log.i(TAG, "onClick: clicked");
 
-                //saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
+                saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
 
-                saveDir(mDestFile);
+//                saveDir(mDestFile);
 
                 dismiss();
 
