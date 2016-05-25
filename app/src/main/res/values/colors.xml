@@ -19,4 +19,7 @@
     <color name="pressed_button">#dcdcdc</color>
 
     <color name="simple_background">#feffef</color>
+
+    <color name="gainsboro">#eee8f2</color>
+
 </resources>

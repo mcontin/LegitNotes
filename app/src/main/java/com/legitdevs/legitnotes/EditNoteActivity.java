@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.Location;
@@ -22,6 +23,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,10 +42,14 @@ import java.util.HashMap;
 import android.support.v7.app.AlertDialog;
 import android.os.Build;
 import android.util.Log;
+import android.widget.ToggleButton;
+
+import windyzboy.github.io.customeeditor.CustomEditText;
+import yuku.ambilwarna.AmbilWarnaDialog;
 
 
 public class EditNoteActivity extends AppCompatActivity
-        implements IDeletionListener, IMediaSaver, LocationListener {
+        implements IDeletionListener, IMediaSaver, LocationListener, AmbilWarnaDialog.OnAmbilWarnaListener {
 
     private static final String TAG = "EditNoteActivity";
     private static final String DIALOG = "start dialog";
@@ -61,9 +68,38 @@ public class EditNoteActivity extends AppCompatActivity
     private Uri photoUri;
     private Bitmap photoBitmap;
     private EditText title;
-    private EditText text;
-    //private CustomEditorText text;
+    private CustomEditText text;
     private LocationManager locationManager;
+
+    private LinearLayout lnl;
+    private AmbilWarnaDialog colorPickerDialog;
+    private ImageView imgChangeColor;
+
+    private int selectionStart;
+    private int selectionEnd;
+
+    private CustomEditText.EventBack eventBack = new CustomEditText.EventBack() {
+
+        @Override
+        public void close() {
+            lnl.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void show() {
+            lnl.setVisibility(View.VISIBLE);
+        }
+    };
+
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (text.isFocused()) {
+                lnl.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +108,7 @@ public class EditNoteActivity extends AppCompatActivity
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         title = (EditText) findViewById(R.id.editTitle);
-        text = (EditText) findViewById(R.id.editText);
-        //CustomEditText text = (CustomEditText) findViewById(R.id.editText);
+        text = (CustomEditText) findViewById(R.id.editText);
         date = (TextView) findViewById(R.id.creationDate);
 
         Intent intent = getIntent();
@@ -177,6 +212,43 @@ public class EditNoteActivity extends AppCompatActivity
                 frameLayout.setOnTouchListener(null);
             }
 
+        });
+
+        colorPickerDialog = new AmbilWarnaDialog(this, Color.BLACK, this);
+        ToggleButton boldToggle = (ToggleButton) findViewById(R.id.btnBold);
+        ToggleButton italicsToggle = (ToggleButton) findViewById(R.id.btnItalics);
+        ToggleButton underlinedToggle = (ToggleButton) findViewById(R.id.btnUnderline);
+        imgChangeColor = (ImageView) findViewById(R.id.btnChangeTextColor);
+        lnl = (LinearLayout) findViewById(R.id.lnlAction);
+        lnl.setVisibility(View.VISIBLE);
+
+        text.setHint(getResources().getString(R.string.new_text));
+        text.setSingleLine(false);
+        text.setMinLines(10);
+        text.setBoldToggleButton(boldToggle);
+        text.setItalicsToggleButton(italicsToggle);
+        text.setUnderlineToggleButton(underlinedToggle);
+        text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    lnl.setVisibility(View.VISIBLE);
+                } else {
+                    lnl.setVisibility(View.GONE);
+                }
+            }
+        });
+        text.setEventBack(eventBack);
+        text.setOnClickListener(clickListener);
+        imgChangeColor.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                selectionStart = text.getSelectionStart();
+                selectionEnd = text.getSelectionEnd();
+                colorPickerDialog.show();
+            }
         });
     }
 
@@ -364,77 +436,16 @@ public class EditNoteActivity extends AppCompatActivity
     public void saveMedia(String fileType, File fileName) {
 
     }
+
+    @Override
+    public void onCancel(AmbilWarnaDialog dialog) {
+
+    }
+
+    @Override
+    public void onOk(AmbilWarnaDialog dialog, int color) {
+        text.setColor(color, selectionStart, selectionEnd);
+        imgChangeColor.setBackgroundColor(color);
+    }
+
 }
-
-/*
-text.setPadding(10, 10, 10, 10);
-        text.setPlaceholder("" + R.string.new_text);
-        text.setOnClickListener(new View.OnClickListener() {
-@Override
-public void onClick(View v) {
-        text.focusEditor();
-        }
-        });
-
-        findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
-@Override
-public void onClick(View v) {
-        text.setBold();
-        }
-        });
-
-        findViewById(R.id.action_italic).setOnClickListener(new View.OnClickListener() {
-@Override
-public void onClick(View v) {
-        text.setItalic();
-        }
-        });
-
-
-        findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
-@Override public void onClick(View v) {
-        text.setSuperscript();
-        }
-        });
-        findViewById(R.id.action_strikethrough).setOnClickListener(new View.OnClickListener() {
-@Override
-public void onClick(View v) {
-        text.setStrikeThrough();
-        }
-        });
-
-        findViewById(R.id.action_underline).setOnClickListener(new View.OnClickListener() {
-@Override
-public void onClick(View v) {
-        text.setUnderline();
-        }
-        });
-
-        findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
-private boolean isChanged;
-
-@Override
-public void onClick(View v) {
-        text.setTextColor(isChanged ? Color.BLACK : Color.RED);
-        isChanged = !isChanged;
-        }
-        });
-
-        findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
-private boolean isChanged;
-
-@Override
-public void onClick(View v) {
-        text.setTextBackgroundColor(isChanged ? Color.TRANSPARENT : Color.YELLOW);
-        isChanged = !isChanged;
-        }
-        });
-
-
-        findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
-@Override
-public void onClick(View v) {
-        text.insertTodo();
-        }
-        });
-        */

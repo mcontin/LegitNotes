@@ -42,33 +42,73 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <LinearLayout
+            android:id="@+id/lnlAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/gainsboro"
+            android:orientation="horizontal">
+
+            <ToggleButton
+                android:id="@+id/btnBold"
+                android:layout_width="@dimen/action_button_height"
+                android:layout_height="@dimen/action_button_height"
+                android:background="@drawable/selector_bold_button"
+                android:textOff=""
+                android:textOn=""
+                android:textStyle="bold" />
+
+            <ToggleButton
+                android:id="@+id/btnItalics"
+                android:layout_width="@dimen/action_button_height"
+                android:layout_height="@dimen/action_button_height"
+                android:background="@drawable/selector_italic_button"
+                android:textOff=""
+                android:textOn=""
+                android:textStyle="italic" />
+
+            <ToggleButton
+                android:id="@+id/btnUnderline"
+                android:layout_width="@dimen/action_button_height"
+                android:layout_height="@dimen/action_button_height"
+                android:background="@drawable/selector_underline_button"
+                android:textOff=""
+                android:textOn="" />
+
+            <ImageView
+                android:id="@+id/btnChangeTextColor"
+                android:layout_width="@dimen/action_button_height"
+                android:layout_height="@dimen/action_button_height"
+                android:background="@android:color/black"
+                android:contentDescription="@null"
+                android:src="@mipmap/button_color" />
+        </LinearLayout>
+
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/editText"
+            <ScrollView
+                android:id="@+id/scrollViewEditor"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="30dp"
-                android:background="@android:color/transparent"
-                android:gravity="top|start"
-                android:hint="@string/new_text"
-                android:imeOptions="flagNoFullscreen"
-                android:inputType="textMultiLine|textCapSentences" />
-            <!--
-            <windyzboy.github.io.customeeditor.CustomEditText
-                android:id="@+id/editText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="30dp"
-                android:gravity="top|start"
-                android:hint="@string/new_text"
-                android:imeOptions="flagNoFullscreen"
-                android:inputType="textFilter|textMultiLine|textNoSuggestions|textCapSentences"
-                android:minLines="10" >
-            </windyzboy.github.io.customeeditor.CustomEditText>-->
+                android:layout_height="wrap_content">
 
+                <windyzboy.github.io.customeeditor.CustomEditText
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="30dp"
+                    android:background="@android:color/transparent"
+                    android:gravity="top|start"
+                    android:hint="@string/new_text"
+                    android:imeOptions="flagNoFullscreen"
+                    android:inputType="textFilter|textMultiLine|textNoSuggestions|textCapSentences">
+
+                    <requestFocus />
+                </windyzboy.github.io.customeeditor.CustomEditText>
+            </ScrollView>
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
@@ -151,86 +191,14 @@
 
     </FrameLayout>
 
-</FrameLayout>
-
-<!--
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/action_bold"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/bold" />
-
-                <ImageButton
-                    android:id="@+id/action_italic"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/italic" />
-
-                <ImageButton
-                    android:id="@+id/action_superscript"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/superscript" />
-
-                <ImageButton
-                    android:id="@+id/action_strikethrough"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/strikethrough" />
-
-                <ImageButton
-                    android:id="@+id/action_underline"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/underline" />
-
-                <ImageButton
-                    android:id="@+id/action_txt_color"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/txt_color" />
-
-                <ImageButton
-                    android:id="@+id/action_bg_color"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/bg_color" />
-
-
-                <ImageButton
-                    android:id="@+id/action_insert_checkbox"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@android:drawable/checkbox_on_background" />
-
-
-            </LinearLayout>
-
-        </HorizontalScrollView>-->
+</FrameLayout><!--
+               <EditText
+                   android:id="@+id/editText"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_marginTop="30dp"
+                   android:background="@android:color/transparent"
+                   android:gravity="top|start"
+                   android:hint="@string/new_text"
+                   android:imeOptions="flagNoFullscreen"
+                   android:inputType="textMultiLine|textCapSentences" />-->
