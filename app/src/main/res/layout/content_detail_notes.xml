@@ -7,31 +7,50 @@
     android:fillViewport="true"
     tools:context=".NoteDetailActivity">
 
-    <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
-        android:id="@+id/scroll"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/note_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp" />
 
             <TextView
                 android:id="@+id/noteText"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="3dp"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_height="wrap_content"
+                android:textSize="19sp"
+                android:textColor="@color/note_text"
+                android:layout_below="@+id/note_date"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp" />
 
 
         </RelativeLayout>
 
-    </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+
+
+    </ScrollView>
+
+
+
+
+
+
 
     <RelativeLayout
         android:id="@+id/media_container"
@@ -48,10 +67,17 @@
             android:src="@drawable/placeholder"
             android:visibility="gone" />
         <VideoView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/video_note"
             android:visibility="gone" />
+        <FrameLayout
+            android:id="@+id/audio_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_centerInParent="true" />
+
     </RelativeLayout>
 
 
