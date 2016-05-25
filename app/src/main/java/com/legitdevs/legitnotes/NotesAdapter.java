@@ -8,12 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.legitdevs.legitnotes.filemanager.FileManager;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -74,10 +72,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
             }
         });
 
-        if (!notes.get(position).getText().equals(""))
-            cardHolder.textIcon.setImageResource(R.drawable.ic_reorder_blue_24dp);
-        else
-            cardHolder.textIcon.setImageResource(R.drawable.ic_reorder_gray_24dp);
+//        if (!notes.get(position).getText().equals(""))
+//            cardHolder.textIcon.setImageResource(R.drawable.ic_text_format_blue_24dp);
+//        else
+//            cardHolder.textIcon.setImageResource(R.drawable.ic_text_format_gray_24dp);
 
         if (notes.get(position).getMedias().get(FileManager.TYPE_AUDIO) != null)
             cardHolder.audioIcon.setImageResource(R.drawable.ic_keyboard_voice_blue_24dp);
@@ -126,6 +124,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
         orderBy();
 
         notifyItemRemoved(position);
+        notifyItemRangeChanged(position, getItemCount());
     }
 
     public void orderBy() {
@@ -145,7 +144,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
             card = (CardView) itemView.findViewById(R.id.cardView);
             noteTitle = (TextView) itemView.findViewById(R.id.title);
             noteSnippet = (TextView) itemView.findViewById(R.id.text);
-            textIcon = (ImageView) itemView.findViewById(R.id.text_icon);
+//            textIcon = (ImageView) itemView.findViewById(R.id.text_icon);
             audioIcon = (ImageView) itemView.findViewById(R.id.audio_icon);
             imageIcon = (ImageView) itemView.findViewById(R.id.image_icon);
             videoIcon = (ImageView) itemView.findViewById(R.id.video_icon);

@@ -247,8 +247,9 @@ public class HomeActivity extends AppCompatActivity
 
         final ArrayList<Note> filteredNote = new ArrayList<>();
         for (Note note : notes) {
-            final String title = note.getTitle().toLowerCase();
-            if (title.contains(query)) {
+            String title = note.getTitle().toLowerCase();
+            String text = note.getText().toLowerCase();
+            if (title.contains(query) || text.contains(query)) {
                 filteredNote.add(note);
             }
         }

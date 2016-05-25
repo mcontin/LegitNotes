@@ -32,7 +32,7 @@ public class EditDialog extends DialogFragment {
         EditDialog editDialog = new EditDialog();
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_NOTE, note);
-        bundle.putInt(KEY_POSITION,position);
+        bundle.putInt(KEY_POSITION, position);
         editDialog.setArguments(bundle);
         return editDialog;
     }
@@ -45,13 +45,13 @@ public class EditDialog extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        View v=inflater.inflate(R.layout.dialog_edit_layout, null);
+        View v = inflater.inflate(R.layout.dialog_edit_layout, null);
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(v);
 
-        btnEdit=(Button)v.findViewById(R.id.buttonEdit);
+        btnEdit = (Button) v.findViewById(R.id.buttonEdit);
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,15 +62,15 @@ public class EditDialog extends DialogFragment {
             }
         });
 
-        btnDelete=(Button)v.findViewById(R.id.buttonDelete);
+        btnDelete = (Button) v.findViewById(R.id.buttonDelete);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Note note=getArguments().getParcelable(KEY_NOTE);
-                int position=getArguments().getInt(KEY_POSITION);
+                Note note = getArguments().getParcelable(KEY_NOTE);
+                int position = getArguments().getInt(KEY_POSITION);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable(KEY_NOTE,note);
+                bundle.putParcelable(KEY_NOTE, note);
                 bundle.putInt(KEY_POSITION, position);
                 ConfirmRemovalDialog.getInstance(bundle).show(getFragmentManager(), "dialog");
                 dismiss();
