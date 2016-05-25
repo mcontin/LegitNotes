@@ -29,6 +29,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +47,7 @@ import java.util.HashMap;
 
 public class EditNoteActivity extends AppCompatActivity
         implements IDeletionListener, IMediaSaver,
-        LocationListener
+        LocationListener, AudioInsideNoteDialog.IDirAudioNote
 {
 
     private static final String TAG = "EditNoteActivity";
@@ -62,12 +64,15 @@ public class EditNoteActivity extends AppCompatActivity
     private HashMap<String, String> medias;
     private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
 
-    private File photoFile;
+    private File photoFile,audioFile;
     private Uri photoUri;
     private Bitmap photoBitmap;
     private EditText title;
     private EditText text;
     private LocationManager locationManager;
+    private ImageView deleteAudio,deleteVideo,deleteImage;
+    private FrameLayout editAudioPlayer;
+    private LinearLayout audioContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,79 +98,22 @@ public class EditNoteActivity extends AppCompatActivity
         title.setText(note.getTitle());
         text.setText(note.getText());
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
-        //medias = note.getMedias();
+        medias = note.getMedias();
 
-        /*text.setPadding(10, 10, 10, 10);
-        text.setPlaceholder("" + R.string.new_text);
-        text.setOnClickListener(new View.OnClickListener() {
+        deleteAudio=(ImageView)findViewById(R.id.delete_audio);
+        deleteAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                text.focusEditor();
+                AudioWife.getInstance().release();
+                editAudioPlayer.removeAllViewsInLayout();
+                deleteAudio=null;
+                audioContent.setVisibility(View.GONE);
             }
         });
-
-        /*
-        findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setBold();
-            }
-        });
-
-        findViewById(R.id.action_italic).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setItalic();
-            }
-        });
+        editAudioPlayer=(FrameLayout)findViewById(R.id.edit_audio);
+        audioContent=(LinearLayout)findViewById(R.id.audio_content);
 
 
-        findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setSuperscript();
-            }
-        });
-        findViewById(R.id.action_strikethrough).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setStrikeThrough();
-            }
-        });
-
-        findViewById(R.id.action_underline).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setUnderline();
-            }
-        });
-
-        findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
-            private boolean isChanged;
-
-            @Override
-            public void onClick(View v) {
-                text.setTextColor(isChanged ? Color.BLACK : Color.RED);
-                isChanged = !isChanged;
-            }
-        });
-
-        findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
-            private boolean isChanged;
-
-            @Override
-            public void onClick(View v) {
-                text.setTextBackgroundColor(isChanged ? Color.TRANSPARENT : Color.YELLOW);
-                isChanged = !isChanged;
-            }
-        });
-
-
-        findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.insertTodo();
-            }
-        });*/
 
         //View newView = new View();
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
@@ -220,7 +168,7 @@ public class EditNoteActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         //record audio
-                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+                        AudioInsideNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
                         fabMenu.collapse();
                     }
                 });
@@ -255,6 +203,17 @@ public class EditNoteActivity extends AppCompatActivity
             }
 
         });
+    }
+
+    public void getDirAudio(File dir){
+        audioFile=dir;
+
+        audioContent.setVisibility(View.VISIBLE);
+
+        AudioWife.getInstance()
+                .init(getApplicationContext(), Uri.parse(audioFile.toString()))
+                .useDefaultUi(editAudioPlayer, getLayoutInflater());
+
     }
 
     @Override
@@ -431,6 +390,11 @@ public class EditNoteActivity extends AppCompatActivity
 
         DatabaseManager.getInstance(this).addNote(note);
 
+        if(audioFile!=null)
+            FileManager.init(this)
+                .with(note)
+                .save(FileManager.TYPE_AUDIO,audioFile);
+
         //nota modificata, devo killare l'activity di dettaglio precedente
         if (NoteDetailActivity.activity != null)
             NoteDetailActivity.activity.finish();
@@ -447,3 +411,75 @@ public class EditNoteActivity extends AppCompatActivity
                 .save(fileType, fileName);
     }
 }
+
+/*text.setPadding(10, 10, 10, 10);
+        text.setPlaceholder("" + R.string.new_text);
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.focusEditor();
+            }
+        });
+
+        /*
+        findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setBold();
+            }
+        });
+
+        findViewById(R.id.action_italic).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setItalic();
+            }
+        });
+
+
+        findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                text.setSuperscript();
+            }
+        });
+        findViewById(R.id.action_strikethrough).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setStrikeThrough();
+            }
+        });
+
+        findViewById(R.id.action_underline).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setUnderline();
+            }
+        });
+
+        findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
+            private boolean isChanged;
+
+            @Override
+            public void onClick(View v) {
+                text.setTextColor(isChanged ? Color.BLACK : Color.RED);
+                isChanged = !isChanged;
+            }
+        });
+
+        findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
+            private boolean isChanged;
+
+            @Override
+            public void onClick(View v) {
+                text.setTextBackgroundColor(isChanged ? Color.TRANSPARENT : Color.YELLOW);
+                isChanged = !isChanged;
+            }
+        });
+
+
+        findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.insertTodo();
+            }
+        });*/

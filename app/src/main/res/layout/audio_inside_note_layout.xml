@@ -5,9 +5,8 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="164dp"
-    tools:context=".MainActivity"
-    android:id="@+id/container"
+    tools:context=".EditNoteActivity"
+    android:id="@+id/container_audio_inside"
     android:orientation="vertical"
     android:gravity="bottom|center_horizontal"
     android:paddingTop="20dp"
@@ -25,19 +24,6 @@
         android:src="@drawable/ic_keyboard_voice_white_24dp"
         android:layout_weight="2" />
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-    <!--android:id="@+id/btnRecord"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:scaleType="center"-->
-    <!--android:src="@drawable/ic_keyboard_voice_white_24dp" />-->
-
-
-    <!--<Button-->
-    <!--android:id="@+id/btnPlay"-->
-    <!--android:text="Play audio"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content" />-->
 
 
     <FrameLayout
@@ -48,12 +34,5 @@
         android:layout_gravity="bottom"
         android:layout_marginTop="10dp" />
 
-
-    <!--<Button-->
-    <!--android:id="@+id/saveAudioBtn"-->
-    <!--android:text="Save"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:enabled="false"/>-->
 
 </LinearLayout>
