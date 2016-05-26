@@ -1,21 +1,15 @@
 package com.legitdevs.legitnotes;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.text.InputType;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 
 import com.legitdevs.legitnotes.database.DatabaseManager;
 
@@ -34,7 +28,7 @@ public class QuickNoteDialog extends DialogFragment {
     }
 
 
-    @Nullable
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
