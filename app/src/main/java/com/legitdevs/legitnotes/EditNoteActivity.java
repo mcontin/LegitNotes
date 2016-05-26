@@ -33,7 +33,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
+import com.bumptech.glide.Glide;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.legitdevs.legitnotes.database.DatabaseManager;
@@ -64,15 +66,15 @@ public class EditNoteActivity extends AppCompatActivity
     private HashMap<String, String> medias;
     private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
 
-    private File photoFile,audioFile;
+    private File photoFile,audioFile,videoFile;
     private Uri photoUri;
     private Bitmap photoBitmap;
     private EditText title;
     private EditText text;
     private LocationManager locationManager;
-    private ImageView deleteAudio,deleteVideo,deleteImage;
+    private ImageView deleteAudio,deleteVideo,deleteImage,editImage,editVideo;
     private FrameLayout editAudioPlayer;
-    private LinearLayout audioContent;
+    private LinearLayout audioContent,imageContent,videoContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,12 +108,34 @@ public class EditNoteActivity extends AppCompatActivity
             public void onClick(View v) {
                 AudioWife.getInstance().release();
                 editAudioPlayer.removeAllViewsInLayout();
-                deleteAudio=null;
+                audioFile=null;
                 audioContent.setVisibility(View.GONE);
             }
         });
         editAudioPlayer=(FrameLayout)findViewById(R.id.edit_audio);
         audioContent=(LinearLayout)findViewById(R.id.audio_content);
+
+        deleteImage=(ImageView)findViewById(R.id.delete_image);
+        deleteImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoFile=null;
+                imageContent.setVisibility(View.GONE);
+            }
+        });
+        editImage=(ImageView)findViewById(R.id.edit_image);
+        imageContent=(LinearLayout)findViewById(R.id.image_content);
+
+        deleteVideo=(ImageView)findViewById(R.id.delete_video);
+        deleteVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                videoFile=null;
+                videoContent.setVisibility(View.GONE);
+            }
+        });
+        editVideo=(ImageView)findViewById(R.id.edit_video);
+        videoContent=(LinearLayout)findViewById(R.id.video_content);
 
 
 
@@ -313,16 +337,24 @@ public class EditNoteActivity extends AppCompatActivity
 
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();
-            File videoFile = new File(getRealPathFromURI(videoUri));
+            videoFile = new File(getRealPathFromURI(videoUri));
 
-            saveMedia(FileManager.TYPE_VIDEO, videoFile);
+            videoContent.setVisibility(View.VISIBLE);
+            Glide
+                    .with(getApplicationContext())
+                    .load(videoFile)
+                    .centerCrop()
+                    .into(editVideo);
 
-            Toast.makeText(this, "Video saved!", Toast.LENGTH_SHORT).show();
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
-            saveMedia(FileManager.TYPE_IMAGE, photoFile);
+            imageContent.setVisibility(View.VISIBLE);
+            Glide
+                    .with(getApplicationContext())
+                    .load(photoFile)
+                    .centerCrop()
+                    .into(editImage);
 
-            Toast.makeText(this, "Picture saved!", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -391,6 +423,12 @@ public class EditNoteActivity extends AppCompatActivity
             FileManager.init(this)
                 .with(note)
                 .save(FileManager.TYPE_AUDIO,audioFile);
+
+        if(photoFile!=null)
+            saveMedia(FileManager.TYPE_IMAGE, photoFile);
+
+        if(videoFile!=null)
+            saveMedia(FileManager.TYPE_VIDEO, videoFile);
 
         //nota modificata, devo killare l'activity di dettaglio precedente
         if (NoteDetailActivity.activity != null)

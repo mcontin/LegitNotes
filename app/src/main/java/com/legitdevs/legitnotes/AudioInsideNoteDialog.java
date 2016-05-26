@@ -152,13 +152,13 @@ public class AudioInsideNoteDialog extends DialogFragment {
                 /* User clicked OK so do some stuff */
                 Log.i(TAG, "onClick: clicked");
 
-                saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
+                //saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
 
-//                saveDir(mDestFile);
+                saveDir(mDestFile);
 
                 dismiss();
 
-                Toast.makeText(getContext(), "Note Saved", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Note Saved", Toast.LENGTH_SHORT).show();
 
             }
         }).setNegativeButton(R.string.audio_dialog_negative, new DialogInterface.OnClickListener() {

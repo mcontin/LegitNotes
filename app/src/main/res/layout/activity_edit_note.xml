@@ -47,7 +47,7 @@
             android:id="@+id/custom_text"
             android:layout_below="@+id/custom_title"
             android:inputType="textCapSentences"
-            android:layout_above="@+id/audio_content">
+            android:layout_above="@+id/media_content">
 
             <EditText
                 android:id="@+id/editText"
@@ -63,25 +63,99 @@
             </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
-            android:id="@+id/audio_content"
-            android:orientation="horizontal"
+            android:id="@+id/media_content"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:visibility="gone">
+            android:layout_alignParentBottom="true">
 
-            <ImageView
-                android:id="@+id/delete_audio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_close_black_24dp"
-                android:layout_gravity="center_vertical" />
-
-            <FrameLayout
-                android:id="@+id/edit_audio"
+            <LinearLayout
+                android:id="@+id/audio_content"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp" />
+                android:visibility="gone"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp">
+
+                <ImageView
+                    android:id="@+id/delete_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_close_black_24dp"
+                    android:layout_gravity="center_vertical"
+                    android:paddingRight="2dp"
+                    android:paddingEnd="2dp" />
+
+                <FrameLayout
+                    android:id="@+id/edit_audio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/image_content"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp">
+
+                <ImageView
+                    android:id="@+id/delete_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_close_black_24dp"
+                    android:layout_gravity="center_vertical"
+                    android:paddingRight="2dp"
+                    android:paddingEnd="2dp" />
+
+                <ImageView
+                    android:id="@+id/edit_image"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_edit_name"
+                    android:layout_gravity="center_vertical"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/video_content"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp">
+
+                <ImageView
+                    android:id="@+id/delete_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_close_black_24dp"
+                    android:layout_gravity="center_vertical"
+                    android:paddingRight="2dp"
+                    android:paddingEnd="2dp" />
+
+                <ImageView
+                    android:id="@+id/edit_video"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_edit_name"
+                    android:layout_gravity="center_vertical"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
