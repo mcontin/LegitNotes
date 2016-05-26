@@ -431,9 +431,7 @@ public class EditNoteActivity extends AppCompatActivity
         DatabaseManager.getInstance(this).addNote(note);
 
         if (audioFile != null)
-            FileManager.init(this)
-                    .with(note)
-                    .save(FileManager.TYPE_AUDIO, audioFile);
+            saveMedia(FileManager.TYPE_AUDIO, audioFile);
 
         if (photoFile != null)
             saveMedia(FileManager.TYPE_IMAGE, photoFile);
