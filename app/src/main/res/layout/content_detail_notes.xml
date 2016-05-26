@@ -32,8 +32,8 @@
 
     <RelativeLayout
         android:id="@+id/media_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:background="@android:color/background_dark">
 
         <ImageView
@@ -45,9 +45,12 @@
             android:src="@drawable/placeholder"
             android:visibility="gone" />
         <VideoView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/video_note"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:visibility="gone" />
         <FrameLayout
             android:id="@+id/audio_container"
