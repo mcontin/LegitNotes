@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -42,7 +43,6 @@ import java.util.HashMap;
 import android.support.v7.app.AlertDialog;
 import android.os.Build;
 import android.util.Log;
-import android.widget.ToggleButton;
 
 import windyzboy.github.io.customeeditor.CustomEditText;
 import yuku.ambilwarna.AmbilWarnaDialog;
@@ -124,7 +124,7 @@ public class EditNoteActivity extends AppCompatActivity
         title.setText(note.getTitle());
         text.setText(Html.fromHtml(note.getText()));
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
-        //medias = note.getMedias();
+        medias = note.getMedias();
 
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
         assert frameLayout != null;
@@ -250,6 +250,12 @@ public class EditNoteActivity extends AppCompatActivity
                 colorPickerDialog.show();
             }
         });
+
+        if (medias != null) {
+            for (int i = 0; i < medias.size(); i++) {
+
+            }
+        }
     }
 
     @Override
