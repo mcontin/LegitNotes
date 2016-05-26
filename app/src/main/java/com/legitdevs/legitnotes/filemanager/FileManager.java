@@ -123,4 +123,12 @@ public class FileManager {
         return null;
     }
 
+    /** TODO
+     * Cancella un tipo di file dalla nota selezionata
+     * @param type
+     */
+    public void delete(String type) {
+
+    }
+
 }
