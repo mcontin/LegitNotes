@@ -128,7 +128,9 @@ public class FileManager {
      * @param type
      */
     public void delete(String type) {
-
+        mNote.getMedias().remove(type);
+        DatabaseManager.getInstance(mContext)
+                .addNote(mNote);
     }
 
 }
