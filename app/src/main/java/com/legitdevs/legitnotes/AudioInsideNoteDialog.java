@@ -1,6 +1,7 @@
 package com.legitdevs.legitnotes;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,6 +27,12 @@ import java.io.IOException;
 
 
 public class AudioInsideNoteDialog extends DialogFragment {
+
+    public interface IDirAudioNote{
+        public void getDirAudio(File dir);
+    }
+
+    private IDirAudioNote iDirAudioNote;
 
     public static final String TAG = "AudioInsideNoteDialog";
 
@@ -56,49 +63,6 @@ public class AudioInsideNoteDialog extends DialogFragment {
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.audio_inside_note_layout, null);
         builder.setView(v);
-
-        builder.setPositiveButton(R.string.audio_dialog_positive, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                /* User clicked OK so do some stuff */
-                Log.i(TAG, "onClick: clicked");
-
-                saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
-
-                dismiss();
-
-                Toast.makeText(getContext(), "Note Saved", Toast.LENGTH_SHORT).show();
-            }
-        })
-                .setNegativeButton(R.string.audio_dialog_negative, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                /* User clicked cancel so do some stuff */
-                        Toast.makeText(getContext(), "Note Dismissed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        saveHandler = (IMediaSaver) getActivity();
-
-        awContainer = (ViewGroup) v.findViewById(R.id.playerContainer);
-
-        //cartella interna privata dell'app
-        File internalMemory = getContext().getFilesDir();
-        File temporaryDir = new File(internalMemory.getAbsolutePath()
-                + "/.temp");
-
-        //se non esiste creo la cartella temporanea
-        if (!temporaryDir.exists()) {
-            if(!temporaryDir.mkdir()) {
-                //è successo qualcosa di brutto
-                AlertDialog.Builder b = new AlertDialog.Builder(getContext());
-                b.setMessage("Error with internal memory! Please restart the app.");
-                b.create().show();
-                dismiss();
-            }
-        }
-
-        mDestFile = new File(temporaryDir, "temp.3gp");
-        mDestFile = new File(temporaryDir + "/audio.3gp");
-        mDestFileUri = Uri.parse(mDestFile.toString());
 
         btnRecord = (CircledPulsatingButton) v.findViewById(R.id.btnRecord);
         btnRecord.setOnClickListener(new View.OnClickListener() {
@@ -146,17 +110,66 @@ public class AudioInsideNoteDialog extends DialogFragment {
 
                     Log.i(TAG, "onClick: " + mDestFileUri.toString());
 
-                    btnRecord.setImageResource(R.drawable.ic_keyboard_voice);
+                    btnRecord.setImageResource(R.drawable.ic_keyboard_voice_white_24dp);
                     recording = false;
 
-                    ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
 
                 }
+
+
             }
         });
 
+        saveHandler = (IMediaSaver) getActivity();
+
+        awContainer = (ViewGroup) v.findViewById(R.id.playerContainer);
+
+        //cartella interna privata dell'app
+        File internalMemory = getContext().getFilesDir();
+        File temporaryDir = new File(internalMemory.getAbsolutePath()
+                + "/.temp");
+
+        //se non esiste creo la cartella temporanea
+        if (!temporaryDir.exists()) {
+            if(!temporaryDir.mkdir()) {
+                //è successo qualcosa di brutto
+                AlertDialog.Builder b = new AlertDialog.Builder(getContext());
+                b.setMessage("Error with internal memory! Please restart the app.");
+                b.create().show();
+                dismiss();
+            }
+        }
+
+        mDestFile = new File(temporaryDir, "temp.3gp");
+        mDestFile = new File(temporaryDir + "/audio.3gp");
+        mDestFileUri = Uri.parse(mDestFile.toString());
+
+
+
+        builder.setPositiveButton(R.string.audio_dialog_positive, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                /* User clicked OK so do some stuff */
+                Log.i(TAG, "onClick: clicked");
+
+                //saveHandler.saveMedia(FileManager.TYPE_AUDIO, mDestFile);
+
+                saveDir(mDestFile);
+
+                dismiss();
+
+                //Toast.makeText(getContext(), "Note Saved", Toast.LENGTH_SHORT).show();
+
+            }
+        }).setNegativeButton(R.string.audio_dialog_negative, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                /* User clicked cancel so do some stuff */
+                        Toast.makeText(getContext(), "Note Dismissed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
         dialog = builder.create();
+
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
             @Override
@@ -165,12 +178,23 @@ public class AudioInsideNoteDialog extends DialogFragment {
             }
         });
 
+
+
         return dialog;
+    }
+
+    private void saveDir(File dir){
+        iDirAudioNote.getDirAudio(dir);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        Activity activity=getActivity();
+        if(activity instanceof IDirAudioNote){
+            iDirAudioNote= (IDirAudioNote) activity;
+        }
     }
 
     @Override
@@ -191,6 +215,8 @@ public class AudioInsideNoteDialog extends DialogFragment {
         awContainer.removeAllViewsInLayout();
 
         recording = false;
+
+        iDirAudioNote=null;
 
     }
 

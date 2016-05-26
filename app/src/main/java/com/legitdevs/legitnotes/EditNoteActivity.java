@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.bumptech.glide.Glide;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.legitdevs.legitnotes.database.DatabaseManager;
@@ -50,6 +51,7 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class EditNoteActivity extends AppCompatActivity
         implements IDeletionListener, IMediaSaver, LocationListener, AmbilWarnaDialog.OnAmbilWarnaListener {
+        LocationListener, AudioInsideNoteDialog.IDirAudioNote {
 
     private static final String TAG = "EditNoteActivity";
     private static final String DIALOG = "start dialog";
@@ -64,12 +66,15 @@ public class EditNoteActivity extends AppCompatActivity
     private HashMap<String, String> medias;
     private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
 
-    private File photoFile;
+    private File photoFile, audioFile, videoFile;
     private Uri photoUri;
     private Bitmap photoBitmap;
     private EditText title;
     private CustomEditText text;
     private LocationManager locationManager;
+    private ImageView deleteAudio, deleteVideo, deleteImage, previewImage, previewVideo;
+    private FrameLayout previewAudio;
+    private LinearLayout containerAudio, containerImage, containerVideo;
 
     private LinearLayout lnl;
     private AmbilWarnaDialog colorPickerDialog;
@@ -126,6 +131,55 @@ public class EditNoteActivity extends AppCompatActivity
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         medias = note.getMedias();
 
+        containerAudio = (LinearLayout) findViewById(R.id.container_audio);
+        deleteAudio = (ImageView) findViewById(R.id.delete_audio);
+        deleteAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AudioWife.getInstance().release();
+                previewAudio.removeAllViewsInLayout();
+                audioFile = null;
+                containerAudio.setVisibility(View.GONE);
+            }
+        });
+        previewAudio = (FrameLayout) findViewById(R.id.preview_audio);
+
+        containerImage = (LinearLayout) findViewById(R.id.container_image);
+        deleteImage = (ImageView) findViewById(R.id.delete_image);
+        deleteImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoFile = null;
+                containerImage.setVisibility(View.GONE);
+            }
+        });
+        previewImage = (ImageView) findViewById(R.id.preview_image);
+
+        containerVideo = (LinearLayout) findViewById(R.id.container_video);
+        deleteVideo = (ImageView) findViewById(R.id.delete_video);
+        deleteVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                videoFile = null;
+                containerVideo.setVisibility(View.GONE);
+            }
+        });
+        previewVideo = (ImageView) findViewById(R.id.preview_video);
+
+        audioFile = FileManager.init(this)
+                .with(note)
+                .get(FileManager.TYPE_AUDIO);
+        videoFile = FileManager.init(this)
+                .with(note)
+                .get(FileManager.TYPE_VIDEO);
+        photoFile = FileManager.init(this)
+                .with(note)
+                .get(FileManager.TYPE_IMAGE);
+
+        showAudioPreview(audioFile != null);
+        showVideoPreview(videoFile != null);
+        showImagePreview(photoFile != null);
+
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
         assert frameLayout != null;
         frameLayout.getBackground().setAlpha(0);
@@ -151,7 +205,7 @@ public class EditNoteActivity extends AppCompatActivity
                         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
                         getIntent.setType("image/*");
 
-                        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         pickIntent.setType("image/*");
 
                         Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
@@ -178,7 +232,7 @@ public class EditNoteActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         //record audio
-                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+                        AudioInsideNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
                         fabMenu.collapse();
                     }
                 });
@@ -259,6 +313,14 @@ public class EditNoteActivity extends AppCompatActivity
     }
 
     @Override
+    public void getDirAudio(File dir) {
+        audioFile = dir;
+
+        showAudioPreview(audioFile != null && audioFile.length() > 0);
+
+    }
+
+    @Override
     public void onLocationChanged(Location location) throws SecurityException {
 
         //setto la posizione dell'utente ogni volta che creo una nota
@@ -294,6 +356,7 @@ public class EditNoteActivity extends AppCompatActivity
     private File createImageFile() throws IOException {
         File internalMemory = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
+
 //        File fileDir = new File(internalMemory.getAbsolutePath()
 //                + File.separatorChar
 //                + note.getId().toString()
@@ -349,26 +412,45 @@ public class EditNoteActivity extends AppCompatActivity
         }
     }
 
+    private void showImagePreview(boolean show) {
+        if(show) {
+            containerImage.setVisibility(View.VISIBLE);
+            Glide.with(getApplicationContext())
+                    .load(photoFile)
+                    .centerCrop()
+                    .into(previewImage);
+        }
+    }
+    private void showAudioPreview(boolean show) {
+        if(show) {
+            containerAudio.setVisibility(View.VISIBLE);
+            AudioWife.getInstance()
+                    .init(getApplicationContext(), Uri.parse(audioFile.getAbsolutePath()))
+                    .useDefaultUi(previewAudio, getLayoutInflater());
+        }
+    }
+    private void showVideoPreview(boolean show) {
+        if (show) {
+            containerVideo.setVisibility(View.VISIBLE);
+            Glide.with(getApplicationContext())
+                    .load(videoFile)
+                    .centerCrop()
+                    .into(previewVideo);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();
-            File videoFile = new File(getRealPathFromURI(videoUri));
+            videoFile = new File(getRealPathFromURI(videoUri));
 
-            FileManager.init(this)
-                    .with(note)
-                    .save(FileManager.TYPE_VIDEO, videoFile);
-
+            showVideoPreview(true);
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
-            FileManager.init(this)
-                    .with(note)
-                    .save(FileManager.TYPE_IMAGE, photoFile);
-
-            Toast.makeText(this, "Picture saved!", Toast.LENGTH_SHORT).show();
-
+            showImagePreview(true);
         }
 
     }
@@ -376,7 +458,7 @@ public class EditNoteActivity extends AppCompatActivity
     private String getRealPathFromURI(Uri contentURI) {
         String result;
         Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
+        if (cursor == null) {
             result = contentURI.getPath();
         } else {
             cursor.moveToFirst();
@@ -432,6 +514,15 @@ public class EditNoteActivity extends AppCompatActivity
 
         DatabaseManager.getInstance(this).addNote(note);
 
+        if (audioFile != null)
+            saveMedia(FileManager.TYPE_AUDIO, audioFile);
+
+        if (photoFile != null)
+            saveMedia(FileManager.TYPE_IMAGE, photoFile);
+
+        if (videoFile != null)
+            saveMedia(FileManager.TYPE_VIDEO, videoFile);
+
         //nota modificata, devo killare l'activity di dettaglio precedente
         if (NoteDetailActivity.activity != null)
             NoteDetailActivity.activity.finish();
@@ -460,3 +551,77 @@ public class EditNoteActivity extends AppCompatActivity
     }
 
 }
+
+
+
+/*text.setPadding(10, 10, 10, 10);
+        text.setPlaceholder("" + R.string.new_text);
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.focusEditor();
+            }
+        });
+
+        /*
+        findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setBold();
+            }
+        });
+
+        findViewById(R.id.action_italic).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setItalic();
+            }
+        });
+
+
+        findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                text.setSuperscript();
+            }
+        });
+        findViewById(R.id.action_strikethrough).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setStrikeThrough();
+            }
+        });
+
+        findViewById(R.id.action_underline).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.setUnderline();
+            }
+        });
+
+        findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
+            private boolean isChanged;
+
+            @Override
+            public void onClick(View v) {
+                text.setTextColor(isChanged ? Color.BLACK : Color.RED);
+                isChanged = !isChanged;
+            }
+        });
+
+        findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
+            private boolean isChanged;
+
+            @Override
+            public void onClick(View v) {
+                text.setTextBackgroundColor(isChanged ? Color.TRANSPARENT : Color.YELLOW);
+                isChanged = !isChanged;
+            }
+        });
+
+
+        findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                text.insertTodo();
+            }
+        });*/
