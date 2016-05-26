@@ -39,12 +39,16 @@
     <string name="remove_dialog_negative">No</string>
     <string name="audio_dialog_positive">Save</string>
     <string name="audio_dialog_negative">Cancel</string>
+    <string name="remove_media_title">Confirm</string>
+    <string name="remove_media_message">Are you sure you want delete this media?</string>
 
     <!--Note editor-->
     <string name="new_title">Title</string>
     <string name="new_text">Write your note here</string>
     <string name="save_note">Save</string>
     <string name="delete_note">Delete</string>
+    <string name="image_edit_name">Image</string>
+    <string name="video_edit_name">Video</string>
 
     <!--String related to toast-->
     <string name="save_note_toast">Note saved successfully</string>

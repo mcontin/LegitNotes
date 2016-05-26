@@ -1,13 +1,13 @@
 package com.legitdevs.legitnotes;
 
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 
 import com.legitdevs.legitnotes.database.DatabaseManager;
 
@@ -42,7 +42,9 @@ public class ConfirmRemovalDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        DatabaseManager.getInstance(getContext()).removeNote((Note) getArguments().getParcelable(KEY_NOTE));
+                        DatabaseManager
+                                .getInstance(getContext())
+                                .removeNote((Note) getArguments().getParcelable(KEY_NOTE));
 
                         //nota modificata, devo killare l'activity di dettaglio precedente
                         if(NoteDetailActivity.activity != null)

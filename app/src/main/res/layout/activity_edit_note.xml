@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".EditNoteActivity">
 
 
-    <LinearLayout
+
+
+    <RelativeLayout
         android:id="@+id/noteContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:padding="16dp">
 
         <TextView
@@ -24,11 +20,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="" />
+            android:text=""
+            android:layout_alignParentRight="true" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/creationDate"
+            android:id="@+id/custom_title">
 
             <EditText
                 android:id="@+id/editTitle"
@@ -44,7 +43,11 @@
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/custom_text"
+            android:layout_below="@+id/custom_title"
+            android:inputType="textCapSentences"
+            android:layout_above="@+id/media_content">
 
             <EditText
                 android:id="@+id/editText"
@@ -59,86 +62,124 @@
 
             </android.support.design.widget.TextInputLayout>
 
-
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/frame_layout_insert_media"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white_overlay"
-        android:layout_gravity="bottom|right">
-
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
-            android:id="@+id/fab_menu_insert"
+        <LinearLayout
+            android:id="@+id/media_content"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            fab:fab_addButtonColorNormal="@color/accent"
-            fab:fab_addButtonColorPressed="@color/accent_dark"
-            fab:fab_addButtonPlusIconColor="@color/white"
-            fab:fab_addButtonStrokeVisible="false"
-            fab:fab_labelStyle="@style/menu_labels_style"
-            fab:fab_labelsPosition="left"
-            android:layout_gravity="bottom|right">
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_from_gallery"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/container_audio"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/accent"
-                fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_icon="@drawable/ic_menu_gallery"
-                fab:fab_plusIconColor="@color/white"
-                fab:fab_size="mini"
-                fab:fab_title="From gallery" />
+                android:visibility="gone"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp">
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_photo"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/delete_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_close_black_24dp"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingEnd="10dp" />
+
+                <FrameLayout
+                    android:id="@+id/preview_audio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/container_image"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/accent"
-                fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_icon="@drawable/ic_menu_camera"
-                fab:fab_plusIconColor="@color/white"
-                fab:fab_size="mini"
-                fab:fab_title="Photo" />
+                android:visibility="gone"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp">
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_audio"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/delete_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_close_black_24dp"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingEnd="10dp" />
+
+                <ImageView
+                    android:id="@+id/preview_image"
+                    android:layout_width="90dp"
+                    android:layout_height="50dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_edit_name"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/container_video"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/accent"
-                fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_icon="@drawable/ic_mic_white_24dp"
-                fab:fab_plusIconColor="@color/white"
-                fab:fab_size="mini"
-                fab:fab_title="Record" />
+                android:visibility="gone"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp">
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/accent"
-                fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_icon="@drawable/ic_videocam_black_24dp"
-                fab:fab_plusIconColor="@color/white"
-                fab:fab_size="mini"
-                fab:fab_title="Video"/>
+                <ImageView
+                    android:id="@+id/delete_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_close_black_24dp"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingEnd="10dp" />
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_position"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/accent"
-                fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_icon="@drawable/ic_my_location_24dp"
-                fab:fab_plusIconColor="@color/white"
-                fab:fab_size="mini"
-                fab:fab_title="Position" />
+                <ImageView
+                    android:id="@+id/preview_video"
+                    android:layout_width="90dp"
+                    android:layout_height="50dp" />
 
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_edit_name"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"/>
 
-    </FrameLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <include
+        layout="@layout/fab_add_medias_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>
 
