@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".EditNoteActivity">
-
-
-
 
     <RelativeLayout
         android:id="@+id/noteContainer"
@@ -19,33 +17,33 @@
             android:id="@+id/creationDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_gravity="end"
-            android:text=""
-            android:layout_alignParentRight="true" />
+            android:text="" />
 
-        <android.support.design.widget.TextInputLayout
+        <!--<android.support.design.widget.TextInputLayout
+            android:id="@+id/custom_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/creationDate"
-            android:id="@+id/custom_title">
+            android:layout_below="@+id/creationDate">-->
 
-            <EditText
-                android:id="@+id/editTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/new_title"
-                android:imeOptions="flagNoFullscreen"
-                android:inputType="textCapSentences"
-                android:lines="1"
-                android:singleLine="true" />
+        <EditText
+            android:id="@+id/editTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/new_title"
+            android:imeOptions="flagNoFullscreen"
+            android:inputType="textCapSentences"
+            android:lines="1"
+            android:singleLine="true" />
 
-        </android.support.design.widget.TextInputLayout>
+        <!--</android.support.design.widget.TextInputLayout>-->
 
         <LinearLayout
             android:id="@+id/lnlAction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/editTitle"
             android:background="@color/gainsboro"
             android:orientation="horizontal">
 
@@ -84,35 +82,27 @@
                 android:src="@mipmap/button_color" />
         </LinearLayout>
 
-
-        <android.support.design.widget.TextInputLayout
+        <ScrollView
+            android:id="@+id/scrollViewEditor"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/custom_text"
-            android:layout_below="@+id/custom_title"
-            android:inputType="textCapSentences"
-            android:layout_above="@+id/media_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lnlAction">
 
-            <ScrollView
-                android:id="@+id/scrollViewEditor"
+            <windyzboy.github.io.customeeditor.CustomEditText
+                android:id="@+id/editText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_marginTop="30dp"
+                android:background="@android:color/transparent"
+                android:gravity="top|start"
+                android:hint="@string/new_text"
+                android:imeOptions="flagNoFullscreen"
+                android:inputType="textFilter|textMultiLine|textNoSuggestions|textCapSentences">
 
-                <windyzboy.github.io.customeeditor.CustomEditText
-                    android:id="@+id/editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="30dp"
-                    android:background="@android:color/transparent"
-                    android:gravity="top|start"
-                    android:hint="@string/new_text"
-                    android:imeOptions="flagNoFullscreen"
-                    android:inputType="textFilter|textMultiLine|textNoSuggestions|textCapSentences">
+                <requestFocus />
+            </windyzboy.github.io.customeeditor.CustomEditText>
+        </ScrollView>
 
-                    <requestFocus />
-                </windyzboy.github.io.customeeditor.CustomEditText>
-            </ScrollView>
-        </android.support.design.widget.TextInputLayout>
         <LinearLayout
             android:id="@+id/media_content"
             android:orientation="vertical"
@@ -135,30 +125,15 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_close_black_24dp"
                     android:layout_gravity="center_vertical"
-                    android:paddingRight="2dp"
-                    android:paddingEnd="2dp" />
-    <FrameLayout
-        android:id="@+id/frame_layout_insert_media"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom|right"
-        android:background="@color/white_overlay">
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingEnd="10dp" />
 
                 <FrameLayout
                     android:id="@+id/preview_audio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
-            android:id="@+id/fab_menu_insert"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom|right"
-            fab:fab_addButtonColorNormal="@color/accent"
-            fab:fab_addButtonColorPressed="@color/accent_dark"
-            fab:fab_addButtonPlusIconColor="@color/white"
-            fab:fab_addButtonStrokeVisible="false"
-            fab:fab_labelStyle="@style/menu_labels_style"
-            fab:fab_labelsPosition="left">
 
             </LinearLayout>
 
@@ -178,29 +153,25 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_close_black_24dp"
                     android:layout_gravity="center_vertical"
-                    android:paddingRight="2dp"
-                    android:paddingEnd="2dp" />
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/accent"
-                fab:fab_colorPressed="@color/accent_dark"
-                fab:fab_icon="@drawable/ic_videocam_black_24dp"
-                fab:fab_plusIconColor="@color/white"
-                fab:fab_size="mini"
-                fab:fab_title="Video" />
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingEnd="10dp" />
 
                 <ImageView
                     android:id="@+id/preview_image"
-                    android:layout_width="100dp"
+                    android:layout_width="90dp"
                     android:layout_height="50dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/image_edit_name"
-                    android:layout_gravity="center_vertical"/>
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"/>
 
             </LinearLayout>
 
@@ -219,30 +190,35 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_close_black_24dp"
                     android:layout_gravity="center_vertical"
-                    android:paddingRight="2dp"
-                    android:paddingEnd="2dp" />
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingEnd="10dp" />
 
                 <ImageView
                     android:id="@+id/preview_video"
-                    android:layout_width="100dp"
+                    android:layout_width="90dp"
                     android:layout_height="50dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/video_edit_name"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"/>
 
-                    android:layout_gravity="center_vertical"/>
             </LinearLayout>
 
         </LinearLayout>
-</FrameLayout><!--
-
 
     </RelativeLayout>
-</FrameLayout>
 
     <include
         layout="@layout/fab_add_medias_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+</FrameLayout>
