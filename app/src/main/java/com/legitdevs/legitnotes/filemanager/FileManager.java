@@ -106,8 +106,7 @@ public class FileManager {
 
         mNote.addMedia(type, newFile);
 
-        DatabaseManager.getInstance(mContext)
-                .addNote(mNote);
+        saveToDb();
     }
 
     /**
@@ -130,7 +129,14 @@ public class FileManager {
     public void delete(String type) {
         mNote.getMedias().remove(type);
         DatabaseManager.getInstance(mContext)
-                .addNote(mNote);
+                .saveNote(mNote);
+
+        saveToDb();
+    }
+
+    private void saveToDb() {
+        DatabaseManager.getInstance(mContext)
+                .saveNote(mNote);
     }
 
 }

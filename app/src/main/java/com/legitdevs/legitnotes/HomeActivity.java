@@ -360,7 +360,7 @@ public class HomeActivity extends AppCompatActivity
                 .with(newNote)
                 .get(FileManager.TYPE_AUDIO);
 
-        DatabaseManager.getInstance(this).addNote(newNote);
+        DatabaseManager.getInstance(this).saveNote(newNote);
         addNote(newNote);
     }
 }

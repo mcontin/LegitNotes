@@ -51,7 +51,7 @@ public class QuickNoteDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Note note = new Note(title.getText().toString(), text.getText().toString());
-                        DatabaseManager.getInstance(getContext()).addNote(note);
+                        DatabaseManager.getInstance(getContext()).saveNote(note);
                         ((HomeActivity) getActivity()).addNote(note);
                     }
                 })

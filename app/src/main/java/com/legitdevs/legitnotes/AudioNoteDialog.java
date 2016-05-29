@@ -132,7 +132,7 @@ public class AudioNoteDialog extends DialogFragment {
                     btnRecord.setImageResource(R.drawable.ic_stop);
                     recording = true;
                     txtAudioNoteTitle.setVisibility(View.INVISIBLE);
-                    ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
                 } else {
 
@@ -164,9 +164,9 @@ public class AudioNoteDialog extends DialogFragment {
                         public void afterTextChanged(Editable s) {
 
                             if (txtAudioNoteTitle.getText().toString().trim().length() > 0){
-                                ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
                             } else {
-                                ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                             }
 
                         }
