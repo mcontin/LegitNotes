@@ -2,30 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingRight="5dp"
+    android:paddingLeft="5dp"
+    android:paddingBottom="5dp">
 
-    <EditText
-        android:id="@+id/quickTitle"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/cont_quick_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginStart="4dp"
         android:layout_marginRight="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_gravity="center_horizontal"
-        android:hint="Title"/>
+        android:layout_marginEnd="4dp">
 
-    <EditText
-        android:id="@+id/quickText"
+        <EditText
+            android:id="@+id/quickTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_title"
+            android:textSize="24sp"
+            android:inputType="textCapSentences"/>
+        </android.support.design.widget.TextInputLayout>
+
+
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginEnd="4dp"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:layout_gravity="center_horizontal|bottom"
-        android:hint="Text"/>
+        android:layout_height="match_parent"
+        android:id="@+id/cont_quick_text"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp">
+
+        <EditText
+            android:id="@+id/quickText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:hint="@string/edit_text"
+            android:textSize="20sp"
+            android:inputType="textMultiLine|textCapSentences"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+
 
 </LinearLayout>

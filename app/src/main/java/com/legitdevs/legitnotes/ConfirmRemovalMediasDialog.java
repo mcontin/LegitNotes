@@ -24,10 +24,8 @@ public class ConfirmRemovalMediasDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Activity activity = getActivity();
-
-        if (activity instanceof IDeleteMedia)
-            iDeleteMedia = (IDeleteMedia) activity;
+        if (context instanceof IDeleteMedia)
+            iDeleteMedia = (IDeleteMedia) context;
 
     }
 

@@ -71,7 +71,6 @@ public class EditNoteActivity extends AppCompatActivity
 
     private Note note;
     private TextView date;
-    private HashMap<String, String> medias;
     private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
 
     private File photoFile, audioFile, videoFile;
@@ -138,7 +137,6 @@ public class EditNoteActivity extends AppCompatActivity
         text.setText(Html.fromHtml(note.getText()));
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         medias = note.getMedias();
-
         containerAudio = (LinearLayout) findViewById(R.id.container_audio);
         deleteAudio = (ImageView) findViewById(R.id.delete_audio);
         deleteAudio.setOnClickListener(new View.OnClickListener() {
@@ -569,16 +567,25 @@ public class EditNoteActivity extends AppCompatActivity
         //note.setText(text.getText().toHtml());
         //note.setMedia(media);
 
-        DatabaseManager.getInstance(this).addNote(note);
+        DatabaseManager.getInstance(this).saveNote(note);
 
         if (audioFile != null)
             saveMedia(FileManager.TYPE_AUDIO, audioFile);
+        else FileManager.init(this)
+                    .with(note)
+                    .delete(FileManager.TYPE_AUDIO);
 
         if (photoFile != null)
             saveMedia(FileManager.TYPE_IMAGE, photoFile);
+        else FileManager.init(this)
+                .with(note)
+                .delete(FileManager.TYPE_IMAGE);
 
         if (videoFile != null)
             saveMedia(FileManager.TYPE_VIDEO, videoFile);
+        else FileManager.init(this)
+                .with(note)
+                .delete(FileManager.TYPE_VIDEO);
 
         //nota modificata, devo killare l'activity di dettaglio precedente
         if (NoteDetailActivity.activity != null)

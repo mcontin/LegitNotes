@@ -35,7 +35,7 @@ public class QuickNoteDialog extends DialogFragment {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Quick Note");
+//        builder.setTitle("Quick Note");
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
@@ -51,7 +51,7 @@ public class QuickNoteDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Note note = new Note(title.getText().toString(), text.getText().toString());
-                        DatabaseManager.getInstance(getContext()).addNote(note);
+                        DatabaseManager.getInstance(getContext()).saveNote(note);
                         ((HomeActivity) getActivity()).addNote(note);
                     }
                 })
@@ -64,9 +64,6 @@ public class QuickNoteDialog extends DialogFragment {
         return builder.create();
     }
 
-
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -76,9 +73,6 @@ public class QuickNoteDialog extends DialogFragment {
     public void onDetach() {
         super.onDetach();
     }
-
-
-
 
 }
 

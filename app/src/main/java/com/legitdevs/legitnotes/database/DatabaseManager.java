@@ -112,7 +112,7 @@ public class DatabaseManager {
         }
     }
 
-    public void addNote(Note note) {
+    public void saveNote(Note note) {
         //mappa di note
         Map<String, Object> notesMap = new HashMap<>();
         //proprietà del documento a cui verrà aggiunta la mappa di note, quella vecchia verrà sovrascritta

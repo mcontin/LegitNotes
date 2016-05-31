@@ -27,15 +27,16 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/creationDate">-->
 
-        <EditText
-            android:id="@+id/editTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/new_title"
-            android:imeOptions="flagNoFullscreen"
-            android:inputType="textCapSentences"
-            android:lines="1"
-            android:singleLine="true" />
+            <EditText
+                android:id="@+id/editTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/new_title"
+                android:inputType="textCapSentences"
+                android:imeOptions="flagNoFullscreen"
+                android:lines="1"
+                android:textSize="24sp"
+                android:singleLine="true" />
 
         <!--</android.support.design.widget.TextInputLayout>-->
 
@@ -98,6 +99,7 @@
                 android:hint="@string/new_text"
                 android:imeOptions="flagNoFullscreen"
                 android:inputType="textFilter|textMultiLine|textNoSuggestions|textCapSentences">
+                android:textSize="20sp"/>
 
                 <requestFocus />
             </com.legitdevs.legitnotes.CustomEditText>
