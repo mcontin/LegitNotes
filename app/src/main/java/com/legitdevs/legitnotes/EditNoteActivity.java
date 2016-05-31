@@ -66,11 +66,10 @@ public class EditNoteActivity extends AppCompatActivity
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_IMAGE_GALLERY = 2;
     private static final int REQUEST_VIDEO_CAPTURE = 3;
-    private static final String SUCCESS_RESULT = "SUCCESS";
-    private static final String FAILURE_RESULT = "FAILURE :(";
 
     private Note note;
     private TextView date;
+    private HashMap<String, String> medias;
     private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
 
     private File photoFile, audioFile, videoFile;
@@ -254,7 +253,6 @@ public class EditNoteActivity extends AppCompatActivity
                     public void onClick(View v) {
                         //get last known location
                         setUserLocation();
-                        String myAddress=displayLocation();
                         fabMenu.collapse();
 
                     }
@@ -357,6 +355,8 @@ public class EditNoteActivity extends AppCompatActivity
 
         //setto la posizione dell'utente ogni volta che creo una nota
         note.setPosition(location);
+        String myAddress = displayLocation();
+        note.setText(note.getText() + "/n Ti trovi in " + myAddress);
         locationManager.removeUpdates(this);
     }
 
@@ -572,8 +572,8 @@ public class EditNoteActivity extends AppCompatActivity
         if (audioFile != null)
             saveMedia(FileManager.TYPE_AUDIO, audioFile);
         else FileManager.init(this)
-                    .with(note)
-                    .delete(FileManager.TYPE_AUDIO);
+                .with(note)
+                .delete(FileManager.TYPE_AUDIO);
 
         if (photoFile != null)
             saveMedia(FileManager.TYPE_IMAGE, photoFile);

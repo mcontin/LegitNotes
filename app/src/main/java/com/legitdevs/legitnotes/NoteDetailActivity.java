@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -80,7 +81,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(note.getTitle());
 
         text = (TextView) findViewById(R.id.noteText);
-        text.setText(note.getText());
+        text.setText(Html.fromHtml(note.getText()));
 
         date = (TextView) findViewById(R.id.note_date);
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));

@@ -98,8 +98,8 @@
                 android:gravity="top|start"
                 android:hint="@string/new_text"
                 android:imeOptions="flagNoFullscreen"
-                android:inputType="textFilter|textMultiLine|textNoSuggestions|textCapSentences">
-                android:textSize="20sp"/>
+                android:inputType="textFilter|textMultiLine|textNoSuggestions|textCapSentences"
+                android:textSize="20sp">
 
                 <requestFocus />
             </com.legitdevs.legitnotes.CustomEditText>

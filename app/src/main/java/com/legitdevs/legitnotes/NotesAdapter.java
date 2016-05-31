@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
     public void onBindViewHolder(final CardViewHolder cardHolder, final int position) {
         cardHolder.noteTitle.setText(notes.get(position).getTitle());
 
-        cardHolder.noteSnippet.setText(notes.get(position).getText());
+        cardHolder.noteSnippet.setText(Html.fromHtml(notes.get(position).getText()));
 
         cardHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
