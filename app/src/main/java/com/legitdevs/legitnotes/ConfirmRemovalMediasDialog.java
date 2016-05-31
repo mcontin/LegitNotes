@@ -1,6 +1,5 @@
 package com.legitdevs.legitnotes;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +14,7 @@ import android.support.v7.app.AlertDialog;
 public class ConfirmRemovalMediasDialog extends DialogFragment {
 
     public interface IDeleteMedia {
-        public void removeMedia(String type);
+        void removeMedia(String type);
     }
 
     private IDeleteMedia iDeleteMedia;
@@ -24,10 +23,8 @@ public class ConfirmRemovalMediasDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Activity activity = getActivity();
-
-        if (activity instanceof IDeleteMedia)
-            iDeleteMedia = (IDeleteMedia) activity;
+        if (context instanceof IDeleteMedia)
+            iDeleteMedia = (IDeleteMedia) context;
 
     }
 
@@ -57,7 +54,7 @@ public class ConfirmRemovalMediasDialog extends DialogFragment {
                 .setPositiveButton(R.string.remove_dialog_positive, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        fileType(getArguments().getString(FILE_KEY));
+                        deleteFile(getArguments().getString(FILE_KEY));
 
                         dismiss();
                     }
@@ -71,7 +68,7 @@ public class ConfirmRemovalMediasDialog extends DialogFragment {
         return builder.create();
     }
 
-    private void fileType(String file) {
+    private void deleteFile(String file) {
         iDeleteMedia.removeMedia(file);
     }
 

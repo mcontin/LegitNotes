@@ -86,7 +86,7 @@ public class AudioInsideNoteDialog extends DialogFragment {
                     mRecorder.start();
                     btnRecord.setImageResource(R.drawable.ic_stop);
                     recording = true;
-                    ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 
                 } else {
 
@@ -136,7 +136,6 @@ public class AudioInsideNoteDialog extends DialogFragment {
             }
         }
 
-        mDestFile = new File(temporaryDir, "temp.3gp");
         mDestFile = new File(temporaryDir + "/audio.3gp");
         mDestFileUri = Uri.parse(mDestFile.toString());
 
@@ -179,6 +178,8 @@ public class AudioInsideNoteDialog extends DialogFragment {
     }
 
     private void saveDir(File dir){
+        AudioWife.getInstance().release();
+
         iDirAudioNote.getDirAudio(dir);
     }
 
@@ -186,9 +187,8 @@ public class AudioInsideNoteDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Activity activity=getActivity();
-        if(activity instanceof IDirAudioNote){
-            iDirAudioNote= (IDirAudioNote) activity;
+        if(context instanceof IDirAudioNote){
+            iDirAudioNote= (IDirAudioNote) context;
         }
     }
 
@@ -206,7 +206,6 @@ public class AudioInsideNoteDialog extends DialogFragment {
         mRecorder = null;
         btnRecord.releaseRecorder();
 
-        AudioWife.getInstance().release();
         awContainer.removeAllViewsInLayout();
 
         recording = false;

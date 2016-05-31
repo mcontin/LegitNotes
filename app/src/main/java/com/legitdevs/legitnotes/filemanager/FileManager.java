@@ -106,8 +106,7 @@ public class FileManager {
 
         mNote.addMedia(type, newFile);
 
-        DatabaseManager.getInstance(mContext)
-                .addNote(mNote);
+        //saveToDb();
     }
 
     /**
@@ -115,12 +114,12 @@ public class FileManager {
      * @param type  tipo file
      * @return
      */
-    public File get(String type) {
+    public File get(String type) throws Exception{
         if(type.equals(TYPE_AUDIO) || type.equals(TYPE_IMAGE) || type.equals(TYPE_VIDEO)) {
-            return (mNote.getMedias().get(type) != null) ? new File(mNote.getMedias().get(type)) : null;
+            return (mNote.getMedias().get(type) != null) ? new File(mNote.getMedias().get(type)) : new File("");
         }
 
-        return null;
+        throw new Exception("Wrong type, use FileManager.TYPE_*");
     }
 
     /** TODO
@@ -128,7 +127,26 @@ public class FileManager {
      * @param type
      */
     public void delete(String type) {
+        String removedFile = mNote.getMedias().remove(type);
+        if(removedFile != null) {
+            File fileToDelete = new File(removedFile);
 
+            //cartella interna privata dell'app
+            File internalMemory = mContext.getFilesDir();
+            File fileDir = new File(internalMemory.getAbsolutePath()
+                    + File.separatorChar
+                    + mNote.getId().toString()
+                    + File.separatorChar
+                    + type);
+
+            boolean deleted = fileToDelete.delete();
+        }
+        //saveToDb();
+    }
+
+    private void saveToDb() {
+        DatabaseManager.getInstance(mContext)
+                .saveNote(mNote);
     }
 
 }

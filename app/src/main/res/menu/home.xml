@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/order_item"
+        android:title="@string/order_settings"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/filter_item"
+        android:title="@string/filter_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/view_item"
+        android:title="@string/card_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_search"
         android:title="@string/search_hint"

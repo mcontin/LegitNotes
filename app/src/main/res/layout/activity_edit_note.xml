@@ -6,14 +6,10 @@
     android:fitsSystemWindows="true"
     tools:context=".EditNoteActivity">
 
-
-
-
     <RelativeLayout
         android:id="@+id/noteContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/creationDate"
@@ -21,13 +17,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:text=""
+            android:paddingRight="16dp"
+            android:paddingEnd="16dp"
             android:layout_alignParentRight="true" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/creationDate"
-            android:id="@+id/custom_title">
+            android:id="@+id/custom_title"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <EditText
                 android:id="@+id/editTitle"
@@ -37,6 +37,7 @@
                 android:inputType="textCapSentences"
                 android:imeOptions="flagNoFullscreen"
                 android:lines="1"
+                android:textSize="24sp"
                 android:singleLine="true" />
 
         </android.support.design.widget.TextInputLayout>
@@ -47,7 +48,9 @@
             android:id="@+id/custom_text"
             android:layout_below="@+id/custom_title"
             android:inputType="textCapSentences"
-            android:layout_above="@+id/media_content">
+            android:layout_above="@+id/media_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <EditText
                 android:id="@+id/editText"
@@ -58,7 +61,8 @@
                 android:hint="@string/new_text"
                 android:imeOptions="flagNoFullscreen"
                 android:background="@android:color/transparent"
-                android:inputType="textMultiLine|textCapSentences" />
+                android:inputType="textMultiLine|textCapSentences"
+                android:textSize="20sp"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -66,6 +70,7 @@
             android:id="@+id/media_content"
             android:orientation="vertical"
             android:layout_width="match_parent"
+            android:background="@color/white"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
 

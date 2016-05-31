@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.legitdevs.legitnotes.filemanager.FileManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -49,6 +50,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
      */
     @Override
     public void onBindViewHolder(final CardViewHolder cardHolder, final int position) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        cardHolder.noteDate.setText(dateFormat.format(notes.get(position).getDate()));
+
+
         cardHolder.noteTitle.setText(notes.get(position).getTitle());
 
         cardHolder.noteSnippet.setText(notes.get(position).getText());
@@ -136,12 +142,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
      */
     public static class CardViewHolder extends RecyclerView.ViewHolder {
         CardView card;
-        TextView noteTitle, noteSnippet;
+        TextView noteTitle, noteSnippet, noteDate;
         ImageView textIcon, audioIcon, imageIcon, videoIcon;
 
         CardViewHolder(View itemView) {
             super(itemView);
             card = (CardView) itemView.findViewById(R.id.cardView);
+            noteDate = (TextView) itemView.findViewById(R.id.date);
             noteTitle = (TextView) itemView.findViewById(R.id.title);
             noteSnippet = (TextView) itemView.findViewById(R.id.text);
 //            textIcon = (ImageView) itemView.findViewById(R.id.text_icon);

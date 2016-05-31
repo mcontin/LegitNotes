@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.location.Location;
 import android.os.Bundle;
@@ -33,13 +34,15 @@ import com.legitdevs.legitnotes.filemanager.FileManager;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.HashMap;
-
 
 public class EditNoteActivity extends AppCompatActivity
         implements IDeletionListener, IMediaSaver,
         LocationListener, AudioInsideNoteDialog.IDirAudioNote,
         ConfirmRemovalMediasDialog.IDeleteMedia {
+
+    private static final String KEY_FILE_PHOTO = "photofile";
+    private static final String KEY_FILE_AUDIO = "audiofile";
+    private static final String KEY_FILE_VIDEO = "videofile";
 
     private static final String TAG = "EditNoteActivity";
     private static final String DIALOG = "start dialog";
@@ -52,7 +55,6 @@ public class EditNoteActivity extends AppCompatActivity
     //private RichEditor text;
     private Note note;
     private TextView date;
-    private HashMap<String, String> medias;
     private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
 
     private File photoFile, audioFile, videoFile;
@@ -66,9 +68,27 @@ public class EditNoteActivity extends AppCompatActivity
     private LinearLayout containerAudio, containerImage, containerVideo;
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(KEY_FILE_VIDEO, videoFile.getAbsolutePath());
+        outState.putString(KEY_FILE_AUDIO, audioFile.getAbsolutePath());
+        outState.putString(KEY_FILE_PHOTO, photoFile.getAbsolutePath());
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
+
+        if(savedInstanceState != null) {
+            if(savedInstanceState.getString(KEY_FILE_PHOTO) != null)
+                photoFile = new File(savedInstanceState.getString(KEY_FILE_PHOTO));
+            if(savedInstanceState.getString(KEY_FILE_AUDIO) != null)
+                audioFile = new File(savedInstanceState.getString(KEY_FILE_AUDIO));
+            if(savedInstanceState.getString(KEY_FILE_VIDEO) != null)
+                videoFile = new File(savedInstanceState.getString(KEY_FILE_VIDEO));
+        }
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         title = (EditText) findViewById(R.id.editTitle);
@@ -89,8 +109,6 @@ public class EditNoteActivity extends AppCompatActivity
         title.setText(note.getTitle());
         text.setText(note.getText());
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
-
-        medias = note.getMedias();
 
         containerAudio = (LinearLayout) findViewById(R.id.container_audio);
         deleteAudio = (ImageView) findViewById(R.id.delete_audio);
@@ -122,19 +140,24 @@ public class EditNoteActivity extends AppCompatActivity
         });
         previewVideo = (ImageView) findViewById(R.id.preview_video);
 
-        audioFile = FileManager.init(this)
-                .with(note)
-                .get(FileManager.TYPE_AUDIO);
-        videoFile = FileManager.init(this)
-                .with(note)
-                .get(FileManager.TYPE_VIDEO);
-        photoFile = FileManager.init(this)
-                .with(note)
-                .get(FileManager.TYPE_IMAGE);
+        //TODO togliere tutti i casi in cui i file possano essere null per gestire più facilmente il ciclo di vita
+        try {
+            audioFile = FileManager.init(this)
+                    .with(note)
+                    .get(FileManager.TYPE_AUDIO);
+            videoFile = FileManager.init(this)
+                    .with(note)
+                    .get(FileManager.TYPE_VIDEO);
+            photoFile = FileManager.init(this)
+                    .with(note)
+                    .get(FileManager.TYPE_IMAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        showAudioPreview(audioFile != null);
-        showVideoPreview(videoFile != null);
-        showImagePreview(photoFile != null);
+        showAudioPreview(audioFile != null && audioFile.length() > 0);
+        showVideoPreview(videoFile != null && videoFile.length() > 0);
+        showImagePreview(photoFile != null && photoFile.length() > 0);
 
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
         assert frameLayout != null;
@@ -269,22 +292,6 @@ public class EditNoteActivity extends AppCompatActivity
         File internalMemory = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
 
-//        File fileDir = new File(internalMemory.getAbsolutePath()
-//                + File.separatorChar
-//                + note.getId().toString()
-//                + File.separatorChar
-//                + FileManager.TYPE_IMAGE);
-//
-//        //se non esiste creo la cartella destinazione
-//        if (!fileDir.exists()) {
-//            if(!fileDir.mkdirs()) {
-//                //è successo qualcosa di molto brutto
-//                AlertDialog.Builder b = new AlertDialog.Builder(getApplicationContext());
-//                b.setMessage("Error with internal memory! Please restart the app.");
-//                b.create().show();
-//            }
-//        }
-
         File image = File.createTempFile(
                 "image",        /* prefix */
                 ".jpg",         /* suffix */
@@ -313,6 +320,7 @@ public class EditNoteActivity extends AppCompatActivity
                         photoUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
+            previewAudio.removeAllViewsInLayout();
         }
     }
 
@@ -333,13 +341,24 @@ public class EditNoteActivity extends AppCompatActivity
                     .into(previewImage);
         }
     }
+    private void hideImagePreview() {
+        containerImage.setVisibility(View.GONE);
+    }
     private void showAudioPreview(boolean show) {
         if(show) {
+            hideAudioPreview();
+
             containerAudio.setVisibility(View.VISIBLE);
             AudioWife.getInstance()
-                    .init(getApplicationContext(), Uri.parse(audioFile.getAbsolutePath()))
+                    .init(this, Uri.parse(audioFile.getAbsolutePath()))
                     .useDefaultUi(previewAudio, getLayoutInflater());
+            AudioWife.getInstance().checkMediaPlayer();
         }
+    }
+    private void hideAudioPreview() {
+        AudioWife.getInstance().release();
+        previewAudio.removeAllViewsInLayout();
+        containerAudio.setVisibility(View.GONE);
     }
     private void showVideoPreview(boolean show) {
         if (show) {
@@ -349,6 +368,9 @@ public class EditNoteActivity extends AppCompatActivity
                     .centerCrop()
                     .into(previewVideo);
         }
+    }
+    private void hideVideoPreview() {
+        containerVideo.setVisibility(View.GONE);
     }
 
     @Override
@@ -385,18 +407,16 @@ public class EditNoteActivity extends AppCompatActivity
 
         switch (file){
             case FileManager.TYPE_AUDIO:
-                AudioWife.getInstance().release();
-                previewAudio.removeAllViewsInLayout();
                 audioFile = null;
-                containerAudio.setVisibility(View.GONE);
+                hideAudioPreview();
                 break;
             case FileManager.TYPE_IMAGE:
                 photoFile = null;
-                containerImage.setVisibility(View.GONE);
+                hideImagePreview();
                 break;
             case FileManager.TYPE_VIDEO:
                 videoFile = null;
-                containerVideo.setVisibility(View.GONE);
+                hideVideoPreview();
                 break;
         }
 
@@ -445,16 +465,37 @@ public class EditNoteActivity extends AppCompatActivity
         note.setText(text.getText().toString());
         //note.setMedia(media);
 
-        DatabaseManager.getInstance(this).addNote(note);
-
-        if (audioFile != null)
+        if (audioFile == null) {
+            //remove from note and files
+            FileManager.init(this)
+                    .with(note)
+                    .delete(FileManager.TYPE_AUDIO);
+        } else {
+            //savemedia
             saveMedia(FileManager.TYPE_AUDIO, audioFile);
+        }
 
-        if (photoFile != null)
+        if (photoFile == null) {
+            //remove from note and files
+            FileManager.init(this)
+                    .with(note)
+                    .delete(FileManager.TYPE_IMAGE);
+        } else {
+            //savemedia
             saveMedia(FileManager.TYPE_IMAGE, photoFile);
+        }
 
-        if (videoFile != null)
+        if (videoFile == null) {
+            //remove from note and files
+            FileManager.init(this)
+                    .with(note)
+                    .delete(FileManager.TYPE_VIDEO);
+        } else {
+            //savemedia
             saveMedia(FileManager.TYPE_VIDEO, videoFile);
+        }
+
+        DatabaseManager.getInstance(this).saveNote(note);
 
         //nota modificata, devo killare l'activity di dettaglio precedente
         if (NoteDetailActivity.activity != null)
