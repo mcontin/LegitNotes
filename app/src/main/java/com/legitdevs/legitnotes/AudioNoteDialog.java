@@ -49,6 +49,8 @@ public class AudioNoteDialog extends DialogFragment {
         return new AudioNoteDialog();
     }
 
+
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
