@@ -59,14 +59,13 @@
     <string name="bottom_bar_video_title" translatable="false">Video</string>
 
     <!--String related to option drawer-->
-    <string name="setting">Layout settings</string>
     <string name="order_settings">Order by</string>
     <string name="order_title">Order your notes</string>
     <array name="order_array">
-        <item>Alphabetical </item>
-        <item>Reverse alphabetical</item>
-        <item>Most recent</item>
-        <item>Most dated</item>
+        <item>A-Z</item>
+        <item>Z-A</item>
+        <item>Newest</item>
+        <item>Oldest</item>
     </array>
     <string name="no_new_setting">Annul</string>
     <string name="filter_settings">Filter</string>
