@@ -51,6 +51,7 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class EditNoteActivity extends AppCompatActivity
         implements IDeletionListener, IMediaSaver, LocationListener, AudioInsideNoteDialog.IDirAudioNote, AmbilWarnaDialog.OnAmbilWarnaListener {
+        ConfirmRemovalMediasDialog.IDeleteMedia {
 
     private static final String TAG = "EditNoteActivity";
     private static final String DIALOG = "start dialog";
@@ -72,7 +73,7 @@ public class EditNoteActivity extends AppCompatActivity
     private CustomEditText text;
     private LocationManager locationManager;
     private ImageView deleteAudio, deleteVideo, deleteImage, previewImage, previewVideo;
-    private FrameLayout previewAudio;
+    public FrameLayout previewAudio;
     private LinearLayout containerAudio, containerImage, containerVideo;
 
     private LinearLayout lnl;
@@ -135,10 +136,7 @@ public class EditNoteActivity extends AppCompatActivity
         deleteAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AudioWife.getInstance().release();
-                previewAudio.removeAllViewsInLayout();
-                audioFile = null;
-                containerAudio.setVisibility(View.GONE);
+                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_AUDIO).show(getSupportFragmentManager(),DIALOG);
             }
         });
         previewAudio = (FrameLayout) findViewById(R.id.preview_audio);
@@ -148,8 +146,7 @@ public class EditNoteActivity extends AppCompatActivity
         deleteImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                photoFile = null;
-                containerImage.setVisibility(View.GONE);
+                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_IMAGE).show(getSupportFragmentManager(),DIALOG);
             }
         });
         previewImage = (ImageView) findViewById(R.id.preview_image);
@@ -159,8 +156,7 @@ public class EditNoteActivity extends AppCompatActivity
         deleteVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoFile = null;
-                containerVideo.setVisibility(View.GONE);
+                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_VIDEO).show(getSupportFragmentManager(),DIALOG);
             }
         });
         previewVideo = (ImageView) findViewById(R.id.preview_video);
@@ -466,6 +462,27 @@ public class EditNoteActivity extends AppCompatActivity
             cursor.close();
         }
         return result;
+    }
+
+    public void removeMedia(String file){
+
+        switch (file){
+            case FileManager.TYPE_AUDIO:
+                AudioWife.getInstance().release();
+                previewAudio.removeAllViewsInLayout();
+                audioFile = null;
+                containerAudio.setVisibility(View.GONE);
+                break;
+            case FileManager.TYPE_IMAGE:
+                photoFile = null;
+                containerImage.setVisibility(View.GONE);
+                break;
+            case FileManager.TYPE_VIDEO:
+                videoFile = null;
+                containerVideo.setVisibility(View.GONE);
+                break;
+        }
+
     }
 
     @Override

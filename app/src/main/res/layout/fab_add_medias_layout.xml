@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_icon="@drawable/ic_menu_gallery"
+            fab:fab_icon="@drawable/ic_perm_media_white_24dp"
             fab:fab_size="mini"
             fab:fab_title="From gallery" />
 
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_icon="@drawable/ic_menu_camera"
+            fab:fab_icon="@drawable/ic_camera_alt_white_24dp"
             fab:fab_size="mini"
             fab:fab_title="Photo" />
 
