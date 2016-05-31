@@ -115,7 +115,7 @@
                     <requestFocus />
                 </com.legitdevs.legitnotes.CustomEditText>
             </ScrollView>
-            
+
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout

@@ -57,10 +57,13 @@
     <string name="bottom_bar_audio_title" translatable="false">Audio</string>
     <string name="bottom_bar_image_title">Image</string>
     <string name="bottom_bar_video_title" translatable="false">Video</string>
+    <string name="bottom_bar_position_title">Position</string>
+    <string name="bottom_bar_gallery_title">From gallery</string>
+
     <string name="invalid_lat_long_used">No valid position</string>
     <string name="no_address_found">No address</string>
     <string name="service_not_available">Service not available</string>
-    <string name="address_found">The address wasn't found</string>
+    <string name="address_found">The address wasn\'t found</string>
 
 
 </resources>

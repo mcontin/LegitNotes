@@ -42,4 +42,7 @@
     <string name="no_address_found">Nessun Indirizzo</string>
     <string name="service_not_available">Servizio non disponibile</string>
     <string name="address_found">L\'indirizzo è stato trovato</string>
+    <string name="bottom_bar_video_title" translatable="false"></string>
+    <string name="bottom_bar_position_title">Posizione</string>
+    <string name="bottom_bar_gallery_title">Dalla gallery</string>
 </resources>
