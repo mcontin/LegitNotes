@@ -40,6 +40,10 @@ public class EditNoteActivity extends AppCompatActivity
         LocationListener, AudioInsideNoteDialog.IDirAudioNote,
         ConfirmRemovalMediasDialog.IDeleteMedia {
 
+    private static final String KEY_FILE_PHOTO = "photofile";
+    private static final String KEY_FILE_AUDIO = "audiofile";
+    private static final String KEY_FILE_VIDEO = "videofile";
+
     private static final String TAG = "EditNoteActivity";
     private static final String DIALOG = "start dialog";
     private static final String KEY_NOTE = "note";
@@ -64,9 +68,27 @@ public class EditNoteActivity extends AppCompatActivity
     private LinearLayout containerAudio, containerImage, containerVideo;
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(KEY_FILE_VIDEO, videoFile.getAbsolutePath());
+        outState.putString(KEY_FILE_AUDIO, audioFile.getAbsolutePath());
+        outState.putString(KEY_FILE_PHOTO, photoFile.getAbsolutePath());
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
+
+        if(savedInstanceState != null) {
+            if(savedInstanceState.getString(KEY_FILE_PHOTO) != null)
+                photoFile = new File(savedInstanceState.getString(KEY_FILE_PHOTO));
+            if(savedInstanceState.getString(KEY_FILE_AUDIO) != null)
+                audioFile = new File(savedInstanceState.getString(KEY_FILE_AUDIO));
+            if(savedInstanceState.getString(KEY_FILE_VIDEO) != null)
+                videoFile = new File(savedInstanceState.getString(KEY_FILE_VIDEO));
+        }
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         title = (EditText) findViewById(R.id.editTitle);
@@ -118,19 +140,24 @@ public class EditNoteActivity extends AppCompatActivity
         });
         previewVideo = (ImageView) findViewById(R.id.preview_video);
 
-        audioFile = FileManager.init(this)
-                .with(note)
-                .get(FileManager.TYPE_AUDIO);
-        videoFile = FileManager.init(this)
-                .with(note)
-                .get(FileManager.TYPE_VIDEO);
-        photoFile = FileManager.init(this)
-                .with(note)
-                .get(FileManager.TYPE_IMAGE);
+        //TODO togliere tutti i casi in cui i file possano essere null per gestire più facilmente il ciclo di vita
+        try {
+            audioFile = FileManager.init(this)
+                    .with(note)
+                    .get(FileManager.TYPE_AUDIO);
+            videoFile = FileManager.init(this)
+                    .with(note)
+                    .get(FileManager.TYPE_VIDEO);
+            photoFile = FileManager.init(this)
+                    .with(note)
+                    .get(FileManager.TYPE_IMAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        showAudioPreview(audioFile != null);
-        showVideoPreview(videoFile != null);
-        showImagePreview(photoFile != null);
+        showAudioPreview(audioFile != null && audioFile.length() > 0);
+        showVideoPreview(videoFile != null && videoFile.length() > 0);
+        showImagePreview(photoFile != null && photoFile.length() > 0);
 
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
         assert frameLayout != null;

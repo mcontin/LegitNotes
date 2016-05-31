@@ -12,6 +12,8 @@ import com.legitdevs.legitnotes.database.DatabaseManager;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
+
+import android.os.PersistableBundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -51,9 +53,10 @@ public class HomeActivity extends AppCompatActivity
     private static final int REQUEST_PERMISSION_MICROPHONE = 3;
     private static final int REQUEST_ALL = 4;
 
-    public static final String KEY_NOTES_LIST = "notes_list";
-    public static final String KEY_NOTE = "note";
-    public static final String KEY_SEARCH ="search";
+    private static final String KEY_FABMENU_STATE = "fabmenustate";
+    private static final String KEY_NOTES_LIST = "notes_list";
+    private static final String KEY_NOTE = "note";
+    private static final String KEY_SEARCH ="search";
 
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
@@ -64,6 +67,10 @@ public class HomeActivity extends AppCompatActivity
     private MenuItem searchMenuItem;
 
     public static HomeActivity activity;
+
+    private FrameLayout frameLayout;
+    private FloatingActionsMenu fabMenu;
+    private boolean fabMenuOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,73 +88,32 @@ public class HomeActivity extends AppCompatActivity
         }
 
         if(savedInstanceState != null) {
-            notes = savedInstanceState.getParcelableArrayList(KEY_NOTES_LIST);
-        } else {
-            notes = DatabaseManager.getInstance(this).getNotes();
-
-            if (notes.size() == 0) {
-                //generateRandomNotes();
-            }
+            fabMenuOpen = savedInstanceState.getBoolean(KEY_FABMENU_STATE);
         }
 
+        notes = DatabaseManager.getInstance(this).getNotes();
+
+        if (notes.size() == 0) generateRandomNotes();
+
         //FAB creazione note
-        final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         assert frameLayout != null;
         frameLayout.getBackground().setAlpha(0);
-        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
         assert fabMenu != null;
+        setFabMenuOpen(fabMenuOpen);
+        setupFabs();
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
-                frameLayout.getBackground().setAlpha(200);
-                frameLayout.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        fabMenu.collapse();
-                        return true;
-                    }
-                });
-
-                FABQuickNote = (FloatingActionButton) findViewById(R.id.fab_quick_note);
-                FABQuickNote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        QuickNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG_QUICK);
-                        fabMenu.collapse();
-
-                    }
-                });
-
-                FABNewNote = (FloatingActionButton) findViewById(R.id.fab_new_note);
-                FABNewNote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent i = new Intent(getBaseContext(),EditNoteActivity.class);
-                        startActivity(i);
-                        fabMenu.collapse();
-
-                    }
-                });
-
-                FABNewAudioNote = (FloatingActionButton) findViewById(R.id.fab_new_audio_note);
-                FABNewAudioNote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG_AUDIO);
-                        fabMenu.collapse();
-
-                    }
-                });
-
+                fabMenuOpen = true;
+                setFabMenuOpen(fabMenuOpen);
             }
 
             @Override
             public void onMenuCollapsed() {
-                frameLayout.getBackground().setAlpha(0);
-                frameLayout.setOnTouchListener(null);
+                fabMenuOpen = false;
+                setFabMenuOpen(fabMenuOpen);
             }
         });
 
@@ -171,6 +137,60 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+    }
+
+    private void setupFabs() {
+        FABQuickNote = (FloatingActionButton) findViewById(R.id.fab_quick_note);
+        FABQuickNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                QuickNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG_QUICK);
+                fabMenu.collapse();
+
+            }
+        });
+
+        FABNewNote = (FloatingActionButton) findViewById(R.id.fab_new_note);
+        FABNewNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(getBaseContext(),EditNoteActivity.class);
+                startActivity(i);
+                fabMenu.collapse();
+
+            }
+        });
+
+        FABNewAudioNote = (FloatingActionButton) findViewById(R.id.fab_new_audio_note);
+        FABNewAudioNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AudioNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG_AUDIO);
+                fabMenu.collapse();
+
+            }
+        });
+    }
+
+    private void setFabMenuOpen(boolean open) {
+
+        if(open) {
+            frameLayout.getBackground().setAlpha(200);
+            frameLayout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    fabMenu.collapse();
+                    return true;
+                }
+            });
+            return;
+        }
+
+        frameLayout.getBackground().setAlpha(0);
+        frameLayout.setOnTouchListener(null);
     }
 
     @Override
@@ -343,7 +363,8 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(KEY_NOTES_LIST, notes);
+
+        outState.putBoolean(KEY_FABMENU_STATE, fabMenuOpen);
     }
 
     @Override
