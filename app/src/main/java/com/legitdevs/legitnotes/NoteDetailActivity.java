@@ -212,7 +212,10 @@ public class NoteDetailActivity extends AppCompatActivity {
                             //myVideoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.developers));
                             //myVideoView.setVideoPath("http://www.ebookfrenzy.com/android_book/movie.mp4");
                             if(!myVideoView.canPause()) {
-                                myVideoView.setVideoURI(Uri.parse(FileManager.init(getApplicationContext()).with(note).get(FileManager.TYPE_VIDEO).getPath()));
+                                myVideoView.setVideoURI(Uri.parse(FileManager
+                                        .init(getApplicationContext())
+                                        .with(note)
+                                        .get(FileManager.TYPE_VIDEO).getPath()));
                             }
 
                         } catch (Exception e) {
