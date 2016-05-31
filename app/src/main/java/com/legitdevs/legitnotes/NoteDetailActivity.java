@@ -95,17 +95,29 @@ public class NoteDetailActivity extends AppCompatActivity {
         mediaContainer = (RelativeLayout) findViewById(R.id.media_container);
         mediaContainer.getBackground().setAlpha(0);
 
-        audio = FileManager.init(this)
-                .with(note)
-                .get(FileManager.TYPE_AUDIO);
+        try {
+            audio = FileManager.init(this)
+                    .with(note)
+                    .get(FileManager.TYPE_AUDIO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        image = FileManager.init(this)
-                .with(note)
-                .get(FileManager.TYPE_IMAGE);
+        try {
+            image = FileManager.init(this)
+                    .with(note)
+                    .get(FileManager.TYPE_IMAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        video = FileManager.init(this)
-                .with(note)
-                .get(FileManager.TYPE_VIDEO);
+        try {
+            video = FileManager.init(this)
+                    .with(note)
+                    .get(FileManager.TYPE_VIDEO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         BottomBarTab[] tabs = new BottomBarTab[4];
@@ -171,13 +183,17 @@ public class NoteDetailActivity extends AppCompatActivity {
                             imageNote = (ImageView) findViewById(R.id.image_note);
                         imageNote.setVisibility(View.VISIBLE);
 
-                        Glide
-                                .with(getApplicationContext())
-                                .load(FileManager
-                                        .init(getApplicationContext())
-                                        .with(note)
-                                        .get(FileManager.TYPE_IMAGE))
-                                .into(imageNote);
+                        try {
+                            Glide
+                                    .with(getApplicationContext())
+                                    .load(FileManager
+                                            .init(getApplicationContext())
+                                            .with(note)
+                                            .get(FileManager.TYPE_IMAGE))
+                                    .into(imageNote);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     if (position==videoIndex){
                         mediaContainer.getBackground().setAlpha(200);
