@@ -10,14 +10,20 @@ import android.support.v7.app.AlertDialog;
 
 public class OrderDialog extends DialogFragment {
 
+    private static final String INT="int";
+
     public interface ISelectedItem{
         void orderCards(int which);
     }
 
     ISelectedItem iSelectedItem;
 
-    public static OrderDialog getInstance() {
-        return new OrderDialog();
+    public static OrderDialog getInstance(int selected) {
+        OrderDialog orderDialog = new OrderDialog();
+        Bundle bundle = new Bundle();
+        bundle.putInt(INT, selected);
+        orderDialog.setArguments(bundle);
+        return orderDialog;
     }
 
     @Override
@@ -39,7 +45,7 @@ public class OrderDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle(R.string.order_title)
-                .setSingleChoiceItems(R.array.order_array, 2, new DialogInterface.OnClickListener() {
+                .setSingleChoiceItems(R.array.order_array, getArguments().getInt(INT), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         iSelectedItem.orderCards(which);
