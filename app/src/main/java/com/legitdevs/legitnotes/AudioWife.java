@@ -756,7 +756,10 @@ public class AudioWife {
 			mMediaPlayer.reset();
 			mMediaPlayer.release();
 			mMediaPlayer = null;
-			mProgressUpdateHandler = null;
 		}
+	}
+
+	public boolean checkMediaPlayer() {
+		return mMediaPlayer != null;
 	}
 }

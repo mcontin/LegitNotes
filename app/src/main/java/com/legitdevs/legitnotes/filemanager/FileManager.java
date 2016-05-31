@@ -106,7 +106,7 @@ public class FileManager {
 
         mNote.addMedia(type, newFile);
 
-        saveToDb();
+        //saveToDb();
     }
 
     /**
@@ -127,11 +127,21 @@ public class FileManager {
      * @param type
      */
     public void delete(String type) {
-        mNote.getMedias().remove(type);
-        DatabaseManager.getInstance(mContext)
-                .saveNote(mNote);
+        String removedFile = mNote.getMedias().remove(type);
+        if(removedFile != null) {
+            File fileToDelete = new File(removedFile);
 
-        saveToDb();
+            //cartella interna privata dell'app
+            File internalMemory = mContext.getFilesDir();
+            File fileDir = new File(internalMemory.getAbsolutePath()
+                    + File.separatorChar
+                    + mNote.getId().toString()
+                    + File.separatorChar
+                    + type);
+
+            boolean deleted = fileToDelete.delete();
+        }
+        //saveToDb();
     }
 
     private void saveToDb() {
