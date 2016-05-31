@@ -114,12 +114,12 @@ public class FileManager {
      * @param type  tipo file
      * @return
      */
-    public File get(String type) {
+    public File get(String type) throws Exception{
         if(type.equals(TYPE_AUDIO) || type.equals(TYPE_IMAGE) || type.equals(TYPE_VIDEO)) {
-            return (mNote.getMedias().get(type) != null) ? new File(mNote.getMedias().get(type)) : null;
+            return (mNote.getMedias().get(type) != null) ? new File(mNote.getMedias().get(type)) : new File("");
         }
 
-        return null;
+        throw new Exception("Wrong type, use FileManager.TYPE_*");
     }
 
     /** TODO
