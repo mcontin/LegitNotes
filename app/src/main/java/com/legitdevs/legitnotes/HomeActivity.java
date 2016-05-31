@@ -2,16 +2,19 @@ package com.legitdevs.legitnotes;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
 import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+
 import com.legitdevs.legitnotes.database.DatabaseManager;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
+
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -30,20 +33,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
 import java.io.File;
 import java.util.ArrayList;
 
 import static android.support.v4.view.GravityCompat.*;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        SearchView.OnQueryTextListener,
-        IDeletionListener,
-        IMediaSaver{
+        implements SearchView.OnQueryTextListener,
+        IDeletionListener, IMediaSaver , OrderDialog.ISelectedItem {
 
     private static final String DIALOG_QUICK = "quick";
     private static final String DIALOG_CONFIRM = "confirm";
     private static final String DIALOG_AUDIO = "audio";
+    private static final String DIALOG_SETTINGS = "settings";
     private static final String TAG = "HomeActivity";
 
     private static final int REQUEST_PERMISSION_LOCATION = 1;
@@ -53,7 +56,7 @@ public class HomeActivity extends AppCompatActivity
 
     public static final String KEY_NOTES_LIST = "notes_list";
     public static final String KEY_NOTE = "note";
-    public static final String KEY_SEARCH ="search";
+    public static final String KEY_SEARCH = "search";
 
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
@@ -76,11 +79,11 @@ public class HomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-        ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestAllPermissions();
         }
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             notes = savedInstanceState.getParcelableArrayList(KEY_NOTES_LIST);
         } else {
             notes = DatabaseManager.getInstance(this).getNotes();
@@ -124,7 +127,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        Intent i = new Intent(getBaseContext(),EditNoteActivity.class);
+                        Intent i = new Intent(getBaseContext(), EditNoteActivity.class);
                         startActivity(i);
                         fabMenu.collapse();
 
@@ -155,20 +158,9 @@ public class HomeActivity extends AppCompatActivity
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new NotesAdapter(notes, this);    //adapter per la lista di note e creazione delle Card
         //layout a 2 colonne
-        GridLayoutManager layoutManager = new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
-
-        //DRAWER LATERALE
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
 
     }
@@ -184,6 +176,7 @@ public class HomeActivity extends AppCompatActivity
         notes = DatabaseManager.getInstance(this).getNotes();
         adapter.updateNotes(notes);
     }
+
     public void addNote(Note note) {
         adapter.addNote(note);
     }
@@ -194,11 +187,11 @@ public class HomeActivity extends AppCompatActivity
 //        adapter.updateNotes(notes);
     }
 
-    public void generateRandomNotes(){
+    public void generateRandomNotes() {
         Lorem lorem = LoremIpsum.getInstance();
         notes = new ArrayList<>();
         Note temp;
-        for(int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             temp = new Note(lorem.getWords(1, 4),   //genera da 1 a 4 parole
                     lorem.getParagraphs(1, 3));     //genera da 1 a 3 paragrafi
             notes.add(temp);
@@ -206,16 +199,6 @@ public class HomeActivity extends AppCompatActivity
         DatabaseManager.getInstance(this).saveNotes(notes);
     }
 
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(START)) {
-            drawer.closeDrawer(START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -240,7 +223,7 @@ public class HomeActivity extends AppCompatActivity
 //        recyclerView.scrollToPosition(0);
 //        return true;
         return false;
-        }
+    }
 
     private ArrayList<Note> filter(ArrayList<Note> notes, String query) {
         query = query.toLowerCase();
@@ -273,41 +256,27 @@ public class HomeActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if (id == R.id.order_item){
+            OrderDialog.getInstance().show(getSupportFragmentManager(),DIALOG_SETTINGS);
+            return true;
+        }
+        if (id == R.id.filter_item){
 
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            FilterDialog.getInstance().show(getSupportFragmentManager(),DIALOG_SETTINGS);
+            return true;
+        }
+        if (id == R.id.view_item){
+            return true;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(START);
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     public void requestAllPermissions() {
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 REQUEST_ALL);
 
     }
@@ -359,5 +328,25 @@ public class HomeActivity extends AppCompatActivity
 
         DatabaseManager.getInstance(this).saveNote(newNote);
         addNote(newNote);
+    }
+
+    @Override
+    public void orderCards(int which) {
+
+        switch (which){
+            case 0:
+                Log.d("order","0");
+                break;
+            case 1:
+                Log.d("order","1");
+                break;
+            case 2:
+                Log.d("order","2");
+                break;
+            case 3:
+                Log.d("order","3");
+                break;
+        }
+
     }
 }
