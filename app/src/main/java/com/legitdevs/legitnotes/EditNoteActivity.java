@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.Location;
@@ -16,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,7 +41,10 @@ import com.legitdevs.legitnotes.filemanager.FileManager;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 
 import android.support.v7.app.AlertDialog;
@@ -50,8 +56,8 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 
 public class EditNoteActivity extends AppCompatActivity
-        implements IDeletionListener, IMediaSaver, LocationListener, AudioInsideNoteDialog.IDirAudioNote, AmbilWarnaDialog.OnAmbilWarnaListener {
-        ConfirmRemovalMediasDialog.IDeleteMedia {
+        implements IDeletionListener, IMediaSaver, LocationListener,
+        AudioInsideNoteDialog.IDirAudioNote, AmbilWarnaDialog.OnAmbilWarnaListener, ConfirmRemovalMediasDialog.IDeleteMedia {
 
     private static final String TAG = "EditNoteActivity";
     private static final String DIALOG = "start dialog";
@@ -60,6 +66,8 @@ public class EditNoteActivity extends AppCompatActivity
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_IMAGE_GALLERY = 2;
     private static final int REQUEST_VIDEO_CAPTURE = 3;
+    private static final String SUCCESS_RESULT = "SUCCESS";
+    private static final String FAILURE_RESULT = "FAILURE :(";
 
     private Note note;
     private TextView date;
@@ -136,7 +144,7 @@ public class EditNoteActivity extends AppCompatActivity
         deleteAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_AUDIO).show(getSupportFragmentManager(),DIALOG);
+                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_AUDIO).show(getSupportFragmentManager(), DIALOG);
             }
         });
         previewAudio = (FrameLayout) findViewById(R.id.preview_audio);
@@ -146,7 +154,7 @@ public class EditNoteActivity extends AppCompatActivity
         deleteImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_IMAGE).show(getSupportFragmentManager(),DIALOG);
+                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_IMAGE).show(getSupportFragmentManager(), DIALOG);
             }
         });
         previewImage = (ImageView) findViewById(R.id.preview_image);
@@ -156,7 +164,7 @@ public class EditNoteActivity extends AppCompatActivity
         deleteVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_VIDEO).show(getSupportFragmentManager(),DIALOG);
+                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_VIDEO).show(getSupportFragmentManager(), DIALOG);
             }
         });
         previewVideo = (ImageView) findViewById(R.id.preview_video);
@@ -248,6 +256,7 @@ public class EditNoteActivity extends AppCompatActivity
                     public void onClick(View v) {
                         //get last known location
                         setUserLocation();
+                        String myAddress=displayLocation();
                         fabMenu.collapse();
 
                     }
@@ -304,6 +313,36 @@ public class EditNoteActivity extends AppCompatActivity
             for (int i = 0; i < medias.size(); i++) {
 
             }
+        }
+    }
+
+    private String displayLocation() {
+
+        String errorMessage = "";
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        Location location = note.getPosition();
+
+        List<Address> addresses = null;
+
+        try {
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+        } catch (IOException ioException) {
+            errorMessage = getString(R.string.service_not_available);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            errorMessage = getString(R.string.invalid_lat_long_used);
+        }
+
+        // Handle case where no address was found.
+        if (addresses == null || addresses.size() == 0) {
+            if (errorMessage.isEmpty()) {
+                errorMessage = getString(R.string.no_address_found);
+            }
+            return errorMessage;
+        } else {
+            Address address = addresses.get(0);
+            ArrayList<String> addressFragments = new ArrayList<String>();
+            addressFragments.add(address.getAddressLine(0));
+            return addressFragments.get(0);
         }
     }
 
@@ -408,7 +447,7 @@ public class EditNoteActivity extends AppCompatActivity
     }
 
     private void showImagePreview(boolean show) {
-        if(show) {
+        if (show) {
             containerImage.setVisibility(View.VISIBLE);
             Glide.with(getApplicationContext())
                     .load(photoFile)
@@ -416,14 +455,16 @@ public class EditNoteActivity extends AppCompatActivity
                     .into(previewImage);
         }
     }
+
     private void showAudioPreview(boolean show) {
-        if(show) {
+        if (show) {
             containerAudio.setVisibility(View.VISIBLE);
             AudioWife.getInstance()
                     .init(getApplicationContext(), Uri.parse(audioFile.getAbsolutePath()))
                     .useDefaultUi(previewAudio, getLayoutInflater());
         }
     }
+
     private void showVideoPreview(boolean show) {
         if (show) {
             containerVideo.setVisibility(View.VISIBLE);
@@ -464,9 +505,9 @@ public class EditNoteActivity extends AppCompatActivity
         return result;
     }
 
-    public void removeMedia(String file){
+    public void removeMedia(String file) {
 
-        switch (file){
+        switch (file) {
             case FileManager.TYPE_AUDIO:
                 AudioWife.getInstance().release();
                 previewAudio.removeAllViewsInLayout();

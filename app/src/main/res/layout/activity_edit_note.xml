@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/lnlAction">
 
-            <windyzboy.github.io.customeeditor.CustomEditText
+            <com.legitdevs.legitnotes.CustomEditText
                 android:id="@+id/editText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -100,7 +100,7 @@
                 android:inputType="textFilter|textMultiLine|textNoSuggestions|textCapSentences">
 
                 <requestFocus />
-            </windyzboy.github.io.customeeditor.CustomEditText>
+            </com.legitdevs.legitnotes.CustomEditText>
         </ScrollView>
 
         <LinearLayout

@@ -59,7 +59,10 @@
     <string name="bottom_bar_audio_title">Audio</string>
     <string name="bottom_bar_image_title">Image</string>
     <string name="bottom_bar_video_title">Video</string>
-
+    <string name="invalid_lat_long_used">La posizione non è valida</string>
+    <string name="no_address_found">Nessun Indirizzo</string>
+    <string name="service_not_available">Servizio non disponibile</string>
+    <string name="address_found">L\'indirizzo è stato trovato</string>
 
 
 </resources>
