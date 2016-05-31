@@ -14,55 +14,60 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:ellipsize="end"
                 android:lines="1"
                 android:maxLines="1"
-                android:padding="5dp"
                 android:text="title"
-                android:textSize="23sp"
                 android:textColor="@color/note_title"
-                />
+                android:textSize="23sp"
+                android:layout_below="@+id/date"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
 
-            <LinearLayout
-                android:id="@+id/center_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00-00-0000"
+                android:id="@+id/date"
+                android:layout_alignParentRight="true"
+                android:paddingRight="5dp"
+                android:textSize="10sp"
+                android:paddingTop="5dp" />
+
+
+            <TextView
+                android:id="@+id/text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/title"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/text"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:lines="6"
-                    android:maxLines="6"
-                    android:padding="5dp"
-                    android:text="text"
-                    android:textSize="18sp" />
-            </LinearLayout>
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:lines="6"
+                android:maxLines="6"
+                android:padding="5dp"
+                android:text="text"
+                android:textSize="18sp"
+                android:layout_below="@+id/title" />
 
             <LinearLayout
                 android:id="@+id/attachments"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/center_content">
+                android:layout_below="@+id/text"
+                android:orientation="horizontal">
 
 
                 <!--<ImageView-->
-                    <!--android:id="@+id/text_icon"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:src="@drawable/ic_reorder_gray_24dp"/>-->
+                <!--android:id="@+id/text_icon"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:src="@drawable/ic_reorder_gray_24dp"/>-->
 
                 <ImageView
                     android:id="@+id/audio_icon"
