@@ -8,6 +8,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.legitdevs.legitnotes.database.DatabaseManager;
@@ -32,6 +33,8 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class HomeActivity extends AppCompatActivity
@@ -50,9 +53,7 @@ public class HomeActivity extends AppCompatActivity
     private static final int REQUEST_ALL = 4;
 
     private static final String KEY_FABMENU_STATE = "fabmenustate";
-    private static final String KEY_NOTES_LIST = "notes_list";
-    private static final String KEY_NOTE = "note";
-    private static final String KEY_SEARCH ="search";
+    private static final String KEY_CHOSEN_ITEM = "chosen";
 
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
@@ -67,6 +68,8 @@ public class HomeActivity extends AppCompatActivity
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
     private boolean fabMenuOpen = false;
+
+    private int chosenItem=2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,7 @@ public class HomeActivity extends AppCompatActivity
 
         if(savedInstanceState != null) {
             fabMenuOpen = savedInstanceState.getBoolean(KEY_FABMENU_STATE);
+            chosenItem = savedInstanceState.getInt(KEY_CHOSEN_ITEM);
         }
 
         notes = DatabaseManager.getInstance(this).getNotes();
@@ -185,6 +189,12 @@ public class HomeActivity extends AppCompatActivity
         updateNotes();
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        orderCards(chosenItem);
+    }
+
     public void updateNotes() {
         notes = DatabaseManager.getInstance(this).getNotes();
         adapter.updateNotes(notes);
@@ -270,7 +280,7 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.order_item){
-            OrderDialog.getInstance().show(getSupportFragmentManager(),DIALOG_SETTINGS);
+            OrderDialog.getInstance(chosenItem).show(getSupportFragmentManager(),DIALOG_SETTINGS);
             return true;
         }
         if (id == R.id.filter_item){
@@ -324,6 +334,7 @@ public class HomeActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_FABMENU_STATE, fabMenuOpen);
+        outState.putInt(KEY_CHOSEN_ITEM ,chosenItem);
     }
 
     @Override
@@ -351,18 +362,88 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void orderCards(int which) {
 
+        chosenItem=which;
+
         switch (which){
             case 0:
-                Log.d("order","0");
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        Collections.sort(notes, new Comparator<Note>() {
+                            @Override
+                            public int compare(Note lhs, Note rhs) {
+                                return lhs.getTitle().toLowerCase().compareTo(rhs.getTitle().toLowerCase());
+                            }
+                        });
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        adapter.notifyItemRangeChanged(0, notes.size()-1);
+                    }
+                }.execute();
                 break;
             case 1:
-                Log.d("order","1");
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        Collections.sort(notes, new Comparator<Note>() {
+                            @Override
+                            public int compare(Note lhs, Note rhs) {
+                                return rhs.getTitle().toLowerCase().compareTo(lhs.getTitle().toLowerCase());
+                            }
+                        });
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        adapter.notifyItemRangeChanged(0, notes.size()-1);
+                    }
+                }.execute();
                 break;
             case 2:
-                Log.d("order","2");
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        Collections.sort(notes, new Comparator<Note>() {
+                            @Override
+                            public int compare(Note lhs, Note rhs) {
+                                return rhs.getDate().compareTo(lhs.getDate());
+                            }
+                        });
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        adapter.notifyItemRangeChanged(0, notes.size()-1);
+                    }
+                }.execute();
                 break;
             case 3:
-                Log.d("order","3");
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        Collections.sort(notes, new Comparator<Note>() {
+                            @Override
+                            public int compare(Note lhs, Note rhs) {
+                                return lhs.getDate().compareTo(rhs.getDate());
+                            }
+                        });
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        adapter.notifyItemRangeChanged(0, notes.size()-1);
+                    }
+                }.execute();
                 break;
         }
 
