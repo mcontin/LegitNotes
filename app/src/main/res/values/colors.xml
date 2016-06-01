@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--   your app branding color for the app bar -->
     <color name="colorPrimary">#82260D</color>
+    <color name="colorPrimaryBright">#be3b18</color>
+    <!--FAB-->
+    <color name="colorPrimaryFab">#d6461f</color>
+    <color name="colorPrimaryBrightFab">#f25f37</color>
     <!--<color name="colorPrimaryDark">#304ffe</color>-->
     <color name="colorAccent">#ffd54f</color>
+    <color name="colorAccentBright">#ffe24f</color>
     <color name="accent_dark">#ff1744</color>
     <color name="accent">#ff5252</color>
 
@@ -21,5 +28,7 @@
 
     <color name="chuck_default">#28000000</color>
 
-    <color name="background">#f5f5f5</color>
+    <color name="background">#fffbed</color>
+
+
 </resources>

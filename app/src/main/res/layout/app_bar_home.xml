@@ -35,7 +35,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
-            fab:fab_addButtonColorNormal="@color/colorAccent"
+            fab:fab_addButtonColorNormal="@color/colorPrimaryFab"
+            fab:fab_addButtonColorPressed="@color/colorPrimaryBrightFab"
             fab:fab_addButtonStrokeVisible="false"
             fab:fab_labelStyle="@style/menu_labels_style"
             fab:fab_labelsPosition="left">
@@ -45,6 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/colorAccent"
+                fab:fab_colorPressed="@color/colorAccentBright"
                 fab:fab_icon="@drawable/ic_mic_white_24dp"
                 fab:fab_size="mini"
                 fab:fab_title="Audio Note" />
@@ -54,6 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/colorAccent"
+                fab:fab_colorPressed="@color/colorAccentBright"
                 fab:fab_icon="@drawable/ic_create_white_24dp"
                 fab:fab_size="mini"
                 fab:fab_title="New Note" />
@@ -63,6 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/colorAccent"
+                fab:fab_colorPressed="@color/colorAccentBright"
                 fab:fab_icon="@drawable/ic_note_add"
                 fab:fab_size="mini"
                 fab:fab_title="Quick Note" />
