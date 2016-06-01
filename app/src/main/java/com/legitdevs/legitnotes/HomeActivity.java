@@ -30,6 +30,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -71,6 +72,7 @@ public class HomeActivity extends AppCompatActivity
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
     private boolean fabMenuOpen = false;
+    public ImageView empty;
 
     private int chosenItem = 2, chosenColumn = 2;
 
@@ -99,7 +101,9 @@ public class HomeActivity extends AppCompatActivity
         notes = DatabaseManager.getInstance(this).getNotes();
         orderCards(chosenItem);
 
-        if (notes.size() == 0) generateRandomNotes();
+        empty = (ImageView) findViewById(R.id.empty);
+
+        if (notes.size() == 0) empty.setVisibility(View.VISIBLE);
 
         //FAB creazione note
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
@@ -209,11 +213,13 @@ public class HomeActivity extends AppCompatActivity
 
     public void addNote(Note note) {
         adapter.addNote(note);
+        empty.setVisibility(View.GONE);
     }
 
     @Override
     public void onNoteDeleted(int position) {
         adapter.removeNote(position);
+        if (notes.size() == 0) empty.setVisibility(View.VISIBLE);
 //        adapter.updateNotes(notes);
     }
 

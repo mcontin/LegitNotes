@@ -69,7 +69,7 @@
         <item>Newest</item>
         <item>Oldest</item>
     </array>
-    <string name="no_new_setting">Annul</string>
+    <string name="no_new_setting">Cancel</string>
     <string name="filter_settings">Filter</string>
     <string name="filter_title">Filter your notes</string>
     <array name="filter_array">
