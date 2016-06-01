@@ -362,8 +362,10 @@ public class NoteDetailActivity extends AppCompatActivity {
                 ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
         if (isImmersiveModeEnabled) {
             Log.i(TAG, "Turning immersive mode mode off. ");
+            bottomBar.show();
         } else {
             Log.i(TAG, "Turning immersive mode mode on.");
+            bottomBar.hide();
         }
 
         // Navigation bar hiding:  Backwards compatible to ICS.

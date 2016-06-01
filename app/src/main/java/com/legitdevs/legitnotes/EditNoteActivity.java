@@ -522,6 +522,7 @@ public class EditNoteActivity extends AppCompatActivity
         AudioWife.getInstance().release();
         previewAudio.removeAllViewsInLayout();
         containerAudio.setVisibility(View.GONE);
+
     }
     private void showVideoPreview(boolean show) {
         if (show) {
