@@ -631,8 +631,7 @@ public class EditNoteActivity extends AppCompatActivity
 
     private void saveChanges() {
         note.setTitle(title.getText().toString());
-        note.setText(text.getText().toString());
-        Log.i("USI",text.getText().toString());
+        note.setText(text.getTextHTML());
         //note.setMedia(media);
 
         Log.i(TAG, "saveChanges: audio: " + audioFile.toString());
