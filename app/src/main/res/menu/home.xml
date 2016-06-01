@@ -7,11 +7,11 @@
         android:title="@string/order_settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
-    <item
+    <!--<item
         android:id="@+id/filter_item"
         android:title="@string/filter_settings"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="never" />-->
     <item
         android:id="@+id/view_item"
         android:title="@string/card_settings"

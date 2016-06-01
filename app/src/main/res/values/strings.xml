@@ -77,4 +77,10 @@
         <item>Video</item>
     </array>
     <string name="card_settings">Notes View</string>
+    <string name="card_view_title">Change view of your notes</string>
+    <array name="card_view_array">
+        <item>1 column</item>
+        <item>2 columns</item>
+        <item>3 columns</item>
+    </array>
 </resources>
