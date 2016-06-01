@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,17 +16,17 @@
             android:id="@+id/creationDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_gravity="end"
-            android:text=""
-            android:paddingRight="16dp"
             android:paddingEnd="16dp"
-            android:layout_alignParentRight="true" />
+            android:paddingRight="16dp"
+            android:text="" />
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/custom_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/creationDate"
-            android:id="@+id/custom_title"
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
 
@@ -34,130 +35,184 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/new_title"
-                android:inputType="textCapSentences"
                 android:imeOptions="flagNoFullscreen"
+                android:inputType="textCapSentences"
                 android:lines="1"
-                android:textSize="24sp"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textSize="24sp" />
 
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
+            android:id="@+id/lnlAction"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/custom_text"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/custom_title"
-            android:inputType="textCapSentences"
+            android:background="@color/gainsboro"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+
+            <ToggleButton
+                android:id="@+id/btnBold"
+                android:layout_width="@dimen/action_button_height"
+                android:layout_height="@dimen/action_button_height"
+                android:background="@drawable/selector_bold_button"
+                android:textOff=""
+                android:textOn=""
+                android:textStyle="bold" />
+
+            <ToggleButton
+                android:id="@+id/btnItalics"
+                android:layout_width="@dimen/action_button_height"
+                android:layout_height="@dimen/action_button_height"
+                android:background="@drawable/selector_italic_button"
+                android:textOff=""
+                android:textOn=""
+                android:textStyle="italic" />
+
+            <ToggleButton
+                android:id="@+id/btnUnderline"
+                android:layout_width="@dimen/action_button_height"
+                android:layout_height="@dimen/action_button_height"
+                android:background="@drawable/selector_underline_button"
+                android:textOff=""
+                android:textOn="" />
+
+            <ImageView
+                android:id="@+id/btnChangeTextColor"
+                android:layout_width="@dimen/action_button_height"
+                android:layout_height="@dimen/action_button_height"
+                android:background="@android:color/black"
+                android:contentDescription="@null"
+                android:src="@mipmap/button_color" />
+        </LinearLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/custom_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_above="@+id/media_content"
+            android:layout_below="@+id/lnlAction"
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
 
-            <EditText
-                android:id="@+id/editText"
+            <ScrollView
+                android:id="@+id/scrollViewEditor"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="30dp"
-                android:gravity="top|start"
-                android:hint="@string/new_text"
-                android:imeOptions="flagNoFullscreen"
-                android:background="@android:color/transparent"
-                android:inputType="textMultiLine|textCapSentences"
-                android:textSize="20sp"/>
+                android:layout_height="wrap_content">
 
-            </android.support.design.widget.TextInputLayout>
+                <com.legitdevs.legitnotes.CustomEditText
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="30dp"
+                    android:background="@android:color/transparent"
+                    android:gravity="top|start"
+                    android:hint="@string/new_text"
+                    android:imeOptions="flagNoFullscreen"
+                    android:inputType="textFilter|textMultiLine|textNoSuggestions|textCapSentences"
+                    android:textSize="20sp">
+
+                    <requestFocus />
+                </com.legitdevs.legitnotes.CustomEditText>
+            </ScrollView>
+
+        </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
             android:id="@+id/media_content"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:background="@color/background"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/container_audio"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:layout_marginBottom="1dp"
                 android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/delete_audio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_close_black_24dp"
                     android:layout_gravity="center_vertical"
+                    android:paddingEnd="10dp"
                     android:paddingLeft="5dp"
-                    android:paddingStart="5dp"
                     android:paddingRight="10dp"
-                    android:paddingEnd="10dp" />
+                    android:paddingStart="5dp"
+                    android:src="@drawable/ic_close_black_24dp" />
 
                 <FrameLayout
                     android:id="@+id/preview_audio"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
 
             <LinearLayout
                 android:id="@+id/container_image"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:layout_marginBottom="1dp"
                 android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/delete_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_close_black_24dp"
                     android:layout_gravity="center_vertical"
+                    android:paddingEnd="10dp"
                     android:paddingLeft="5dp"
-                    android:paddingStart="5dp"
                     android:paddingRight="10dp"
-                    android:paddingEnd="10dp" />
+                    android:paddingStart="5dp"
+                    android:src="@drawable/ic_close_black_24dp" />
 
                 <ImageView
                     android:id="@+id/preview_image"
                     android:layout_width="90dp"
-                    android:layout_height="50dp"/>
+                    android:layout_height="50dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/image_edit_name"
                     android:layout_gravity="center_vertical"
+                    android:paddingEnd="5dp"
                     android:paddingLeft="10dp"
-                    android:paddingStart="10dp"
                     android:paddingRight="5dp"
-                    android:paddingEnd="5dp"/>
+                    android:paddingStart="10dp"
+                    android:text="@string/image_edit_name" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/container_video"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:layout_marginBottom="1dp"
                 android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/delete_video"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_close_black_24dp"
                     android:layout_gravity="center_vertical"
+                    android:paddingEnd="10dp"
                     android:paddingLeft="5dp"
-                    android:paddingStart="5dp"
                     android:paddingRight="10dp"
-                    android:paddingEnd="10dp" />
+                    android:paddingStart="5dp"
+                    android:src="@drawable/ic_close_black_24dp" />
 
                 <ImageView
                     android:id="@+id/preview_video"
@@ -167,17 +222,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/video_edit_name"
                     android:layout_gravity="center_vertical"
+                    android:paddingEnd="5dp"
                     android:paddingLeft="10dp"
-                    android:paddingStart="10dp"
                     android:paddingRight="5dp"
-                    android:paddingEnd="5dp"/>
+                    android:paddingStart="10dp"
+                    android:text="@string/video_edit_name" />
 
             </LinearLayout>
 
         </LinearLayout>
-
 
     </RelativeLayout>
 
@@ -187,102 +241,3 @@
         android:layout_height="match_parent" />
 
 </FrameLayout>
-
-
-    <!--<HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/black">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageButton
-                            android:id="@+id/action_bold"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@null"
-                            android:contentDescription="@null"
-                            android:src="@drawable/bold" />
-
-                        <ImageButton
-                            android:id="@+id/action_italic"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@null"
-                            android:contentDescription="@null"
-                            android:src="@drawable/italic" />
-
-                        <ImageButton
-                            android:id="@+id/action_superscript"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@null"
-                            android:contentDescription="@null"
-                            android:src="@drawable/superscript" />
-
-                        <ImageButton
-                            android:id="@+id/action_strikethrough"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@null"
-                            android:contentDescription="@null"
-                            android:src="@drawable/strikethrough" />
-
-                        <ImageButton
-                            android:id="@+id/action_underline"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@null"
-                            android:contentDescription="@null"
-                            android:src="@drawable/underline" />
-
-                        <ImageButton
-                            android:id="@+id/action_txt_color"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@null"
-                            android:contentDescription="@null"
-                            android:src="@drawable/txt_color" />
-
-                        <ImageButton
-                            android:id="@+id/action_bg_color"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@null"
-                            android:contentDescription="@null"
-                            android:src="@drawable/bg_color" />
-
-
-                       <ImageButton
-                            android:id="@+id/action_insert_checkbox"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:background="@null"
-                            android:contentDescription="@null"
-                            android:src="@android:drawable/checkbox_on_background" />
-
-
-
-
-
-
-                    </LinearLayout>
-
-                </HorizontalScrollView>
-
-                <jp.wasabeef.richeditor.RichEditor
-                    android:id="@+id/editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/creationDate"
-                    android:layout_marginTop="30dp"
-                    android:inputType="textMultiLine|textCapSentences"
-                    android:capitalize="sentences"
-                    android:gravity="top|start"
-                    android:focusable="true"
-                    android:hint="@string/new_text"
-                    android:imeOptions="flagNoFullscreen"
-                    android:background="@android:color/transparent"/>-->
