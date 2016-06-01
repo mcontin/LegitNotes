@@ -37,4 +37,11 @@
     <string name="title_edit_note">Modifica</string>
     <string name="title_home_activity">Le tue note</string>
     <string name="permission_rationale"></string>
+    <string name="invalid_lat_long_used">La posizione non è valida</string>
+    <string name="no_address_found">Nessun Indirizzo</string>
+    <string name="service_not_available">Servizio non disponibile</string>
+    <string name="address_found">L\'indirizzo è stato trovato</string>
+    <string name="bottom_bar_video_title" translatable="false"></string>
+    <string name="bottom_bar_position_title">Posizione</string>
+    <string name="bottom_bar_gallery_title">Dalla gallery</string>
 </resources>

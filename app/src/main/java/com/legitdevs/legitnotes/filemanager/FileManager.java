@@ -131,17 +131,23 @@ public class FileManager {
         if(removedFile != null) {
             File fileToDelete = new File(removedFile);
 
-            //cartella interna privata dell'app
-            File internalMemory = mContext.getFilesDir();
-            File fileDir = new File(internalMemory.getAbsolutePath()
-                    + File.separatorChar
-                    + mNote.getId().toString()
-                    + File.separatorChar
-                    + type);
+//            //cartella interna privata dell'app
+//            File internalMemory = mContext.getFilesDir();
+//            File fileDir = new File(internalMemory.getAbsolutePath()
+//                    + File.separatorChar
+//                    + mNote.getId().toString()
+//                    + File.separatorChar
+//                    + type);
 
             boolean deleted = fileToDelete.delete();
         }
         //saveToDb();
+    }
+
+    public void deleteMedias() {
+        delete(TYPE_AUDIO);
+        delete(TYPE_IMAGE);
+        delete(TYPE_VIDEO);
     }
 
     private void saveToDb() {

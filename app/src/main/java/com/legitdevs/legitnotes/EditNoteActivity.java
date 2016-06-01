@@ -4,17 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,8 +32,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.legitdevs.legitnotes.database.DatabaseManager;
@@ -36,11 +44,22 @@ import com.legitdevs.legitnotes.filemanager.FileManager;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+
+import android.support.v7.app.AlertDialog;
+import android.os.Build;
+import android.util.Log;
+
+import yuku.ambilwarna.AmbilWarnaDialog;
+
 
 public class EditNoteActivity extends AppCompatActivity
-        implements IDeletionListener, IMediaSaver,
-        LocationListener, AudioInsideNoteDialog.IDirAudioNote,
-        ConfirmRemovalMediasDialog.IDeleteMedia {
+        implements IDeletionListener, IMediaSaver, LocationListener,
+        AudioInsideNoteDialog.IDirAudioNote, AmbilWarnaDialog.OnAmbilWarnaListener, ConfirmRemovalMediasDialog.IDeleteMedia {
 
     private static final String KEY_FILE_PHOTO = "photofile";
     private static final String KEY_FILE_AUDIO = "audiofile";
@@ -55,25 +74,53 @@ public class EditNoteActivity extends AppCompatActivity
     private static final int REQUEST_IMAGE_GALLERY = 2;
     private static final int REQUEST_VIDEO_CAPTURE = 3;
 
-    //private RichEditor text;
     private Note note;
     private TextView date;
+    private HashMap<String, String> medias;
     private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
 
     private File photoFile, tempPhotoFile, audioFile, videoFile;
     private Uri photoUri;
     private Bitmap photoBitmap;
     private EditText title;
-    private EditText text;
+    private CustomEditText text;
     private LocationManager locationManager;
     private ImageView deleteAudio, deleteVideo, deleteImage, previewImage, previewVideo;
     public FrameLayout previewAudio;
     private LinearLayout containerAudio, containerImage, containerVideo;
 
+    private LinearLayout lnl;
+    private AmbilWarnaDialog colorPickerDialog;
+    private ImageView imgChangeColor;
+
+    private int selectionStart;
+    private int selectionEnd;
+
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
     private boolean fabMenuOpen = false;
 
+    private CustomEditText.EventBack eventBack = new CustomEditText.EventBack() {
+
+        @Override
+        public void close() {
+            lnl.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void show() {
+            lnl.setVisibility(View.VISIBLE);
+        }
+    };
+
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (text.isFocused()) {
+                lnl.setVisibility(View.VISIBLE);
+            }
+        }
+    };
 
 
     @Override
@@ -100,8 +147,7 @@ public class EditNoteActivity extends AppCompatActivity
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         title = (EditText) findViewById(R.id.editTitle);
-        text = (EditText) findViewById(R.id.editText);
-        //text = (RichEditor) findViewById(R.id.editText);
+        text = (CustomEditText) findViewById(R.id.editText);
         date = (TextView) findViewById(R.id.creationDate);
 
         Intent intent = getIntent();
@@ -115,15 +161,15 @@ public class EditNoteActivity extends AppCompatActivity
         }
 
         title.setText(note.getTitle());
-        text.setText(note.getText());
+        text.setText(Html.fromHtml(note.getText()));
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
-
+        medias = note.getMedias();
         containerAudio = (LinearLayout) findViewById(R.id.container_audio);
         deleteAudio = (ImageView) findViewById(R.id.delete_audio);
         deleteAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_AUDIO).show(getSupportFragmentManager(),DIALOG);
+                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_AUDIO).show(getSupportFragmentManager(), DIALOG);
             }
         });
         previewAudio = (FrameLayout) findViewById(R.id.preview_audio);
@@ -133,7 +179,7 @@ public class EditNoteActivity extends AppCompatActivity
         deleteImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_IMAGE).show(getSupportFragmentManager(),DIALOG);
+                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_IMAGE).show(getSupportFragmentManager(), DIALOG);
             }
         });
         previewImage = (ImageView) findViewById(R.id.preview_image);
@@ -143,7 +189,7 @@ public class EditNoteActivity extends AppCompatActivity
         deleteVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_VIDEO).show(getSupportFragmentManager(),DIALOG);
+                ConfirmRemovalMediasDialog.getInstance(FileManager.TYPE_VIDEO).show(getSupportFragmentManager(), DIALOG);
             }
         });
         previewVideo = (ImageView) findViewById(R.id.preview_video);
@@ -245,12 +291,84 @@ public class EditNoteActivity extends AppCompatActivity
         fabLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 setUserLocation();
                 fabMenu.collapse();
 
             }
         });
+
+        colorPickerDialog = new AmbilWarnaDialog(this, Color.BLACK, this);
+        ToggleButton boldToggle = (ToggleButton) findViewById(R.id.btnBold);
+        ToggleButton italicsToggle = (ToggleButton) findViewById(R.id.btnItalics);
+        ToggleButton underlinedToggle = (ToggleButton) findViewById(R.id.btnUnderline);
+        imgChangeColor = (ImageView) findViewById(R.id.btnChangeTextColor);
+        lnl = (LinearLayout) findViewById(R.id.lnlAction);
+        lnl.setVisibility(View.VISIBLE);
+
+        text.setHint(getResources().getString(R.string.new_text));
+        text.setSingleLine(false);
+        text.setMinLines(10);
+        text.setBoldToggleButton(boldToggle);
+        text.setItalicsToggleButton(italicsToggle);
+        text.setUnderlineToggleButton(underlinedToggle);
+        text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    lnl.setVisibility(View.VISIBLE);
+                } else {
+                    lnl.setVisibility(View.GONE);
+                }
+            }
+        });
+        text.setEventBack(eventBack);
+        text.setOnClickListener(clickListener);
+        imgChangeColor.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                selectionStart = text.getSelectionStart();
+                selectionEnd = text.getSelectionEnd();
+                colorPickerDialog.show();
+            }
+        });
+
+        if (medias != null) {
+            for (int i = 0; i < medias.size(); i++) {
+
+            }
+        }
+    }
+
+    private String displayLocation() {
+
+        String errorMessage = "";
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        Location location = note.getPosition();
+
+        List<Address> addresses = null;
+
+        try {
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+        } catch (IOException ioException) {
+            errorMessage = getString(R.string.service_not_available);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            errorMessage = getString(R.string.invalid_lat_long_used);
+        }
+
+        // Handle case where no address was found.
+        if (addresses == null || addresses.size() == 0) {
+            if (errorMessage.isEmpty()) {
+                errorMessage = getString(R.string.no_address_found);
+            }
+            return errorMessage;
+        } else {
+            Address address = addresses.get(0);
+            ArrayList<String> addressFragments = new ArrayList<String>();
+            addressFragments.add(address.getAddressLine(0));
+            return addressFragments.get(0);
+        }
     }
 
     private void setFabMenuOpen(boolean open) {
@@ -282,9 +400,22 @@ public class EditNoteActivity extends AppCompatActivity
 
     @Override
     public void onLocationChanged(Location location) throws SecurityException {
-        //setto la posizione dell'utente ogni volta che apre il fragment per consentire alle card di scrivere la distanza
+
+        //setto la posizione dell'utente ogni volta che creo una nota
         note.setPosition(location);
         locationManager.removeUpdates(this);
+
+        Handler mainHandler = new Handler(getApplicationContext().getMainLooper());
+
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                String myAddress = displayLocation();
+                Log.i("POSITION",myAddress);
+                note.setText(note.getText() + "/n Ti trovi in " + myAddress);
+            }
+        };
+        mainHandler.post(myRunnable);
     }
 
     @Override
@@ -363,11 +494,13 @@ public class EditNoteActivity extends AppCompatActivity
     }
 
     private void showImagePreview(boolean show) {
-        if(show) {
+        if (show) {
             containerImage.setVisibility(View.VISIBLE);
             Glide.with(getApplicationContext())
                     .load(photoFile)
                     .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .into(previewImage);
         }
     }
@@ -441,7 +574,7 @@ public class EditNoteActivity extends AppCompatActivity
                 .with(note)
                 .delete(file);
 
-        switch (file){
+        switch (file) {
             case FileManager.TYPE_AUDIO:
                 audioFile = new File("");
                 hideAudioPreview();
@@ -498,7 +631,7 @@ public class EditNoteActivity extends AppCompatActivity
 
     private void saveChanges() {
         note.setTitle(title.getText().toString());
-        note.setText(text.getText().toString());
+        note.setText(text.getTextHTML());
         //note.setMedia(media);
 
         Log.i(TAG, "saveChanges: audio: " + audioFile.toString());
@@ -555,78 +688,16 @@ public class EditNoteActivity extends AppCompatActivity
                 .with(note)
                 .save(fileType, fileName);
     }
+
+    @Override
+    public void onCancel(AmbilWarnaDialog dialog) {
+
+    }
+
+    @Override
+    public void onOk(AmbilWarnaDialog dialog, int color) {
+        text.setColor(color, selectionStart, selectionEnd);
+        imgChangeColor.setBackgroundColor(color);
+    }
+
 }
-
-
-
-/*text.setPadding(10, 10, 10, 10);
-        text.setPlaceholder("" + R.string.new_text);
-        text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.focusEditor();
-            }
-        });
-
-        /*
-        findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setBold();
-            }
-        });
-
-        findViewById(R.id.action_italic).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setItalic();
-            }
-        });
-
-
-        findViewById(R.id.action_superscript).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                text.setSuperscript();
-            }
-        });
-        findViewById(R.id.action_strikethrough).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setStrikeThrough();
-            }
-        });
-
-        findViewById(R.id.action_underline).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.setUnderline();
-            }
-        });
-
-        findViewById(R.id.action_txt_color).setOnClickListener(new View.OnClickListener() {
-            private boolean isChanged;
-
-            @Override
-            public void onClick(View v) {
-                text.setTextColor(isChanged ? Color.BLACK : Color.RED);
-                isChanged = !isChanged;
-            }
-        });
-
-        findViewById(R.id.action_bg_color).setOnClickListener(new View.OnClickListener() {
-            private boolean isChanged;
-
-            @Override
-            public void onClick(View v) {
-                text.setTextBackgroundColor(isChanged ? Color.TRANSPARENT : Color.YELLOW);
-                isChanged = !isChanged;
-            }
-        });
-
-
-        findViewById(R.id.action_insert_checkbox).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                text.insertTodo();
-            }
-        });*/

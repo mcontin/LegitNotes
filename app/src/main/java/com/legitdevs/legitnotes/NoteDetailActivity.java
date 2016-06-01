@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +22,7 @@ import android.widget.VideoView;
 import android.widget.MediaController;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarTab;
@@ -81,7 +83,7 @@ public class NoteDetailActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(note.getTitle());
 
         text = (TextView) findViewById(R.id.noteText);
-        text.setText(note.getText());
+        text.setText(Html.fromHtml(note.getText()));
 
         date = (TextView) findViewById(R.id.note_date);
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
@@ -173,7 +175,6 @@ public class NoteDetailActivity extends AppCompatActivity {
                         AudioWife.getInstance()
                                 .init(getApplicationContext(), Uri.parse(audio.getAbsolutePath()))
                                 .useDefaultUi(audioPlayer, getLayoutInflater());
-
                     }
                     if (position==imageIndex){
                         mediaContainer.getBackground().setAlpha(200);
@@ -190,6 +191,8 @@ public class NoteDetailActivity extends AppCompatActivity {
                                             .init(getApplicationContext())
                                             .with(note)
                                             .get(FileManager.TYPE_IMAGE))
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .skipMemoryCache(true)
                                     .into(imageNote);
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
 
         cardHolder.noteTitle.setText(notes.get(position).getTitle());
 
-        cardHolder.noteSnippet.setText(notes.get(position).getText());
+        cardHolder.noteSnippet.setText(Html.fromHtml(notes.get(position).getText()));
 
         cardHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,28 +114,21 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
 
     public void updateNotes(ArrayList<Note> notes) {
         this.notes = notes;
-        orderBy();
 
         notifyDataSetChanged();
     }
 
     public void addNote(Note note) {
         notes.add(note);
-        orderBy();
 
         notifyItemInserted(notes.indexOf(note));
     }
 
     public void removeNote(int position) {
         notes.remove(position);
-        orderBy();
 
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
-    }
-
-    public void orderBy() {
-
     }
 
     /**

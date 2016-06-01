@@ -81,6 +81,7 @@ public class DatabaseManager {
     }
 
     /**
+     * MEMORY LEAK
      * Salva la lista di note nel database
      * @param notes
      */
@@ -112,6 +113,10 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * MEMORY LEAK
+     * @param note
+     */
     public void saveNote(Note note) {
         //mappa di note
         Map<String, Object> notesMap = new HashMap<>();
@@ -139,6 +144,10 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * MEMORY LEAK
+     * @param note
+     */
     public void removeNote(Note note) {
         //mappa di note
         Map<String, Object> notesMap = new HashMap<>();
@@ -166,71 +175,4 @@ public class DatabaseManager {
         }
     }
 
-    public ArrayList<Category> getCategories() {
-        Document document = database.getExistingDocument(DOCUMENT_CATEGORIES);
-
-        if(document != null) {
-            Map<String, Object> categoriesMap = (HashMap) document.getProperty(PROPERTY_CATEGORIES);
-
-            ArrayList<Category> categories = new ArrayList<>();
-
-            for (String key : categoriesMap.keySet()) {
-                Category category = new Category((HashMap<String, Object>) categoriesMap.get(key));
-                categories.add(category);
-            }
-
-            return categories;
-        } else {
-            document = database.getDocument(DOCUMENT_NOTES);
-        }
-
-        return null;
-    }
-
-    /**
-     * TODO non so se veramente TODO
-     */
-    public void saveCategories() {
-
-    }
-
-    /**
-     * TODO
-     * salva la categoria aggiunta dall'utente
-     * @param category
-     */
-    public void addCategory(Category category) {
-        //mappa di categorie
-        Map<String, Object> categoriesMap = new HashMap<>();
-        //proprietà del documento a cui verrà aggiunta la mappa di categorie, quella vecchia verrà sovrascritta
-        Map<String, Object> propertiesWithCategories = new HashMap<>();
-
-        Document document = database.getExistingDocument(DOCUMENT_CATEGORIES);
-
-        if(document == null){
-            document = database.getDocument(DOCUMENT_CATEGORIES);
-        } else {
-            propertiesWithCategories.putAll(document.getProperties());
-            categoriesMap.putAll((HashMap<String, Object>) propertiesWithCategories.get(PROPERTY_NOTES));
-        }
-
-        categoriesMap.put(category.getName(), category.toHashMap());
-
-        propertiesWithCategories.put(PROPERTY_NOTES, categoriesMap);
-
-        try {
-            //inserisco la lista aggiornata nel documento
-            document.putProperties(propertiesWithCategories);
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * TODO
-     * cancella la categoria scelta dall'utente
-     */
-    public void removeCategory(String category) {
-
-    }
 }
