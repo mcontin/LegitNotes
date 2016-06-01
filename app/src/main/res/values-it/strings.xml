@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">LegitNotes</string>
     <string name="prompt_password">Password (facoltativo)</string>
     <string name="action_settings">Impostazioni</string>
     <string name="action_sign_in">Accedi o registrati</string>

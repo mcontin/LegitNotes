@@ -310,13 +310,13 @@ public class EditNoteActivity extends AppCompatActivity
     }
 
     private File createImageFile() throws IOException {
-        File internalMemory = getFilesDir();
-        internalMemory = new File(internalMemory.getAbsolutePath()
-                + File.separatorChar
-                + ".temp");
+        File tempDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//        tempDir = new File(tempDir.getAbsolutePath()
+//                + File.separatorChar
+//                + ".temp");
         //se non esiste creo la cartella temporanea
-        if (!internalMemory.exists()) {
-            if(!internalMemory.mkdir()) {
+        if (!tempDir.exists()) {
+            if(!tempDir.mkdir()) {
                 //è successo qualcosa di brutto
                 AlertDialog.Builder b = new AlertDialog.Builder(this);
                 b.setMessage("Error with internal memory! Please restart the app.");
@@ -325,9 +325,11 @@ public class EditNoteActivity extends AppCompatActivity
             }
         }
 
-        File image = new File(internalMemory, "image.jpg");
+        File imageTemp = File.createTempFile("image",
+                ".jpg",
+                tempDir);
 
-        return image;
+        return imageTemp;
     }
 
     private void dispatchTakePictureIntent() {
@@ -343,7 +345,7 @@ public class EditNoteActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             // Continue only if the File was successfully created
-            if (tempPhotoFile != null) {
+            if (tempPhotoFile != null && tempPhotoFile.exists()) {
                 photoUri = Uri.fromFile(tempPhotoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                         photoUri);
@@ -364,7 +366,7 @@ public class EditNoteActivity extends AppCompatActivity
         if(show) {
             containerImage.setVisibility(View.VISIBLE);
             Glide.with(getApplicationContext())
-                    .load(photoFile.toString())
+                    .load(photoFile)
                     .centerCrop()
                     .into(previewImage);
         }
@@ -405,16 +407,17 @@ public class EditNoteActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.i(TAG, "onActivityResult: foto: " + photoFile);
+        Log.i(TAG, "onActivityResult: temp: " + tempPhotoFile);
+
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();
             videoFile = new File(getRealPathFromURI(videoUri));
 
             showVideoPreview(true);
-        } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            if(resultCode == RESULT_OK) {
-                photoFile = tempPhotoFile;
-                showImagePreview(true);
-            }
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            photoFile = tempPhotoFile;
+            showImagePreview(true);
         }
 
     }
@@ -520,7 +523,7 @@ public class EditNoteActivity extends AppCompatActivity
                     .delete(FileManager.TYPE_IMAGE);
         } else {
             //savemedia
-            if(photoFile.getParentFile().getName().equals(".temp"))
+            if(photoFile.getParentFile().getName().equals("Pictures"))
                 saveMedia(FileManager.TYPE_IMAGE, photoFile);
         }
 
