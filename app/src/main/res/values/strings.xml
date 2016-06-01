@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LegitNotes</string>
+    <string name="app_name" translatable="false">Chuck NoteThis</string>
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
@@ -60,6 +60,31 @@
     <string name="bottom_bar_position_title">Position</string>
     <string name="bottom_bar_gallery_title">From gallery</string>
 
+    <!--String related to option drawer-->
+    <string name="order_settings">Order by</string>
+    <string name="order_title">Order your notes</string>
+    <array name="order_array">
+        <item>A-Z</item>
+        <item>Z-A</item>
+        <item>Newest</item>
+        <item>Oldest</item>
+    </array>
+    <string name="no_new_setting">Annul</string>
+    <string name="filter_settings">Filter</string>
+    <string name="filter_title">Filter your notes</string>
+    <array name="filter_array">
+        <item>Text</item>
+        <item>Audio</item>
+        <item>Images</item>
+        <item>Video</item>
+    </array>
+    <string name="card_settings">Notes View</string>
+    <string name="card_view_title">Change view of your notes</string>
+    <array name="card_view_array">
+        <item>1 column</item>
+        <item>2 columns</item>
+        <item>3 columns</item>
+    </array>
     <string name="invalid_lat_long_used">No valid position</string>
     <string name="no_address_found">No address</string>
     <string name="service_not_available">Service not available</string>

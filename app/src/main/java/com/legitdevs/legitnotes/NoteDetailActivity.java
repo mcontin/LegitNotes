@@ -30,6 +30,7 @@ import com.roughike.bottombar.OnTabClickListener;
 
 import java.io.File;
 import java.text.DateFormat;
+import java.util.Collections;
 
 public class NoteDetailActivity extends AppCompatActivity {
 
@@ -96,17 +97,29 @@ public class NoteDetailActivity extends AppCompatActivity {
         mediaContainer = (RelativeLayout) findViewById(R.id.media_container);
         mediaContainer.getBackground().setAlpha(0);
 
-        audio = FileManager.init(this)
-                .with(note)
-                .get(FileManager.TYPE_AUDIO);
+        try {
+            audio = FileManager.init(this)
+                    .with(note)
+                    .get(FileManager.TYPE_AUDIO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        image = FileManager.init(this)
-                .with(note)
-                .get(FileManager.TYPE_IMAGE);
+        try {
+            image = FileManager.init(this)
+                    .with(note)
+                    .get(FileManager.TYPE_IMAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        video = FileManager.init(this)
-                .with(note)
-                .get(FileManager.TYPE_VIDEO);
+        try {
+            video = FileManager.init(this)
+                    .with(note)
+                    .get(FileManager.TYPE_VIDEO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         BottomBarTab[] tabs = new BottomBarTab[4];
@@ -115,17 +128,17 @@ public class NoteDetailActivity extends AppCompatActivity {
 
         int index = 1;
 
-        if (audio != null) {
+        if (audio != null && audio.toString().length() > 0) {
             tabs[index] = new BottomBarTab(R.drawable.ic_keyboard_voice_white_24dp, R.string.bottom_bar_audio_title);
             audioIndex=index;
             index++;
         }
-        if (image != null) {
+        if (image != null && image.toString().length() > 0) {
             tabs[index] = new BottomBarTab(R.drawable.ic_image_white_24dp, R.string.bottom_bar_image_title);
             imageIndex=index;
             index++;
         }
-        if (video != null) {
+        if (video != null && video.toString().length() > 0) {
             tabs[index] = new BottomBarTab(R.drawable.ic_local_movies_white_24dp, R.string.bottom_bar_video_title);
             videoIndex=index;
             index++;
@@ -135,8 +148,7 @@ public class NoteDetailActivity extends AppCompatActivity {
 
         System.arraycopy(tabs, 0, defintiveTabs, 0, index);
 
-
-        if (audio != null || image != null || video != null) {
+        if (audio.toString().length() > 0 || video.toString().length() > 0 || image.toString().length() > 0) {
 
             bottomBar = BottomBar.attach(this, savedInstanceState);
             bottomBar.noTopOffset();
@@ -172,13 +184,17 @@ public class NoteDetailActivity extends AppCompatActivity {
                             imageNote = (ImageView) findViewById(R.id.image_note);
                         imageNote.setVisibility(View.VISIBLE);
 
-                        Glide
-                                .with(getApplicationContext())
-                                .load(FileManager
-                                        .init(getApplicationContext())
-                                        .with(note)
-                                        .get(FileManager.TYPE_IMAGE))
-                                .into(imageNote);
+                        try {
+                            Glide
+                                    .with(getApplicationContext())
+                                    .load(FileManager
+                                            .init(getApplicationContext())
+                                            .with(note)
+                                            .get(FileManager.TYPE_IMAGE))
+                                    .into(imageNote);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     if (position==videoIndex){
                         mediaContainer.getBackground().setAlpha(200);
@@ -252,6 +268,10 @@ public class NoteDetailActivity extends AppCompatActivity {
                 }
             });
         }
+
+        Log.i(TAG, "onCreate: audio: " + audio.toString());
+        Log.i(TAG, "onCreate: video: " + video.toString());
+        Log.i(TAG, "onCreate: foto: " + image.toString());
 
     }
 

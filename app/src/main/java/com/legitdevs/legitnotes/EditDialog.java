@@ -58,7 +58,7 @@ public class EditDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getContext(), EditNoteActivity.class);
-                i.putExtra(HomeActivity.KEY_NOTE, getArguments().getParcelable(KEY_NOTE));
+                i.putExtra(KEY_NOTE, getArguments().getParcelable(KEY_NOTE));
                 startActivity(i);
                 dismiss();
             }

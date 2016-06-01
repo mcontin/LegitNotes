@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/order_item"
+        android:title="@string/order_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+    <!--<item
+        android:id="@+id/filter_item"
+        android:title="@string/filter_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never" />-->
+    <item
+        android:id="@+id/view_item"
+        android:title="@string/card_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_search"
         android:title="@string/search_hint"
-        android:orderInCategory="100"
+        android:orderInCategory="50"
         android:icon="@drawable/ic_search"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView" />
 </menu>
 
