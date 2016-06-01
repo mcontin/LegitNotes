@@ -23,14 +23,14 @@
         fab:fab_labelsPosition="left"
         android:layout_gravity="bottom|right">
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_from_gallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_icon="@drawable/ic_perm_media_white_24dp"
-            fab:fab_size="mini"
-            fab:fab_title="@string/bottom_bar_gallery_title" />
+        <!--<com.getbase.floatingactionbutton.FloatingActionButton-->
+            <!--android:id="@+id/fab_from_gallery"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--fab:fab_colorNormal="@color/colorAccent"-->
+            <!--fab:fab_icon="@drawable/ic_perm_media_white_24dp"-->
+            <!--fab:fab_size="mini"-->
+            <!--fab:fab_title="@string/bottom_bar_gallery_title" />-->
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_photo"
