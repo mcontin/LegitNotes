@@ -124,7 +124,7 @@
         <LinearLayout
             android:id="@+id/media_content"
             android:layout_width="match_parent"
-            android:background="@color/background"
+            android:background="@color/media_background"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="vertical">

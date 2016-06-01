@@ -295,15 +295,15 @@ public class EditNoteActivity extends AppCompatActivity
             }
         });
 
-        fabLocation = (FloatingActionButton) findViewById(R.id.fab_position);
-        fabLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setUserLocation();
-                fabMenu.collapse();
-
-            }
-        });
+//        fabLocation = (FloatingActionButton) findViewById(R.id.fab_position);
+//        fabLocation.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                setUserLocation();
+//                fabMenu.collapse();
+//
+//            }
+//        });
 
         colorPickerDialog = new AmbilWarnaDialog(this, Color.BLACK, this);
         ToggleButton boldToggle = (ToggleButton) findViewById(R.id.btnBold);
@@ -683,6 +683,7 @@ public class EditNoteActivity extends AppCompatActivity
 
         DatabaseManager.getInstance(this).saveNote(note);
         HomeActivity.activity.empty.setVisibility(View.GONE);
+        HomeActivity.activity.orderCards(HomeActivity.activity.chosenItem);
 
         //nota modificata, devo killare l'activity di dettaglio precedente
         if (NoteDetailActivity.activity != null)
