@@ -96,6 +96,8 @@ public class EditNoteActivity extends AppCompatActivity
     private int selectionStart;
     private int selectionEnd;
 
+    private LinearLayout mMediaContainer;
+
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
     private boolean fabMenuOpen = false;
@@ -104,11 +106,13 @@ public class EditNoteActivity extends AppCompatActivity
 
         @Override
         public void close() {
+            mMediaContainer.setVisibility(View.VISIBLE);
             lnl.setVisibility(View.GONE);
         }
 
         @Override
         public void show() {
+            mMediaContainer.setVisibility(View.GONE);
             lnl.setVisibility(View.VISIBLE);
         }
     };
@@ -118,6 +122,9 @@ public class EditNoteActivity extends AppCompatActivity
         public void onClick(View v) {
             if (text.isFocused()) {
                 lnl.setVisibility(View.VISIBLE);
+                mMediaContainer.setVisibility(View.GONE);
+            } else {
+                mMediaContainer.setVisibility(View.VISIBLE);
             }
         }
     };
@@ -164,6 +171,7 @@ public class EditNoteActivity extends AppCompatActivity
         text.setText(Html.fromHtml(note.getText()));
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         medias = note.getMedias();
+        mMediaContainer = (LinearLayout) findViewById(R.id.media_content);
         containerAudio = (LinearLayout) findViewById(R.id.container_audio);
         deleteAudio = (ImageView) findViewById(R.id.delete_audio);
         deleteAudio.setOnClickListener(new View.OnClickListener() {
@@ -312,13 +320,14 @@ public class EditNoteActivity extends AppCompatActivity
         text.setItalicsToggleButton(italicsToggle);
         text.setUnderlineToggleButton(underlinedToggle);
         text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     lnl.setVisibility(View.VISIBLE);
+                    mMediaContainer.setVisibility(View.GONE);
                 } else {
                     lnl.setVisibility(View.GONE);
+                    mMediaContainer.setVisibility(View.VISIBLE);
                 }
             }
         });
