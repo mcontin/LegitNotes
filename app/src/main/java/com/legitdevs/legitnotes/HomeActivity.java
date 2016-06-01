@@ -39,7 +39,8 @@ import java.util.Comparator;
 
 public class HomeActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
-        IDeletionListener, IMediaSaver , OrderDialog.ISelectedItem {
+        IDeletionListener, IMediaSaver , OrderDialog.ISelectedItem,
+        ChangeViewCardsDialog.ISelectedItem {
 
     private static final String DIALOG_QUICK = "quick";
     private static final String DIALOG_CONFIRM = "confirm";
@@ -54,6 +55,7 @@ public class HomeActivity extends AppCompatActivity
 
     private static final String KEY_FABMENU_STATE = "fabmenustate";
     private static final String KEY_CHOSEN_ITEM = "chosen";
+    private static final String KEY_CHOSEN_COLUMN = "column";
 
     private RecyclerView recyclerView;
     private NotesAdapter adapter;
@@ -69,7 +71,7 @@ public class HomeActivity extends AppCompatActivity
     private FloatingActionsMenu fabMenu;
     private boolean fabMenuOpen = false;
 
-    private int chosenItem=2;
+    private int chosenItem=2,chosenColumn=2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +91,11 @@ public class HomeActivity extends AppCompatActivity
         if(savedInstanceState != null) {
             fabMenuOpen = savedInstanceState.getBoolean(KEY_FABMENU_STATE);
             chosenItem = savedInstanceState.getInt(KEY_CHOSEN_ITEM);
+            chosenColumn = savedInstanceState.getInt(KEY_CHOSEN_COLUMN);
         }
 
         notes = DatabaseManager.getInstance(this).getNotes();
+        orderCards(chosenItem);
 
         if (notes.size() == 0) generateRandomNotes();
 
@@ -121,9 +125,8 @@ public class HomeActivity extends AppCompatActivity
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         adapter = new NotesAdapter(notes, this);    //adapter per la lista di note e creazione delle Card
         //layout a 2 colonne
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+
+        changeCardView(chosenColumn);
 
 
     }
@@ -185,14 +188,16 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onRestart() {
         super.onRestart();
-
+        orderCards(chosenItem);
+        changeCardView(chosenColumn);
         updateNotes();
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
         orderCards(chosenItem);
+        changeCardView(chosenColumn);
     }
 
     public void updateNotes() {
@@ -283,12 +288,9 @@ public class HomeActivity extends AppCompatActivity
             OrderDialog.getInstance(chosenItem).show(getSupportFragmentManager(),DIALOG_SETTINGS);
             return true;
         }
-        if (id == R.id.filter_item){
 
-            FilterDialog.getInstance().show(getSupportFragmentManager(),DIALOG_SETTINGS);
-            return true;
-        }
         if (id == R.id.view_item){
+            ChangeViewCardsDialog.getInstance(chosenColumn).show(getSupportFragmentManager(),DIALOG_SETTINGS);
             return true;
         }
 
@@ -335,6 +337,7 @@ public class HomeActivity extends AppCompatActivity
 
         outState.putBoolean(KEY_FABMENU_STATE, fabMenuOpen);
         outState.putInt(KEY_CHOSEN_ITEM ,chosenItem);
+        outState.putInt(KEY_CHOSEN_COLUMN ,chosenColumn);
     }
 
     @Override
@@ -447,5 +450,13 @@ public class HomeActivity extends AppCompatActivity
                 break;
         }
 
+    }
+
+    @Override
+    public void changeCardView(int column) {
+        chosenColumn =column;
+        GridLayoutManager layoutManager = new GridLayoutManager(this, column, GridLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
     }
 }

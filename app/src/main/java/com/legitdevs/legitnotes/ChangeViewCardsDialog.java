@@ -8,56 +8,59 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-public class OrderDialog extends DialogFragment {
-
-    private static final String INT="int";
+public class ChangeViewCardsDialog extends DialogFragment {
 
     public interface ISelectedItem{
-        void orderCards(int which);
+        void changeCardView(int column);
     }
 
     ISelectedItem iSelectedItem;
 
-    public static OrderDialog getInstance(int selected) {
-        OrderDialog orderDialog = new OrderDialog();
-        Bundle bundle = new Bundle();
-        bundle.putInt(INT, selected);
-        orderDialog.setArguments(bundle);
-        return orderDialog;
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof ISelectedItem)
-            iSelectedItem=(ISelectedItem) activity;
+
+        if(activity instanceof ISelectedItem )
+            iSelectedItem = (ISelectedItem) activity;
     }
+
 
     @Override
     public void onDetach() {
         super.onDetach();
-        iSelectedItem=null;
+        iSelectedItem = null;
     }
-    private int select;
+
+    private static final String COLUMN="int column";
+
+    public static ChangeViewCardsDialog getInstance(int columns){
+        ChangeViewCardsDialog changeViewCardsDialog = new ChangeViewCardsDialog();
+        Bundle bundle = new Bundle();
+        bundle.putInt(COLUMN, columns);
+        changeViewCardsDialog.setArguments(bundle);
+        return changeViewCardsDialog;
+    }
+
+    private int column;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        select=getArguments().getInt(INT);
+        column=getArguments().getInt(COLUMN);
 
-        builder.setTitle(R.string.order_title)
-                .setSingleChoiceItems(R.array.order_array, select, new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.card_view_title)
+                .setSingleChoiceItems(R.array.card_view_array , column-1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        select=which;
+                        column=which+1;
                     }
                 })
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        iSelectedItem.orderCards(select);
+                        iSelectedItem.changeCardView(column);
                         dismiss();
                     }
                 })
@@ -67,8 +70,9 @@ public class OrderDialog extends DialogFragment {
                         dismiss();
                     }
                 });
+
+
+
         return builder.create();
     }
-
 }
-
