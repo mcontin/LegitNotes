@@ -682,6 +682,7 @@ public class EditNoteActivity extends AppCompatActivity
 
         DatabaseManager.getInstance(this).saveNote(note);
         HomeActivity.activity.empty.setVisibility(View.GONE);
+        HomeActivity.activity.orderCards(HomeActivity.activity.chosenItem);
 
         //nota modificata, devo killare l'activity di dettaglio precedente
         if (NoteDetailActivity.activity != null)
