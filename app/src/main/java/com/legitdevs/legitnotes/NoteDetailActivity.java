@@ -191,7 +191,7 @@ public class NoteDetailActivity extends AppCompatActivity {
                        imageNote.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                fullScreenPhoto();
+                               fullScreenPhoto();
 
 
 
@@ -225,6 +225,8 @@ public class NoteDetailActivity extends AppCompatActivity {
                         if(myVideoView == null)
                             myVideoView = (VideoView) findViewById(R.id.video_note);
                         myVideoView.setVisibility(View.VISIBLE);
+
+
 
                         // create a progress bar while the video file is loading
                         progressDialog = new ProgressDialog(NoteDetailActivity.this);
@@ -367,12 +369,12 @@ public class NoteDetailActivity extends AppCompatActivity {
             Log.i(TAG, "Turning immersive mode mode on.");
             bottomBar.hide();
         }
-
+/*
         // Navigation bar hiding:  Backwards compatible to ICS.
         if (Build.VERSION.SDK_INT >= 14) {
             newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         }
-
+*/
         // Status bar hiding: Backwards compatible to Jellybean
         if (Build.VERSION.SDK_INT >= 16) {
             newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
