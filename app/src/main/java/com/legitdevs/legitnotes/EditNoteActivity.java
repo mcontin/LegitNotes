@@ -12,7 +12,9 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,6 +45,7 @@ public class EditNoteActivity extends AppCompatActivity
     private static final String KEY_FILE_PHOTO = "photofile";
     private static final String KEY_FILE_AUDIO = "audiofile";
     private static final String KEY_FILE_VIDEO = "videofile";
+    private static final String KEY_FABMENU_OPEN = "fabmenu";
 
     private static final String TAG = "EditNoteActivity";
     private static final String DIALOG = "start dialog";
@@ -57,7 +60,7 @@ public class EditNoteActivity extends AppCompatActivity
     private TextView date;
     private FloatingActionButton fabGallery, fabPhoto, fabAudio, fabVideo, fabLocation;
 
-    private File photoFile, audioFile, videoFile;
+    private File photoFile, tempPhotoFile, audioFile, videoFile;
     private Uri photoUri;
     private Bitmap photoBitmap;
     private EditText title;
@@ -67,13 +70,20 @@ public class EditNoteActivity extends AppCompatActivity
     public FrameLayout previewAudio;
     private LinearLayout containerAudio, containerImage, containerVideo;
 
+    private FrameLayout frameLayout;
+    private FloatingActionsMenu fabMenu;
+    private boolean fabMenuOpen = false;
+
+
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(KEY_FILE_VIDEO, videoFile.getAbsolutePath());
-        outState.putString(KEY_FILE_AUDIO, audioFile.getAbsolutePath());
-        outState.putString(KEY_FILE_PHOTO, photoFile.getAbsolutePath());
+        outState.putString(KEY_FILE_VIDEO, videoFile.toString());
+        outState.putString(KEY_FILE_AUDIO, audioFile.toString());
+        outState.putString(KEY_FILE_PHOTO, photoFile.toString());
+        outState.putBoolean(KEY_FABMENU_OPEN, fabMenuOpen);
     }
 
     @Override
@@ -82,12 +92,10 @@ public class EditNoteActivity extends AppCompatActivity
         setContentView(R.layout.activity_edit_note);
 
         if(savedInstanceState != null) {
-            if(savedInstanceState.getString(KEY_FILE_PHOTO) != null)
-                photoFile = new File(savedInstanceState.getString(KEY_FILE_PHOTO));
-            if(savedInstanceState.getString(KEY_FILE_AUDIO) != null)
-                audioFile = new File(savedInstanceState.getString(KEY_FILE_AUDIO));
-            if(savedInstanceState.getString(KEY_FILE_VIDEO) != null)
-                videoFile = new File(savedInstanceState.getString(KEY_FILE_VIDEO));
+            photoFile = new File(savedInstanceState.getString(KEY_FILE_PHOTO));
+            audioFile = new File(savedInstanceState.getString(KEY_FILE_AUDIO));
+            videoFile = new File(savedInstanceState.getString(KEY_FILE_VIDEO));
+            fabMenuOpen = savedInstanceState.getBoolean(KEY_FABMENU_OPEN);
         }
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -155,98 +163,114 @@ public class EditNoteActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        showAudioPreview(audioFile != null && audioFile.length() > 0);
-        showVideoPreview(videoFile != null && videoFile.length() > 0);
-        showImagePreview(photoFile != null && photoFile.length() > 0);
+        showAudioPreview(audioFile != null && audioFile.toString().length() > 0);
+        showVideoPreview(videoFile != null && videoFile.toString().length() > 0);
+        showImagePreview(photoFile != null && photoFile.toString().length() > 0);
 
-        final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
+        frameLayout = (FrameLayout) findViewById(R.id.frame_layout_insert_media);
         assert frameLayout != null;
         frameLayout.getBackground().setAlpha(0);
-        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu_insert);
+        fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu_insert);
         assert fabMenu != null;
+        setFabMenuOpen(fabMenuOpen);
+        setupFabs();
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
-                frameLayout.getBackground().setAlpha(200);
-                frameLayout.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        fabMenu.collapse();
-                        return true;
-                    }
-                });
-
-                fabGallery = (FloatingActionButton) findViewById(R.id.fab_from_gallery);
-                fabGallery.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //call the system's gallery
-                        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                        getIntent.setType("image/*");
-
-                        Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        pickIntent.setType("image/*");
-
-                        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-
-                        startActivityForResult(chooserIntent, REQUEST_IMAGE_GALLERY);
-
-                        fabMenu.collapse();
-                    }
-                });
-
-                fabPhoto = (FloatingActionButton) findViewById(R.id.fab_photo);
-                fabPhoto.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //take a picture
-                        dispatchTakePictureIntent();
-                        fabMenu.collapse();
-                    }
-                });
-
-                fabAudio = (FloatingActionButton) findViewById(R.id.fab_audio);
-                fabAudio.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //record audio
-                        AudioInsideNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
-                        fabMenu.collapse();
-                    }
-                });
-
-                fabVideo = (FloatingActionButton) findViewById(R.id.fab_video);
-                fabVideo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //record a video
-                        dispatchTakeVideoIntent();
-                        fabMenu.collapse();
-                    }
-                });
-
-                fabLocation = (FloatingActionButton) findViewById(R.id.fab_position);
-                fabLocation.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        setUserLocation();
-                        fabMenu.collapse();
-
-                    }
-                });
-
+                fabMenuOpen = true;
+                setFabMenuOpen(fabMenuOpen);
             }
 
             @Override
             public void onMenuCollapsed() {
-                frameLayout.getBackground().setAlpha(0);
-                frameLayout.setOnTouchListener(null);
+                fabMenuOpen = false;
+                setFabMenuOpen(fabMenuOpen);
             }
 
         });
     }
+
+    private void setupFabs() {
+        fabGallery = (FloatingActionButton) findViewById(R.id.fab_from_gallery);
+        fabGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //call the system's gallery
+                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                getIntent.setType("image/*");
+
+                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickIntent.setType("image/*");
+
+                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+
+                startActivityForResult(chooserIntent, REQUEST_IMAGE_GALLERY);
+
+                fabMenu.collapse();
+            }
+        });
+
+        fabPhoto = (FloatingActionButton) findViewById(R.id.fab_photo);
+        fabPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //take a picture
+                dispatchTakePictureIntent();
+                fabMenu.collapse();
+            }
+        });
+
+        fabAudio = (FloatingActionButton) findViewById(R.id.fab_audio);
+        fabAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //record audio
+                AudioInsideNoteDialog.getInstance().show(getSupportFragmentManager(), DIALOG);
+                fabMenu.collapse();
+            }
+        });
+
+        fabVideo = (FloatingActionButton) findViewById(R.id.fab_video);
+        fabVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //record a video
+                dispatchTakeVideoIntent();
+                fabMenu.collapse();
+            }
+        });
+
+        fabLocation = (FloatingActionButton) findViewById(R.id.fab_position);
+        fabLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                setUserLocation();
+                fabMenu.collapse();
+
+            }
+        });
+    }
+
+    private void setFabMenuOpen(boolean open) {
+
+        if(open) {
+            frameLayout.getBackground().setAlpha(200);
+            frameLayout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    fabMenu.collapse();
+                    return true;
+                }
+            });
+            return;
+        }
+
+        frameLayout.getBackground().setAlpha(0);
+        frameLayout.setOnTouchListener(null);
+    }
+
 
     @Override
     public void getDirAudio(File dir) {
@@ -265,17 +289,14 @@ public class EditNoteActivity extends AppCompatActivity
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
     }
 
     public void setUserLocation() {
@@ -289,16 +310,26 @@ public class EditNoteActivity extends AppCompatActivity
     }
 
     private File createImageFile() throws IOException {
-        File internalMemory = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
+        File tempDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//        tempDir = new File(tempDir.getAbsolutePath()
+//                + File.separatorChar
+//                + ".temp");
+        //se non esiste creo la cartella temporanea
+        if (!tempDir.exists()) {
+            if(!tempDir.mkdir()) {
+                //è successo qualcosa di brutto
+                AlertDialog.Builder b = new AlertDialog.Builder(this);
+                b.setMessage("Error with internal memory! Please restart the app.");
+                b.create().show();
+                return new File("");
+            }
+        }
 
-        File image = File.createTempFile(
-                "image",        /* prefix */
-                ".jpg",         /* suffix */
-                internalMemory  /* directory */
-        );
+        File imageTemp = File.createTempFile("image",
+                ".jpg",
+                tempDir);
 
-        return image;
+        return imageTemp;
     }
 
     private void dispatchTakePictureIntent() {
@@ -306,21 +337,20 @@ public class EditNoteActivity extends AppCompatActivity
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
-            photoFile = null;
+            tempPhotoFile = null;
             try {
-                photoFile = createImageFile();
+                tempPhotoFile = createImageFile();
             } catch (IOException e) {
                 // Error occurred while creating the File
                 e.printStackTrace();
             }
             // Continue only if the File was successfully created
-            if (photoFile != null) {
-                photoUri = Uri.fromFile(photoFile);
+            if (tempPhotoFile != null && tempPhotoFile.exists()) {
+                photoUri = Uri.fromFile(tempPhotoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                         photoUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
-            previewAudio.removeAllViewsInLayout();
         }
     }
 
@@ -377,13 +407,16 @@ public class EditNoteActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.i(TAG, "onActivityResult: foto: " + photoFile);
+        Log.i(TAG, "onActivityResult: temp: " + tempPhotoFile);
+
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();
             videoFile = new File(getRealPathFromURI(videoUri));
 
             showVideoPreview(true);
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-
+            photoFile = tempPhotoFile;
             showImagePreview(true);
         }
 
@@ -404,18 +437,21 @@ public class EditNoteActivity extends AppCompatActivity
     }
 
     public void removeMedia(String file){
+        FileManager.init(this)
+                .with(note)
+                .delete(file);
 
         switch (file){
             case FileManager.TYPE_AUDIO:
-                audioFile = null;
+                audioFile = new File("");
                 hideAudioPreview();
                 break;
             case FileManager.TYPE_IMAGE:
-                photoFile = null;
+                photoFile = new File("");
                 hideImagePreview();
                 break;
             case FileManager.TYPE_VIDEO:
-                videoFile = null;
+                videoFile = new File("");
                 hideVideoPreview();
                 break;
         }
@@ -465,34 +501,41 @@ public class EditNoteActivity extends AppCompatActivity
         note.setText(text.getText().toString());
         //note.setMedia(media);
 
-        if (audioFile == null) {
+        Log.i(TAG, "saveChanges: audio: " + audioFile.toString());
+        Log.i(TAG, "saveChanges: video: " + videoFile.toString());
+        Log.i(TAG, "saveChanges: photo: " + photoFile.toString());
+
+        if (audioFile == null || audioFile.toString().length() == 0) {
             //remove from note and files
             FileManager.init(this)
                     .with(note)
                     .delete(FileManager.TYPE_AUDIO);
         } else {
             //savemedia
-            saveMedia(FileManager.TYPE_AUDIO, audioFile);
+            if(audioFile.getParentFile().getName().equals(".temp"))
+                saveMedia(FileManager.TYPE_AUDIO, audioFile);
         }
 
-        if (photoFile == null) {
+        if (photoFile == null || photoFile.toString().length() == 0) {
             //remove from note and files
             FileManager.init(this)
                     .with(note)
                     .delete(FileManager.TYPE_IMAGE);
         } else {
             //savemedia
-            saveMedia(FileManager.TYPE_IMAGE, photoFile);
+            if(photoFile.getParentFile().getName().equals("Pictures"))
+                saveMedia(FileManager.TYPE_IMAGE, photoFile);
         }
 
-        if (videoFile == null) {
+        if (videoFile == null || videoFile.toString().length() == 0) {
             //remove from note and files
             FileManager.init(this)
                     .with(note)
                     .delete(FileManager.TYPE_VIDEO);
         } else {
             //savemedia
-            saveMedia(FileManager.TYPE_VIDEO, videoFile);
+            if(videoFile.getParentFile().getName().equals("Camera"))
+                saveMedia(FileManager.TYPE_VIDEO, videoFile);
         }
 
         DatabaseManager.getInstance(this).saveNote(note);

@@ -18,5 +18,8 @@
     <color name="default_button">#eeeeee</color>
     <color name="pressed_button">#e0e0e0</color>
 
+
+    <color name="chuck_default">#28000000</color>
+
     <color name="background">#f5f5f5</color>
 </resources>
