@@ -114,28 +114,21 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.CardViewHold
 
     public void updateNotes(ArrayList<Note> notes) {
         this.notes = notes;
-        orderBy();
 
         notifyDataSetChanged();
     }
 
     public void addNote(Note note) {
         notes.add(note);
-        orderBy();
 
         notifyItemInserted(notes.indexOf(note));
     }
 
     public void removeNote(int position) {
         notes.remove(position);
-        orderBy();
 
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
-    }
-
-    public void orderBy() {
-
     }
 
     /**

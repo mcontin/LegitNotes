@@ -386,7 +386,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
-                        adapter.notifyItemRangeChanged(0, notes.size() - 1);
+                        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                     }
                 }.execute();
                 break;
@@ -406,7 +406,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
-                        adapter.notifyItemRangeChanged(0, notes.size() - 1);
+                        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                     }
                 }.execute();
                 break;
@@ -426,7 +426,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
-                        adapter.notifyItemRangeChanged(0, notes.size() - 1);
+                        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                     }
                 }.execute();
                 break;
@@ -446,7 +446,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
-                        adapter.notifyItemRangeChanged(0, notes.size() - 1);
+                        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                     }
                 }.execute();
                 break;

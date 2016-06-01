@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import com.legitdevs.legitnotes.database.DatabaseManager;
+import com.legitdevs.legitnotes.filemanager.FileManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +46,10 @@ public class ConfirmRemovalDialog extends DialogFragment {
                         DatabaseManager
                                 .getInstance(getContext())
                                 .removeNote((Note) getArguments().getParcelable(KEY_NOTE));
+
+                        FileManager.init(getContext())
+                                .with((Note) getArguments().getParcelable(KEY_NOTE))
+                                .deleteMedias();
 
                         //nota modificata, devo killare l'activity di dettaglio precedente
                         if(NoteDetailActivity.activity != null)
