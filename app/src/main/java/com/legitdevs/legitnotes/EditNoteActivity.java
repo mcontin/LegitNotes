@@ -245,25 +245,25 @@ public class EditNoteActivity extends AppCompatActivity
     }
 
     private void setupFabs() {
-        fabGallery = (FloatingActionButton) findViewById(R.id.fab_from_gallery);
-        fabGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //call the system's gallery
-                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                getIntent.setType("image/*");
-
-                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickIntent.setType("image/*");
-
-                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-
-                startActivityForResult(chooserIntent, REQUEST_IMAGE_GALLERY);
-
-                fabMenu.collapse();
-            }
-        });
+//        fabGallery = (FloatingActionButton) findViewById(R.id.fab_from_gallery);
+//        fabGallery.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //call the system's gallery
+//                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//                getIntent.setType("image/*");
+//
+//                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                pickIntent.setType("image/*");
+//
+//                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+//                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+//
+//                startActivityForResult(chooserIntent, REQUEST_IMAGE_GALLERY);
+//
+//                fabMenu.collapse();
+//            }
+//        });
 
         fabPhoto = (FloatingActionButton) findViewById(R.id.fab_photo);
         fabPhoto.setOnClickListener(new View.OnClickListener() {
@@ -531,6 +531,7 @@ public class EditNoteActivity extends AppCompatActivity
         AudioWife.getInstance().release();
         previewAudio.removeAllViewsInLayout();
         containerAudio.setVisibility(View.GONE);
+
     }
     private void showVideoPreview(boolean show) {
         if (show) {
