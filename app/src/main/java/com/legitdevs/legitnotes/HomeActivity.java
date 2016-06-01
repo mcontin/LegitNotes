@@ -74,7 +74,7 @@ public class HomeActivity extends AppCompatActivity
     private boolean fabMenuOpen = false;
     public ImageView empty;
 
-    private int chosenItem = 2, chosenColumn = 2;
+    public int chosenItem = 2, chosenColumn = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,12 +213,14 @@ public class HomeActivity extends AppCompatActivity
 
     public void addNote(Note note) {
         adapter.addNote(note);
+        orderCards(chosenItem);
         empty.setVisibility(View.GONE);
     }
 
     @Override
     public void onNoteDeleted(int position) {
         adapter.removeNote(position);
+        orderCards(chosenItem);
         if (notes.size() == 0) empty.setVisibility(View.VISIBLE);
 //        adapter.updateNotes(notes);
     }
