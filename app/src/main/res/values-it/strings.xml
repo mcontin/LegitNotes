@@ -43,4 +43,7 @@
     <string name="address_found">L\'indirizzo è stato trovato</string>
     <string name="bottom_bar_position_title">Posizione</string>
     <string name="bottom_bar_gallery_title">Dalla gallery</string>
+    <string name="order_settings">Annulla</string>
+    <string name="order_title">Ordina le tue note</string>
+    <string name="card_settings">Visualizza Nota</string>
 </resources>
