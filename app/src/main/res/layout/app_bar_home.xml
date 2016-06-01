@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".HomeActivity">
+    tools:context=".HomeActivity"
+    android:id="@+id/coordinator">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -24,6 +25,17 @@
 
     <include layout="@layout/content_home" />
 
+    <ImageView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_home"
+        android:paddingLeft="50dp"
+        android:paddingTop="100dp"
+        android:paddingRight="50dp"
+        android:paddingBottom="50dp"
+        android:visibility="gone"/>
+
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
@@ -35,7 +47,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
-            fab:fab_addButtonColorNormal="@color/colorAccent"
+            fab:fab_addButtonColorNormal="@color/colorPrimaryFab"
+            fab:fab_addButtonColorPressed="@color/colorPrimaryBrightFab"
             fab:fab_addButtonStrokeVisible="false"
             fab:fab_labelStyle="@style/menu_labels_style"
             fab:fab_labelsPosition="left">
@@ -45,6 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/colorAccent"
+                fab:fab_colorPressed="@color/colorAccentBright"
                 fab:fab_icon="@drawable/ic_mic_white_24dp"
                 fab:fab_size="mini"
                 fab:fab_title="Audio Note" />
@@ -54,6 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/colorAccent"
+                fab:fab_colorPressed="@color/colorAccentBright"
                 fab:fab_icon="@drawable/ic_create_white_24dp"
                 fab:fab_size="mini"
                 fab:fab_title="New Note" />
@@ -63,6 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/colorAccent"
+                fab:fab_colorPressed="@color/colorAccentBright"
                 fab:fab_icon="@drawable/ic_note_add"
                 fab:fab_size="mini"
                 fab:fab_title="Quick Note" />
