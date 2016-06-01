@@ -96,6 +96,8 @@ public class EditNoteActivity extends AppCompatActivity
     private int selectionStart;
     private int selectionEnd;
 
+    private LinearLayout mMediaContainer;
+
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
     private boolean fabMenuOpen = false;
@@ -104,11 +106,13 @@ public class EditNoteActivity extends AppCompatActivity
 
         @Override
         public void close() {
+            mMediaContainer.setVisibility(View.VISIBLE);
             lnl.setVisibility(View.GONE);
         }
 
         @Override
         public void show() {
+            mMediaContainer.setVisibility(View.GONE);
             lnl.setVisibility(View.VISIBLE);
         }
     };
@@ -118,6 +122,9 @@ public class EditNoteActivity extends AppCompatActivity
         public void onClick(View v) {
             if (text.isFocused()) {
                 lnl.setVisibility(View.VISIBLE);
+                mMediaContainer.setVisibility(View.GONE);
+            } else {
+                mMediaContainer.setVisibility(View.VISIBLE);
             }
         }
     };
@@ -164,6 +171,7 @@ public class EditNoteActivity extends AppCompatActivity
         text.setText(Html.fromHtml(note.getText()));
         date.setText(DateFormat.getDateTimeInstance().format(note.getDate()));
         medias = note.getMedias();
+        mMediaContainer = (LinearLayout) findViewById(R.id.media_content);
         containerAudio = (LinearLayout) findViewById(R.id.container_audio);
         deleteAudio = (ImageView) findViewById(R.id.delete_audio);
         deleteAudio.setOnClickListener(new View.OnClickListener() {
@@ -237,25 +245,25 @@ public class EditNoteActivity extends AppCompatActivity
     }
 
     private void setupFabs() {
-        fabGallery = (FloatingActionButton) findViewById(R.id.fab_from_gallery);
-        fabGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //call the system's gallery
-                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                getIntent.setType("image/*");
-
-                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                pickIntent.setType("image/*");
-
-                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-
-                startActivityForResult(chooserIntent, REQUEST_IMAGE_GALLERY);
-
-                fabMenu.collapse();
-            }
-        });
+//        fabGallery = (FloatingActionButton) findViewById(R.id.fab_from_gallery);
+//        fabGallery.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //call the system's gallery
+//                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//                getIntent.setType("image/*");
+//
+//                Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                pickIntent.setType("image/*");
+//
+//                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+//                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+//
+//                startActivityForResult(chooserIntent, REQUEST_IMAGE_GALLERY);
+//
+//                fabMenu.collapse();
+//            }
+//        });
 
         fabPhoto = (FloatingActionButton) findViewById(R.id.fab_photo);
         fabPhoto.setOnClickListener(new View.OnClickListener() {
@@ -312,13 +320,14 @@ public class EditNoteActivity extends AppCompatActivity
         text.setItalicsToggleButton(italicsToggle);
         text.setUnderlineToggleButton(underlinedToggle);
         text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     lnl.setVisibility(View.VISIBLE);
+                    mMediaContainer.setVisibility(View.GONE);
                 } else {
                     lnl.setVisibility(View.GONE);
+                    mMediaContainer.setVisibility(View.VISIBLE);
                 }
             }
         });
