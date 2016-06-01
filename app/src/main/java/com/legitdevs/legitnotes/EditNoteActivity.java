@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -254,6 +255,7 @@ public class EditNoteActivity extends AppCompatActivity
                     public void onClick(View v) {
                         //get last known location
                         setUserLocation();
+
                         fabMenu.collapse();
 
                     }
@@ -356,9 +358,19 @@ public class EditNoteActivity extends AppCompatActivity
 
         //setto la posizione dell'utente ogni volta che creo una nota
         note.setPosition(location);
-        String myAddress = displayLocation();
-        note.setText(note.getText() + "/n Ti trovi in " + myAddress);
         locationManager.removeUpdates(this);
+
+        Handler mainHandler = new Handler(getApplicationContext().getMainLooper());
+
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                String myAddress = displayLocation();
+                Log.i("POSITION",myAddress);
+                note.setText(note.getText() + "/n Ti trovi in " + myAddress);
+            }
+        };
+        mainHandler.post(myRunnable);
     }
 
     @Override
@@ -560,7 +572,7 @@ public class EditNoteActivity extends AppCompatActivity
 
     private void saveChanges() {
         note.setTitle(title.getText().toString());
-        //note.setText(text.getText().toHtml());
+        note.setText(text.getText().toString());
         //note.setMedia(media);
 
         if (audioFile == null) {

@@ -49,7 +49,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/custom_title"
             android:background="@color/gainsboro"
-            android:orientation="horizontal">
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
 
             <ToggleButton
                 android:id="@+id/btnBold"
