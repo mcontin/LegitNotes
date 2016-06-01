@@ -335,7 +335,7 @@ public class HomeActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_FABMENU_STATE, fabMenuOpen);
-        outState.putInt(KEY_CHOSEN_ITEM ,chosenItem);
+        outState.putInt(KEY_CHOSEN_ITEM, chosenItem);
     }
 
     @Override
@@ -382,7 +382,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
-                        adapter.notifyItemRangeChanged(0, notes.size()-1);
+                        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                     }
                 }.execute();
                 break;
@@ -402,7 +402,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
-                        adapter.notifyItemRangeChanged(0, notes.size()-1);
+                        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                     }
                 }.execute();
                 break;
@@ -422,7 +422,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
-                        adapter.notifyItemRangeChanged(0, notes.size()-1);
+                        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                     }
                 }.execute();
                 break;
@@ -442,7 +442,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
-                        adapter.notifyItemRangeChanged(0, notes.size()-1);
+                        adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                     }
                 }.execute();
                 break;

@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.legitdevs.legitnotes.database.DatabaseManager;
@@ -368,6 +369,8 @@ public class EditNoteActivity extends AppCompatActivity
             Glide.with(getApplicationContext())
                     .load(photoFile)
                     .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .into(previewImage);
         }
     }

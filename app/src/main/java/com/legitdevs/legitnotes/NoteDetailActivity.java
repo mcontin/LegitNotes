@@ -21,6 +21,7 @@ import android.widget.VideoView;
 import android.widget.MediaController;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarTab;
@@ -173,7 +174,6 @@ public class NoteDetailActivity extends AppCompatActivity {
                         AudioWife.getInstance()
                                 .init(getApplicationContext(), Uri.parse(audio.getAbsolutePath()))
                                 .useDefaultUi(audioPlayer, getLayoutInflater());
-
                     }
                     if (position==imageIndex){
                         mediaContainer.getBackground().setAlpha(200);
@@ -190,6 +190,8 @@ public class NoteDetailActivity extends AppCompatActivity {
                                             .init(getApplicationContext())
                                             .with(note)
                                             .get(FileManager.TYPE_IMAGE))
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .skipMemoryCache(true)
                                     .into(imageNote);
                         } catch (Exception e) {
                             e.printStackTrace();
