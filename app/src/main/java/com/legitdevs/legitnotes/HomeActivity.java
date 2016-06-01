@@ -15,6 +15,7 @@ import com.legitdevs.legitnotes.database.DatabaseManager;
 import com.legitdevs.legitnotes.filemanager.FileManager;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
+
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -39,7 +40,7 @@ import java.util.Comparator;
 
 public class HomeActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
-        IDeletionListener, IMediaSaver , OrderDialog.ISelectedItem,
+        IDeletionListener, IMediaSaver, OrderDialog.ISelectedItem,
         ChangeViewCardsDialog.ISelectedItem {
 
     private static final String DIALOG_QUICK = "quick";
@@ -71,7 +72,7 @@ public class HomeActivity extends AppCompatActivity
     private FloatingActionsMenu fabMenu;
     private boolean fabMenuOpen = false;
 
-    private int chosenItem=2,chosenColumn=2;
+    private int chosenItem = 2, chosenColumn = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +90,7 @@ public class HomeActivity extends AppCompatActivity
             requestAllPermissions();
         }
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             fabMenuOpen = savedInstanceState.getBoolean(KEY_FABMENU_STATE);
             chosenItem = savedInstanceState.getInt(KEY_CHOSEN_ITEM);
             chosenColumn = savedInstanceState.getInt(KEY_CHOSEN_COLUMN);
@@ -149,7 +150,7 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                Intent i = new Intent(getBaseContext(),EditNoteActivity.class);
+                Intent i = new Intent(getBaseContext(), EditNoteActivity.class);
                 startActivity(i);
                 fabMenu.collapse();
 
@@ -170,7 +171,7 @@ public class HomeActivity extends AppCompatActivity
 
     private void setFabMenuOpen(boolean open) {
 
-        if(open) {
+        if (open) {
             frameLayout.getBackground().setAlpha(200);
             frameLayout.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -285,13 +286,13 @@ public class HomeActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.order_item){
-            OrderDialog.getInstance(chosenItem).show(getSupportFragmentManager(),DIALOG_SETTINGS);
+        if (id == R.id.order_item) {
+            OrderDialog.getInstance(chosenItem).show(getSupportFragmentManager(), DIALOG_SETTINGS);
             return true;
         }
 
-        if (id == R.id.view_item){
-            ChangeViewCardsDialog.getInstance(chosenColumn).show(getSupportFragmentManager(),DIALOG_SETTINGS);
+        if (id == R.id.view_item) {
+            ChangeViewCardsDialog.getInstance(chosenColumn).show(getSupportFragmentManager(), DIALOG_SETTINGS);
             return true;
         }
 
@@ -337,8 +338,8 @@ public class HomeActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_FABMENU_STATE, fabMenuOpen);
-        outState.putInt(KEY_CHOSEN_ITEM ,chosenItem);
-        outState.putInt(KEY_CHOSEN_COLUMN ,chosenColumn);
+        outState.putInt(KEY_CHOSEN_ITEM, chosenItem);
+        outState.putInt(KEY_CHOSEN_COLUMN, chosenColumn);
     }
 
     @Override
@@ -366,9 +367,9 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void orderCards(int which) {
 
-        chosenItem=which;
+        chosenItem = which;
 
-        switch (which){
+        switch (which) {
             case 0:
                 new AsyncTask<Void, Void, Void>() {
                     @Override
@@ -385,7 +386,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
-                        adapter.notifyItemRangeChanged(0, notes.size()-1);
+                        adapter.notifyItemRangeChanged(0, notes.size() - 1);
                     }
                 }.execute();
                 break;
@@ -405,7 +406,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
-                        adapter.notifyItemRangeChanged(0, notes.size()-1);
+                        adapter.notifyItemRangeChanged(0, notes.size() - 1);
                     }
                 }.execute();
                 break;
@@ -425,7 +426,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
-                        adapter.notifyItemRangeChanged(0, notes.size()-1);
+                        adapter.notifyItemRangeChanged(0, notes.size() - 1);
                     }
                 }.execute();
                 break;
@@ -445,7 +446,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
-                        adapter.notifyItemRangeChanged(0, notes.size()-1);
+                        adapter.notifyItemRangeChanged(0, notes.size() - 1);
                     }
                 }.execute();
                 break;
@@ -455,7 +456,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void changeCardView(int column) {
-        chosenColumn =column;
+        chosenColumn = column;
         GridLayoutManager layoutManager = new GridLayoutManager(this, column, GridLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

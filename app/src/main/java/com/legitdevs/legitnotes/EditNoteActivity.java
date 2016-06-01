@@ -53,7 +53,6 @@ import android.support.v7.app.AlertDialog;
 import android.os.Build;
 import android.util.Log;
 
-//import windyzboy.github.io.customeeditor.CustomEditText;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 
@@ -95,6 +94,10 @@ public class EditNoteActivity extends AppCompatActivity
 
     private int selectionStart;
     private int selectionEnd;
+
+    private FrameLayout frameLayout;
+    private FloatingActionsMenu fabMenu;
+    private boolean fabMenuOpen = false;
 
     private CustomEditText.EventBack eventBack = new CustomEditText.EventBack() {
 
@@ -287,7 +290,6 @@ public class EditNoteActivity extends AppCompatActivity
         fabLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 setUserLocation();
                 fabMenu.collapse();
 
@@ -627,6 +629,7 @@ public class EditNoteActivity extends AppCompatActivity
     private void saveChanges() {
         note.setTitle(title.getText().toString());
         note.setText(text.getText().toString());
+        Log.i("USI",text.getText().toString());
         //note.setMedia(media);
 
         Log.i(TAG, "saveChanges: audio: " + audioFile.toString());
