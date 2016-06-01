@@ -59,14 +59,14 @@
             fab:fab_size="mini"
             fab:fab_title="@string/bottom_bar_video_title"/>
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_position"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_icon="@drawable/ic_my_location_24dp"
-            fab:fab_size="mini"
-            fab:fab_title="@string/bottom_bar_position_title" />
+        <!--<com.getbase.floatingactionbutton.FloatingActionButton-->
+            <!--android:id="@+id/fab_position"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--fab:fab_colorNormal="@color/colorAccent"-->
+            <!--fab:fab_icon="@drawable/ic_my_location_24dp"-->
+            <!--fab:fab_size="mini"-->
+            <!--fab:fab_title="@string/bottom_bar_position_title" />-->
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

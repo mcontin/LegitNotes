@@ -295,15 +295,15 @@ public class EditNoteActivity extends AppCompatActivity
             }
         });
 
-        fabLocation = (FloatingActionButton) findViewById(R.id.fab_position);
-        fabLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setUserLocation();
-                fabMenu.collapse();
-
-            }
-        });
+//        fabLocation = (FloatingActionButton) findViewById(R.id.fab_position);
+//        fabLocation.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                setUserLocation();
+//                fabMenu.collapse();
+//
+//            }
+//        });
 
         colorPickerDialog = new AmbilWarnaDialog(this, Color.BLACK, this);
         ToggleButton boldToggle = (ToggleButton) findViewById(R.id.btnBold);
